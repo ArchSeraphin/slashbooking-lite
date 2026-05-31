@@ -141,7 +141,15 @@ final class RestRouter
             find: fn (int $id) => $bookings->findById($id),
             persist: fn (\Slash\Booking\Domain\Booking $b) => $bookings->save($b),
         );
-        (new DecisionController($signer, $confirmUC, $rejectUC))->registerRoutes();
+        (new DecisionController(
+            $signer,
+            $confirmUC,
+            $rejectUC,
+            static function (array $entry): void {
+                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- intentional: rare decision-link conflict logged server-side; no WP equivalent.
+                error_log('[slashbooking] ' . (string) wp_json_encode($entry));
+            },
+        ))->registerRoutes();
 
         (new AdminBookingController($bookings, $confirmUC, $rejectUC, $cancel))->registerRoutes();
 

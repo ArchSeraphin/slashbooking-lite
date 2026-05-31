@@ -31,7 +31,7 @@ final class DecisionControllerTest extends WP_UnitTestCase
         $b = $this->seedPending();
         $exp = time() + 3600;
         $sig = $this->signer->sign('decide|' . $b->id() . '|confirm', $exp);
-        $request = new WP_REST_Request('GET', '/slashbooking/v1/decide');
+        $request = new WP_REST_Request('POST', '/slashbooking/v1/decide');
         $request->set_query_params(['booking' => $b->id(), 'action' => 'confirm', 'exp' => $exp, 'sig' => $sig]);
         $response = rest_do_request($request);
         self::assertSame(200, $response->get_status());
@@ -46,7 +46,7 @@ final class DecisionControllerTest extends WP_UnitTestCase
         $b = $this->seedPending();
         $exp = time() + 3600;
         $sig = $this->signer->sign('decide|' . $b->id() . '|reject', $exp);
-        $request = new WP_REST_Request('GET', '/slashbooking/v1/decide');
+        $request = new WP_REST_Request('POST', '/slashbooking/v1/decide');
         $request->set_query_params(['booking' => $b->id(), 'action' => 'reject', 'exp' => $exp, 'sig' => $sig]);
         $response = rest_do_request($request);
         self::assertSame(200, $response->get_status());
@@ -80,10 +80,27 @@ final class DecisionControllerTest extends WP_UnitTestCase
         $b = $this->seedPending();
         $exp = time() + 3600;
         $sig = $this->signer->sign('decide|' . $b->id() . '|confirm', $exp);
-        $request = new WP_REST_Request('GET', '/slashbooking/v1/decide');
+        $request = new WP_REST_Request('POST', '/slashbooking/v1/decide');
         $request->set_query_params(['booking' => $b->id(), 'action' => 'confirm', 'exp' => $exp, 'sig' => $sig]);
         rest_do_request($request);
         self::assertSame(200, rest_do_request($request)->get_status());
+    }
+
+    public function test_get_renders_interstitial_and_does_not_mutate(): void
+    {
+        $b = $this->seedPending();
+        $exp = time() + 3600;
+        $sig = $this->signer->sign('decide|' . $b->id() . '|confirm', $exp);
+        $request = new WP_REST_Request('GET', '/slashbooking/v1/decide');
+        $request->set_query_params(['booking' => $b->id(), 'action' => 'confirm', 'exp' => $exp, 'sig' => $sig]);
+        $response = rest_do_request($request);
+
+        self::assertSame(200, $response->get_status());
+        self::assertStringContainsString('<form', (string) $response->get_data());
+
+        global $wpdb;
+        $refreshed = (new BookingRepository($wpdb))->findById((int) $b->id());
+        self::assertSame(BookingStatus::PENDING, $refreshed->status(), 'GET must not mutate the booking');
     }
 
     private function seedPending(): Booking
