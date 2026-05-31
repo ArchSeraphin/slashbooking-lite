@@ -22,30 +22,66 @@ final class PublicCancelController
 
     public function registerRoutes(): void
     {
+        $args = [
+            'uid' => ['type' => 'string', 'required' => true],
+            'exp' => ['type' => 'integer', 'required' => true],
+            'sig' => ['type' => 'string', 'required' => true],
+        ];
+
         register_rest_route(
             Plugin::REST_NAMESPACE,
             '/cancel',
             [
-                'methods' => WP_REST_Server::READABLE,
-                'callback' => [$this, 'handle'],
-                'permission_callback' => '__return_true',
-                'args' => [
-                    'uid' => ['type' => 'string', 'required' => true],
-                    'exp' => ['type' => 'integer', 'required' => true],
-                    'sig' => ['type' => 'string', 'required' => true],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [$this, 'handleGet'],
+                    'permission_callback' => '__return_true',
+                    'args'                => $args,
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [$this, 'handlePost'],
+                    'permission_callback' => '__return_true',
+                    'args'                => $args,
                 ],
             ]
         );
     }
 
-    public function handle(WP_REST_Request $request): WP_REST_Response|WP_Error
+    public function handleGet(WP_REST_Request $request): WP_REST_Response
     {
         $uid = (string) $request['uid'];
         $exp = (int) $request['exp'];
         $sig = (string) $request['sig'];
-        $payload = 'cancel|' . $uid;
 
-        if (!$this->signer->verify($payload, $exp, $sig)) {
+        if (!$this->signer->verify('cancel|' . $uid, $exp, $sig)) {
+            return $this->htmlResponse(
+                403,
+                '<h1>' . esc_html__('Lien invalide ou expiré', 'slashbooking') . '</h1>'
+                . '<p>' . esc_html__('Demandez un nouveau lien.', 'slashbooking') . '</p>',
+            );
+        }
+
+        $endpoint = esc_url(rest_url(Plugin::REST_NAMESPACE . '/cancel'));
+        $form = '<h1>' . esc_html__('Annuler cette réservation ?', 'slashbooking') . '</h1>'
+            . '<form method="post" action="' . $endpoint . '">'
+            . '<input type="hidden" name="uid" value="' . esc_attr($uid) . '">'
+            . '<input type="hidden" name="exp" value="' . (int) $exp . '">'
+            . '<input type="hidden" name="sig" value="' . esc_attr($sig) . '">'
+            . '<button type="submit" style="font-size:16px;padding:10px 18px;cursor:pointer">'
+            . esc_html__('Annuler le RDV', 'slashbooking') . '</button>'
+            . '</form>';
+
+        return $this->htmlResponse(200, $form);
+    }
+
+    public function handlePost(WP_REST_Request $request): WP_REST_Response|WP_Error
+    {
+        $uid = (string) $request['uid'];
+        $exp = (int) $request['exp'];
+        $sig = (string) $request['sig'];
+
+        if (!$this->signer->verify('cancel|' . $uid, $exp, $sig)) {
             return new WP_Error('sb_invalid_token', __('Lien invalide ou expiré.', 'slashbooking'), ['status' => 403]);
         }
 
@@ -56,5 +92,16 @@ final class PublicCancelController
         }
 
         return new WP_REST_Response(['status' => 'cancelled'], 200);
+    }
+
+    private function htmlResponse(int $status, string $body): WP_REST_Response
+    {
+        $title = esc_html__('Annulation RDV', 'slashbooking');
+        $html = <<<HTML
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>{$title}</title>
+<style>body{font-family:system-ui,sans-serif;max-width:560px;margin:80px auto;padding:0 16px;color:#111}</style>
+</head><body>{$body}</body></html>
+HTML;
+        return new WP_REST_Response($html, $status, ['Content-Type' => 'text/html; charset=UTF-8']);
     }
 }
