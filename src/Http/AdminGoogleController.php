@@ -9,10 +9,11 @@ use DateTimeInterface;
 use DateTimeZone;
 use Slash\Booking\Admin\Capabilities;
 use Slash\Booking\Domain\GoogleAccount;
+use Slash\Booking\Google\BrokerGateway;
 use Slash\Booking\Google\Encryption;
+use Slash\Booking\Google\Exceptions\BrokerUnavailable;
 use Slash\Booking\Google\Exceptions\OAuthFailure;
 use Slash\Booking\Google\GoogleClientBuilder;
-use Slash\Booking\Google\OAuthClient;
 use Slash\Booking\Google\OAuthState;
 use Slash\Booking\Google\WatchChannelManager;
 use Slash\Booking\Persistence\GoogleAccountRepository;
@@ -28,7 +29,7 @@ final class AdminGoogleController
      */
     public function __construct(
         private readonly GoogleAccountRepository $accounts,
-        private readonly OAuthClient $oauthClient,
+        private readonly BrokerGateway $broker,
         private readonly OAuthState $state,
         private readonly Encryption $encryption,
         private readonly WatchChannelManager $watchManager,
@@ -110,43 +111,54 @@ final class AdminGoogleController
         if ($userId === 0) {
             return new WP_Error('not_logged_in', __('Not logged in', 'slashbooking'), ['status' => 401]);
         }
-        $stateToken = $this->state->issue($userId);
-        $url        = $this->oauthClient->authUrl($stateToken);
+        if ((string) get_option('sb_license_status', 'absent') !== 'valid') {
+            return new WP_Error(
+                'license_required',
+                __('Une clé de licence valide est requise pour connecter Google Calendar.', 'slashbooking'),
+                ['status' => 403]
+            );
+        }
+
+        $n           = $this->state->issue($userId);
+        $callbackUrl = rest_url(Plugin::REST_NAMESPACE . '/admin/google/oauth/callback');
+
+        try {
+            $url = $this->broker->startUrl($callbackUrl, $n);
+        } catch (BrokerUnavailable $e) {
+            return new WP_Error('broker_unavailable', $e->getMessage(), ['status' => 503]);
+        } catch (OAuthFailure $e) {
+            return new WP_Error('oauth_failed', $e->getMessage(), ['status' => 502]);
+        }
+
         return new WP_REST_Response(['auth_url' => $url], 200);
     }
 
     public function callback(WP_REST_Request $req): WP_REST_Response|WP_Error
     {
-        $code  = (string) $req->get_param('code');
-        $state = (string) $req->get_param('state');
+        $claim = (string) $req->get_param('sb_claim');
+        $n     = (string) $req->get_param('n');
 
-        if ($code === '' || $this->state->verify($state) === null) {
+        if ($claim === '' || $this->state->verify($n) === null) {
             return new WP_Error('invalid_state', __('Invalid or expired OAuth state.', 'slashbooking'), ['status' => 403]);
         }
 
         try {
-            $tokens = $this->oauthClient->exchangeCode($code);
+            $tokens = $this->broker->claim($claim);
+        } catch (BrokerUnavailable $e) {
+            return new WP_Error('broker_unavailable', $e->getMessage(), ['status' => 503]);
         } catch (OAuthFailure $e) {
             return new WP_Error('oauth_failed', $e->getMessage(), ['status' => 502]);
         }
 
-        if (!isset($tokens['refresh_token'])) {
-            return new WP_Error(
-                'missing_refresh_token',
-                __('Google did not return a refresh token. Revoke access at myaccount.google.com and retry with prompt=consent.', 'slashbooking'),
-                ['status' => 502]
-            );
-        }
-
         $existing  = $this->accounts->findSingle();
         $now       = new DateTimeImmutable('now', new DateTimeZone('UTC'));
-        $expiresAt = $now->modify('+' . (int) $tokens['expires_in'] . ' seconds');
+        $expiresAt = $now->modify('+' . $tokens['expires_in'] . ' seconds');
 
-        $refreshEnc = $this->encryption->encrypt((string) $tokens['refresh_token']);
-        $accessEnc  = $this->encryption->encrypt((string) $tokens['access_token']);
+        $refreshEnc = $this->encryption->encrypt($tokens['refresh_token']);
+        $accessEnc  = $this->encryption->encrypt($tokens['access_token']);
 
         $label      = $existing?->label() ?? 'Commercial';
-        $calendarId = $existing?->calendarId() ?? 'primary';
+        $calendarId = $tokens['calendar_id'] !== '' ? $tokens['calendar_id'] : ($existing?->calendarId() ?? 'primary');
 
         $account = GoogleAccount::connect(
             label: $label,
@@ -158,6 +170,7 @@ final class AdminGoogleController
         if ($existing !== null && $existing->id() !== null) {
             $account->assignId($existing->id());
         }
+        $account->clearReconnectRequired();
 
         $this->accounts->save($account);
 
