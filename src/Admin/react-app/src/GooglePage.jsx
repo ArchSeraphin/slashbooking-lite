@@ -14,8 +14,8 @@ import {
 	fetchGoogleStatus,
 	startGoogleOAuth,
 	disconnectGoogle,
-	fetchGoogleSettings,
-	saveGoogleSettings,
+	fetchLicenseStatus,
+	saveLicense,
 	fetchGoogleDiagnostics,
 	startWatch,
 	stopWatch,
@@ -23,12 +23,12 @@ import {
 	fetchGoogleCalendars,
 	setGoogleCalendar,
 } from './api';
-import GoogleSetupWizard from './GoogleSetupWizard';
 
 export default function GooglePage() {
 	const [ status, setStatus ] = useState( null );
 	const [ settings, setSettings ] = useState( null );
-	const [ secret, setSecret ] = useState( '' );
+	const [ licenseKey, setLicenseKey ] = useState( '' );
+	const [ licenseMsg, setLicenseMsg ] = useState( '' );
 	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ] = useState( null );
 	const [ diag, setDiag ] = useState( null );
@@ -45,7 +45,7 @@ export default function GooglePage() {
 		try {
 			const [ st, sg ] = await Promise.all( [
 				fetchGoogleStatus(),
-				fetchGoogleSettings(),
+				fetchLicenseStatus(),
 			] );
 			setStatus( st );
 			setSettings( sg );
@@ -146,16 +146,22 @@ export default function GooglePage() {
 		}
 	};
 
-	const saveSettings = async () => {
+	const onSaveLicense = async () => {
+		setLicenseMsg( '' );
 		try {
-			await saveGoogleSettings( {
-				clientId: settings.client_id,
-				clientSecret: secret,
-			} );
-			setSecret( '' );
+			const res = await saveLicense( licenseKey );
+			setLicenseKey( '' );
+			setSettings( res );
+			setLicenseMsg(
+				res.license_status === 'valid'
+					? __( 'Licence valide ✓', 'slashbooking' )
+					: __( 'Licence invalide ou expirée.', 'slashbooking' )
+			);
 			await reload();
 		} catch ( e ) {
-			setError( e.message ?? String( e ) );
+			setLicenseMsg(
+				__( 'Erreur : ', 'slashbooking' ) + ( e.message ?? String( e ) )
+			);
 		}
 	};
 
@@ -240,66 +246,60 @@ export default function GooglePage() {
 				</Notice>
 			) }
 
-			{ /* Show the guided setup only while the account is NOT connected. */ }
-			{ settings && ! status?.connected && (
-				<GoogleSetupWizard redirectUri={ settings.redirect_uri } />
-			) }
-
 			{ settings && (
 				<Card>
 					<CardHeader>
-						<h2>
-							{ __( 'Configuration OAuth', 'slashbooking' ) }
-						</h2>
+						<h2>{ __( 'Licence SlashBooking', 'slashbooking' ) }</h2>
 					</CardHeader>
 					<CardBody>
-						<p>
-							<strong>
-								{ __(
-									'URI de redirection (à coller dans Google Cloud Console) :',
-									'slashbooking'
-								) }
-							</strong>
+						<p style={ { marginTop: 0, color: '#475569' } }>
+							{ __(
+								'La connexion Google Calendar se fait en 1 clic via le service SlashBooking. Aucun projet Google Cloud à créer. Saisis ta clé de licence pour activer la connexion.',
+								'slashbooking'
+							) }
 						</p>
-						<div className="sb-redirect-uri-box">
-							<code>{ settings.redirect_uri }</code>
-							<Button
-								variant="secondary"
-								size="small"
-								onClick={ async () => {
-									try {
-										await navigator.clipboard.writeText( settings.redirect_uri );
-										setPanelMsg( __( '✓ URI copiée dans le presse-papiers.', 'slashbooking' ) );
-										setTimeout( () => setPanelMsg( '' ), 1500 );
-									} catch ( e ) { /* noop */ }
-								} }
-							>
-								📋 { __( 'Copier', 'slashbooking' ) }
-							</Button>
-						</div>
-						<TextControl
-							label={ __( 'Client ID', 'slashbooking' ) }
-							value={ settings.client_id }
-							onChange={ ( v ) =>
-								setSettings( { ...settings, client_id: v } )
-							}
-						/>
+						<p>
+							<strong>{ __( 'Statut : ', 'slashbooking' ) }</strong>
+							{ settings.license_status === 'valid' &&
+								__( 'Licence valide ✓', 'slashbooking' ) }
+							{ settings.license_status === 'invalid' &&
+								__( 'Licence invalide ou expirée', 'slashbooking' ) }
+							{ settings.license_status === 'absent' &&
+								__( 'Aucune licence', 'slashbooking' ) }
+							{ settings.license_status === 'unknown' &&
+								__( 'Licence non vérifiée', 'slashbooking' ) }
+							{ settings.plan && ` — ${ settings.plan }` }
+						</p>
 						<TextControl
 							label={
-								settings.has_client_secret
-									? __(
-											'Client Secret (déjà défini — saisir pour remplacer)',
-											'slashbooking'
-									  )
-									: __( 'Client Secret', 'slashbooking' )
+								settings.has_license
+									? __( 'Clé de licence (saisir pour remplacer)', 'slashbooking' )
+									: __( 'Clé de licence', 'slashbooking' )
 							}
-							type="password"
-							value={ secret }
-							onChange={ setSecret }
+							value={ licenseKey }
+							onChange={ setLicenseKey }
 						/>
-						<Button variant="primary" onClick={ saveSettings }>
-							{ __( 'Enregistrer', 'slashbooking' ) }
+						<Button
+							variant="primary"
+							onClick={ onSaveLicense }
+							disabled={ ! licenseKey }
+						>
+							{ __( 'Enregistrer la licence', 'slashbooking' ) }
 						</Button>
+						{ licenseMsg && (
+							<Notice
+								status={
+									licenseMsg.startsWith( 'Erreur' ) ||
+									settings.license_status === 'invalid'
+										? 'error'
+										: 'success'
+								}
+								isDismissible={ false }
+								style={ { marginTop: '12px' } }
+							>
+								{ licenseMsg }
+							</Notice>
+						) }
 					</CardBody>
 				</Card>
 			) }
@@ -462,17 +462,17 @@ export default function GooglePage() {
 									'slashbooking'
 								) }
 							</p>
-							{ ( ! settings?.client_id || ! settings?.has_client_secret ) ? (
+							{ settings?.license_status !== 'valid' ? (
 								<>
 									<Notice status="warning" isDismissible={ false }>
 										{ __(
-											'Renseigne le Client ID + Secret dans la carte « Configuration OAuth » ci-dessus avant de te connecter.',
+											'Saisis une clé de licence valide dans la carte « Licence SlashBooking » ci-dessus avant de te connecter.',
 											'slashbooking'
 										) }
 									</Notice>
 									<Button variant="primary" disabled style={ { marginTop: 10 } }>
 										{ __(
-											'Connecter mon Google Calendar',
+											'Connecter Google Calendar',
 											'slashbooking'
 										) }
 									</Button>
@@ -480,7 +480,7 @@ export default function GooglePage() {
 							) : (
 								<Button variant="primary" onClick={ connect }>
 									{ __(
-										'Connecter mon Google Calendar',
+										'Connecter Google Calendar',
 										'slashbooking'
 									) }
 								</Button>
