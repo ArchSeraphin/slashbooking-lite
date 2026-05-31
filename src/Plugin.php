@@ -168,6 +168,25 @@ final class Plugin
 
         // ----- Google sync (Plan 3) -----
         $accounts    = new Persistence\GoogleAccountRepository($wpdb);
+
+        (new Migration\BrokerMigration($accounts))->run();
+        add_action('admin_notices', static function () use ($accounts): void {
+            if (!current_user_can('manage_options')) {
+                return;
+            }
+            $account = $accounts->findSingle();
+            if ($account === null || !$account->reconnectRequired()) {
+                return;
+            }
+            $url = admin_url('admin.php?page=slashbooking#/google');
+            printf(
+                '<div class="notice notice-warning"><p><strong>SlashBooking :</strong> %s <a href="%s">%s</a></p></div>',
+                esc_html__('La connexion Google Calendar doit être renouvelée (1 clic).', 'slashbooking'),
+                esc_url($url),
+                esc_html__('Reconnecter maintenant', 'slashbooking')
+            );
+        });
+
         $syncLogRepo = new Persistence\SyncLogRepository($wpdb);
         $keyResolver = new Google\EncryptionKeyResolver();
         $encryption  = new Google\Encryption($keyResolver->resolve());
