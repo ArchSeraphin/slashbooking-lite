@@ -157,12 +157,11 @@ final class RestRouter
         $keyResolver = new \Slash\Booking\Google\EncryptionKeyResolver();
         $encryption  = new \Slash\Booking\Google\Encryption($keyResolver->resolve());
         $oauthState  = new \Slash\Booking\Google\OAuthState((string) get_option('sb_decision_secret'));
-        $oauthClient = new \Slash\Booking\Google\OAuthClient(
-            clientId: (string) get_option('sb_google_client_id', ''),
-            clientSecret: (string) get_option('sb_google_client_secret', ''),
-            redirectUri: rest_url(\Slash\Booking\Plugin::REST_NAMESPACE . '/admin/google/oauth/callback'),
+        $broker      = new \Slash\Booking\Google\BrokerClient(
+            baseUrl: \Slash\Booking\Config::brokerUrl(),
+            license: (string) get_option('sb_license_key', ''),
         );
-        $clientBuilder = new \Slash\Booking\Google\GoogleClientBuilder($encryption, $accounts);
+        $clientBuilder = new \Slash\Booking\Google\GoogleClientBuilder($encryption, $accounts, $broker);
         $watchMgr      = new \Slash\Booking\Google\WatchChannelManager(
             persist: fn (\Slash\Booking\Domain\GoogleAccount $a) => $accounts->save($a),
             ttlSeconds: 604_800,
@@ -178,7 +177,7 @@ final class RestRouter
 
         (new AdminGoogleController(
             $accounts,
-            $oauthClient,
+            $broker,
             $oauthState,
             $encryption,
             $watchMgr,
@@ -189,7 +188,7 @@ final class RestRouter
         $syncLog = new \Slash\Booking\Persistence\SyncLogRepository($wpdb);
         (new AdminSyncLogController($syncLog))->registerRoutes();
 
-        (new AdminGoogleSettingsController())->registerRoutes();
+        (new AdminGoogleSettingsController($broker))->registerRoutes();
 
         // Plan 4 webhook — TODO Task 16: full wiring review
         (new GoogleWebhookController(

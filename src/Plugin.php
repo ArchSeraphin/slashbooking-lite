@@ -182,7 +182,11 @@ final class Plugin
             purge: fn (\DateTimeImmutable $cutoff): int => $syncLogRepo->purgeOlderThan($cutoff),
         ))->register();
 
-        $clientBuilder = new Google\GoogleClientBuilder($encryption, $accounts);
+        $broker        = new Google\BrokerClient(
+            baseUrl: Config::brokerUrl(),
+            license: (string) get_option('sb_license_key', ''),
+        );
+        $clientBuilder = new Google\GoogleClientBuilder($encryption, $accounts, $broker);
 
         // Register Action Scheduler handler.
         add_action(Google\PushScheduler::HOOK, function (int $bookingId, string $action) use (
