@@ -54,15 +54,15 @@ export async function disconnectGoogle() {
 	} );
 }
 
-export async function fetchGoogleSettings() {
+export async function fetchLicenseStatus() {
 	return apiFetch( { path: 'admin/google/settings' } );
 }
 
-export async function saveGoogleSettings( { clientId, clientSecret } ) {
+export async function saveLicense( licenseKey ) {
 	return apiFetch( {
 		path: 'admin/google/settings',
 		method: 'POST',
-		data: { client_id: clientId, client_secret: clientSecret },
+		data: { license_key: licenseKey },
 	} );
 }
 
