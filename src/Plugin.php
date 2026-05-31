@@ -402,6 +402,7 @@ final class Plugin
             });
         }
 
+        (new Admin\TurnstileNotice())->register();
         (new Admin\AdminMenu())->register();
         (new Admin\Assets($this))->register();
         (new Admin\DashboardWidget($bookings, $services))->register();
