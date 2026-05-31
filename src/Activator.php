@@ -88,6 +88,11 @@ final class Activator
         return (new \DateTimeImmutable('first day of next month 03:30', $tz))->getTimestamp();
     }
 
+    /**
+     * Root HMAC secret. Both DecisionTokenSigner and Google\OAuthState derive
+     * DISTINCT context subkeys from this single value (HKDF-style domain
+     * separation), so do NOT add a second option — one stored secret is correct.
+     */
     public static function ensureDecisionSecret(): void
     {
         $existing = get_option('sb_decision_secret');
