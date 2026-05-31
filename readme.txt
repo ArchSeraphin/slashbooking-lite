@@ -4,7 +4,7 @@ Tags: booking, appointment, calendar, google-calendar, calendly
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 1.0.25
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,9 @@ Oui. Les schémas de tables sont versionnés et migrés automatiquement, les opt
 
 == Changelog ==
 
+= 1.1.0 =
+*Connexion Google en 1 clic via le service SlashBooking.* Plus besoin de créer un projet Google Cloud ni de coller un Client ID/Secret : saisis ta clé de licence, clique « Connecter Google Calendar », c'est tout. Le plugin ne contient plus aucun secret Google. **Migration :** les connexions Google existantes doivent être renouvelées une fois (1 clic) après la mise à jour — une notice te le rappelle. Tes RDV et réglages sont conservés.
+
 = 1.0.25 =
 *Sorti le 2026-05-31.* **Durcissement sécurité (audit).** Rate limit anti-abus du formulaire (fail-closed + plafond global, clés IPv6 /64), notice quand Turnstile n'est pas configuré, webhook Google durci (expiration + resource id en temps constant + anti-rafale), gestion réservée aux administrateurs par défaut (filtre `slashbooking_manage_roles`, révocation de l'éditeur à la mise à jour), liens de décision/annulation passés en page de confirmation (le `GET` n'agit plus, seul le `POST` agit), suppression d'une fuite de message d'exception, clés HMAC séparées par contexte, et notice « clé de chiffrement en base » escaladée. ⚠️ Les liens de décision/annulation déjà envoyés par e-mail (validité 72 h) devront être régénérés après la mise à jour.
 
@@ -129,6 +132,9 @@ Oui. Les schémas de tables sont versionnés et migrés automatiquement, les opt
 Voir le [CHANGELOG complet](https://github.com/ArchSeraphin/slashbooking/blob/main/CHANGELOG.md).
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Nouvelle connexion Google en 1 clic (licence SlashBooking). Après mise à jour, reconnecte Google Calendar une fois depuis l'onglet Google (tes données sont conservées).
 
 = 1.0.25 =
 Durcissement sécurité (anti-abus booking, webhook Google, liens de confirmation GET→POST, clés HMAC séparées par contexte, accès admin par défaut). ⚠️ Les liens d'annulation/décision déjà envoyés par e-mail (validité 72 h) ne fonctionneront plus après la mise à jour — ils sont régénérés automatiquement pour les nouveaux envois. Pas de reconnexion Google requise.

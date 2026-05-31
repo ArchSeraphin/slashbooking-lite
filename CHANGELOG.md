@@ -6,6 +6,30 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.1.0] — 2026-05-31
+
+### Added
+
+- **Connexion Google Calendar en 1 clic via le broker SlashBooking.** Le plugin ne contient plus de `client_id`/`client_secret` Google. Nouveau `BrokerClient` (start/claim/refresh/validate) parlant en serveur-à-serveur au broker `https://slashbox.fr/slashbooking/api` (base configurable via la constante `SB_BROKER_URL` / le filtre `sb_broker_url`). La connexion est conditionnée à une clé de licence (`sb_license_key`) validée par le broker. Nonce anti-CSRF `n` réutilisant `OAuthState`. Claim one-time : aucun token ne transite par une URL navigateur.
+
+### Changed
+
+- `AdminGoogleSettingsController` gère désormais la licence (`{has_license, license_status, plan, expires}`) au lieu du Client ID/Secret Google.
+- `GoogleClientBuilder` rafraîchit l'access token via le broker ; ne pose plus de `client_secret` sur le client Google (les appels Calendar restent directs en Bearer). Gestion `BrokerUnavailable` (retry, tokens conservés) et `TokenRevoked` (compte marqué « reconnexion requise », données conservées).
+- UI admin : carte « Licence SlashBooking » + bouton « Connecter Google Calendar » actif uniquement avec une licence valide. Assistant Google Cloud supprimé.
+
+### Removed
+
+- `src/Google/OAuthClient.php` (échange/refresh/authUrl désormais côté broker).
+- `GoogleSetupWizard.jsx` (plus de projet Google Cloud à configurer).
+- Options `sb_google_client_id` / `sb_google_client_secret` (supprimées à la migration).
+
+### Migration
+
+- Les `refresh_token` existants (émis par le projet GCP du client) ne sont pas rafraîchissables par le broker → les connexions Google existantes cassent à la mise à jour. `BrokerMigration` supprime les anciennes options, marque le compte « reconnexion requise » (données conservées) et affiche une notice admin « Reconnectez Google Calendar (1 clic) ».
+
+---
+
 ## [1.0.25] — 2026-05-31
 
 ### Security
