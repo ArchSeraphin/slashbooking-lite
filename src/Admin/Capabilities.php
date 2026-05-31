@@ -9,40 +9,51 @@ final class Capabilities
     public const VIEW   = 'slashbooking_view';
 
     /**
-     * Roles that get full plugin access. Editor is included because in the
-     * typical SMB usage scenario, the WP "Editor" role is held by the office
-     * person who actually handles bookings — not the dev / IT admin.
+     * Default role granted full plugin access. Administrator only: managing
+     * Google OAuth credentials and viewing all customer PII is an admin task.
+     * Operators who delegate booking management can opt extra roles in via the
+     * 'slashbooking_manage_roles' filter.
      */
-    private const GRANTED_ROLES = ['administrator', 'editor'];
+    private const DEFAULT_ROLES = ['administrator'];
+
+    /**
+     * Roles that revision <=2 granted but the current layout revokes.
+     */
+    private const REVOKED_ON_UPGRADE = ['editor'];
 
     /**
      * Bumped whenever the cap layout changes. {@see syncOnUpgrade()} compares
-     * this against the stored revision to decide whether to re-run install()
-     * on sites that activated under an older revision.
+     * this against the stored revision to decide whether to re-run the migration.
      */
-    private const REVISION = 2;
+    private const REVISION = 3;
     private const REVISION_OPTION = 'slashbooking_caps_revision';
+
+    /**
+     * @return list<string>
+     */
+    private static function grantedRoles(): array
+    {
+        /** @var list<string> $roles */
+        $roles = apply_filters('slashbooking_manage_roles', self::DEFAULT_ROLES);
+        return array_values(array_unique(array_filter($roles, 'is_string')));
+    }
 
     public static function install(): void
     {
-        foreach (self::GRANTED_ROLES as $roleName) {
+        foreach (self::grantedRoles() as $roleName) {
             $role = get_role($roleName);
             if ($role === null) {
                 continue;
             }
-            // add_cap() is idempotent — calling it on a role that already has
-            // the cap is a no-op for the in-memory state. WP_Roles still
-            // writes the option only when the cap value actually changes.
             $role->add_cap(self::MANAGE);
             $role->add_cap(self::VIEW);
         }
     }
 
     /**
-     * Idempotent migration. Grants the current cap layout when the stored
-     * revision is behind {@see self::REVISION}. Designed to be called on every
-     * Plugin::register() — the option read is cheap and the actual install()
-     * call only fires once per revision bump.
+     * Idempotent migration. When the stored revision is behind {@see self::REVISION},
+     * revoke caps from roles dropped by the new layout, then re-grant the current
+     * layout. Designed to be called on every Plugin::register().
      */
     public static function syncOnUpgrade(): void
     {
@@ -50,13 +61,24 @@ final class Capabilities
         if ($stored >= self::REVISION) {
             return;
         }
+
+        foreach (self::REVOKED_ON_UPGRADE as $roleName) {
+            $role = get_role($roleName);
+            if ($role === null) {
+                continue;
+            }
+            $role->remove_cap(self::MANAGE);
+            $role->remove_cap(self::VIEW);
+        }
+
         self::install();
         update_option(self::REVISION_OPTION, self::REVISION, false);
     }
 
     public static function uninstall(): void
     {
-        foreach (self::GRANTED_ROLES as $roleName) {
+        $roles = array_unique(array_merge(self::grantedRoles(), self::REVOKED_ON_UPGRADE));
+        foreach ($roles as $roleName) {
             $role = get_role($roleName);
             if ($role === null) {
                 continue;

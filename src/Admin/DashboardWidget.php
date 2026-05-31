@@ -14,7 +14,8 @@ use DateTimeZone;
  * WP dashboard widget that surfaces what the booking owner actually needs to
  * see when they log in: pending requests awaiting their decision, and the
  * upcoming confirmed schedule for the next 7 days. Visible to anyone with the
- * {@see Capabilities::VIEW} cap (admin + editor by default).
+ * {@see Capabilities::VIEW} cap (administrators by default; extendable via the
+ * 'slashbooking_manage_roles' filter).
  */
 final class DashboardWidget
 {
