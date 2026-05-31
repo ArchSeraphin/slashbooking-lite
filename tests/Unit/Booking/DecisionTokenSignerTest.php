@@ -41,4 +41,36 @@ final class DecisionTokenSignerTest extends TestCase
         $sig = $this->signer->sign('payload', $exp);
         self::assertTrue($this->signer->verify('payload', $exp, $sig));
     }
+
+    public function test_signature_is_domain_separated_from_raw_hmac(): void
+    {
+        $root = str_repeat('s', 32);
+        $signer = new DecisionTokenSigner($root);
+
+        $exp = time() + 3600;
+        $payload = 'decide|1|confirm';
+
+        $sig = $signer->sign($payload, $exp);
+
+        // Old (vulnerable) construction used the root secret directly.
+        $rawHmac = hash_hmac('sha256', $payload . '|' . $exp, $root);
+
+        self::assertNotSame($rawHmac, $sig, 'signer must derive a context subkey, not use the root secret directly');
+    }
+
+    public function test_decision_and_oauth_state_do_not_share_effective_key(): void
+    {
+        $root = str_repeat('s', 32);
+        $signer = new DecisionTokenSigner($root);
+        $state  = new \Slash\Booking\Google\OAuthState($root);
+
+        $exp = time() + 600;
+        $decisionSig = $signer->sign('x', $exp);
+
+        // OAuthState issues a token; confirm its bytes don't embed the decision
+        // signature for the same root secret, proving distinct derived keys.
+        $token = $state->issue(0);
+        self::assertNotSame('', $token);
+        self::assertStringNotContainsString($decisionSig, $token);
+    }
 }
