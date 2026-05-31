@@ -98,6 +98,7 @@ final class Migrator
                 watch_expires_at DATETIME NULL,
                 sync_token VARCHAR(255) NULL,
                 last_full_sync_at DATETIME NULL,
+                reconnect_required TINYINT(1) NOT NULL DEFAULT 0,
                 created_at DATETIME NOT NULL,
                 updated_at DATETIME NOT NULL,
                 PRIMARY KEY (id)

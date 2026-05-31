@@ -69,6 +69,7 @@ final class GoogleAccountRepository
             'watch_expires_at'         => $fmt($a->watchExpiresAt()),
             'sync_token'               => $a->syncToken(),
             'last_full_sync_at'        => $fmt($a->lastFullSyncAt()),
+            'reconnect_required'       => $a->reconnectRequired() ? 1 : 0,
             'created_at'               => $fmt($a->createdAt()),
             'updated_at'               => $fmt($a->updatedAt()),
         ];
