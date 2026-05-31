@@ -48,3 +48,48 @@ if (!class_exists('WP_REST_Response')) {
         }
     }
 }
+
+if (!class_exists('WP_REST_Request')) {
+    class WP_REST_Request
+    {
+        /** @var array<string, mixed> */
+        private array $params = [];
+
+        public function set_param(string $key, mixed $value): void
+        {
+            $this->params[$key] = $value;
+        }
+
+        public function get_param(string $key): mixed
+        {
+            return $this->params[$key] ?? null;
+        }
+    }
+}
+
+if (!class_exists('WP_Error')) {
+    class WP_Error
+    {
+        public function __construct(
+            private string $code = '',
+            private string $message = '',
+            private mixed $data = null
+        ) {
+        }
+
+        public function get_error_code(): string
+        {
+            return $this->code;
+        }
+
+        public function get_error_message(): string
+        {
+            return $this->message;
+        }
+
+        public function get_error_data(): mixed
+        {
+            return $this->data;
+        }
+    }
+}
