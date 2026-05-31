@@ -144,6 +144,26 @@ final class GoogleAccount
         return hash_equals($this->watchTokenSecret, $candidate);
     }
 
+    public function verifyWatchResourceId(string $candidate): bool
+    {
+        if ($this->watchResourceId === null || $candidate === '') {
+            return false;
+        }
+        return hash_equals($this->watchResourceId, $candidate);
+    }
+
+    /**
+     * True when a watch channel is attached and not yet expired.
+     * A null expiry is treated as inactive (fail-closed).
+     */
+    public function watchActive(DateTimeImmutable $now): bool
+    {
+        if ($this->watchExpiresAt === null) {
+            return false;
+        }
+        return $now < $this->watchExpiresAt;
+    }
+
     public function updateSyncToken(string $token): void
     {
         $this->syncToken = $token;
