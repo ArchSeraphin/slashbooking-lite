@@ -392,13 +392,25 @@ final class Plugin
             do_action('sb/google_pull', (int) $account->id());
         });
 
-        // Admin notice if encryption key falls back to option.
+        // Admin notice if encryption key falls back to the database option.
+        // Escalated to notice-error: while the fallback works, the Google tokens
+        // are NOT protected at rest against a DB dump until the constant is set.
         if ($keyResolver->usingFallback()) {
             add_action('admin_notices', function (): void {
                 if (!current_user_can('manage_options')) {
                     return;
                 }
-                echo '<div class="notice notice-warning"><p><strong>SlashBooking :</strong> définissez <code>SLASHBOOKING_ENC_KEY</code> dans <code>wp-config.php</code> pour chiffrer les tokens Google avec une clé hors base.</p></div>';
+                echo '<div class="notice notice-error"><p><strong>SlashBooking — '
+                    . esc_html__('sécurité', 'slashbooking') . ' :</strong> '
+                    . esc_html__(
+                        'la clé de chiffrement est stockée dans la base de données. Les tokens Google ne sont donc PAS protégés en cas de fuite de la base. Définissez la constante',
+                        'slashbooking'
+                    )
+                    . ' <code>SLASHBOOKING_ENC_KEY</code> '
+                    . esc_html__('dans', 'slashbooking')
+                    . ' <code>wp-config.php</code> '
+                    . esc_html__('pour utiliser une clé hors base.', 'slashbooking')
+                    . '</p></div>';
             });
         }
 
