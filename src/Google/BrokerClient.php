@@ -18,7 +18,7 @@ use Slash\Booking\Google\Exceptions\TokenRevoked;
  *
  * @phpstan-type HttpResponse array{status:int, json:mixed}
  */
-final class BrokerClient
+final class BrokerClient implements BrokerGateway
 {
     /**
      * @param Closure(string, array<string, mixed>): array{status:int, json:mixed}|null $httpPost
