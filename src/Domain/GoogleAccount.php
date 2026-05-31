@@ -21,6 +21,7 @@ final class GoogleAccount
         private ?DateTimeImmutable $watchExpiresAt,
         private ?string $syncToken,
         private ?DateTimeImmutable $lastFullSyncAt,
+        private bool $reconnectRequired,
         private DateTimeImmutable $createdAt,
         private DateTimeImmutable $updatedAt,
     ) {
@@ -47,6 +48,7 @@ final class GoogleAccount
             watchExpiresAt: null,
             syncToken: null,
             lastFullSyncAt: null,
+            reconnectRequired: false,
             createdAt: $now,
             updatedAt: $now,
         );
@@ -74,6 +76,7 @@ final class GoogleAccount
             watchExpiresAt: $parse($row['watch_expires_at'] ?? null),
             syncToken: $row['sync_token'] !== null ? (string) $row['sync_token'] : null,
             lastFullSyncAt: $parse($row['last_full_sync_at'] ?? null),
+            reconnectRequired: (int) ($row['reconnect_required'] ?? 0) === 1,
             createdAt: $parse((string) $row['created_at']) ?? new DateTimeImmutable('now', $utc),
             updatedAt: $parse((string) $row['updated_at']) ?? new DateTimeImmutable('now', $utc),
         );
@@ -182,6 +185,18 @@ final class GoogleAccount
         $this->touch();
     }
 
+    public function markReconnectRequired(): void
+    {
+        $this->reconnectRequired = true;
+        $this->touch();
+    }
+
+    public function clearReconnectRequired(): void
+    {
+        $this->reconnectRequired = false;
+        $this->touch();
+    }
+
     public function id(): ?int { return $this->id; }
     public function label(): string { return $this->label; }
     public function calendarId(): string { return $this->calendarId; }
@@ -194,6 +209,7 @@ final class GoogleAccount
     public function watchExpiresAt(): ?DateTimeImmutable { return $this->watchExpiresAt; }
     public function syncToken(): ?string { return $this->syncToken; }
     public function lastFullSyncAt(): ?DateTimeImmutable { return $this->lastFullSyncAt; }
+    public function reconnectRequired(): bool { return $this->reconnectRequired; }
     public function createdAt(): DateTimeImmutable { return $this->createdAt; }
     public function updatedAt(): DateTimeImmutable { return $this->updatedAt; }
 
