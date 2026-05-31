@@ -12,6 +12,7 @@ use Slash\Booking\Persistence\BusyBlockRepository;
 use Slash\Booking\Persistence\ServiceRepository;
 use Slash\Booking\Plugin;
 use Slash\Booking\PublicFront\TurnstileVerifier;
+use Slash\Booking\Support\ClientIp;
 use DateTimeImmutable;
 use DateTimeZone;
 use WP_Error;
@@ -159,7 +160,7 @@ final class PublicBookingController
         if ($this->turnstile !== null && $this->turnstile->isConfigured()) {
             $token = (string) ($params['cf_turnstile_response'] ?? '');
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-            $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+            $ip = ClientIp::fromServer($_SERVER);
             if (!$this->turnstile->verify($token, $ip)) {
                 return new WP_Error(
                     'sb_captcha_failed',
@@ -214,19 +215,56 @@ final class PublicBookingController
         ], 201);
     }
 
+    public const PER_IP_LIMIT_PER_MINUTE = 5;
+    public const GLOBAL_LIMIT_PER_MINUTE = 60;
+    private const RATE_PREFIX            = 'sb_rate_';
+    private const RATE_GLOBAL_KEY        = 'sb_rate_global';
+
+    /**
+     * Pure rate-limit decision. Increments both a per-IP bucket and a global
+     * bucket. Returns true (blocked) when either bucket is exhausted, OR when
+     * there is no usable IP key (fail-CLOSED).
+     *
+     * @param string                      $ipKey  Normalized IP key, '' when unknown.
+     * @param callable(string): int       $getter Transient getter (key => count).
+     * @param callable(string, int): void $setter Transient setter (key, value).
+     */
+    public static function evaluateRateLimit(string $ipKey, callable $getter, callable $setter): bool
+    {
+        // Global bucket is always counted — defeats source-IP rotation.
+        $globalCount = (int) $getter(self::RATE_GLOBAL_KEY);
+        $globalCount++;
+        $setter(self::RATE_GLOBAL_KEY, $globalCount);
+        if ($globalCount > self::GLOBAL_LIMIT_PER_MINUTE) {
+            return true;
+        }
+
+        // No usable IP => fail closed (do not let CLI/edge/misconfig disable throttling).
+        if ($ipKey === '') {
+            return true;
+        }
+
+        $key = self::RATE_PREFIX . md5($ipKey);
+        $count = (int) $getter($key);
+        if ($count >= self::PER_IP_LIMIT_PER_MINUTE) {
+            return true;
+        }
+        $setter($key, $count + 1);
+        return false;
+    }
+
     private function isRateLimited(): bool
     {
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
-        if ($ip === '') {
-            return false;
-        }
-        $key = 'sb_rate_' . md5($ip);
-        $count = (int) get_transient($key);
-        if ($count >= 5) {
-            return true;
-        }
-        set_transient($key, $count + 1, MINUTE_IN_SECONDS);
-        return false;
+        $ip    = ClientIp::fromServer($_SERVER);
+        $ipKey = ClientIp::normalizeForKey($ip);
+
+        return self::evaluateRateLimit(
+            $ipKey,
+            static fn (string $k): int => (int) get_transient($k),
+            static function (string $k, int $v): void {
+                set_transient($k, $v, MINUTE_IN_SECONDS);
+            },
+        );
     }
 }
