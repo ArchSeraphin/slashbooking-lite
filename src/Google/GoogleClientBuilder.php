@@ -7,27 +7,36 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Google\Client as GoogleClient;
 use Slash\Booking\Domain\GoogleAccount;
-use Slash\Booking\Google\Exceptions\OAuthFailure;
+use Slash\Booking\Google\Exceptions\BrokerUnavailable;
+use Slash\Booking\Google\Exceptions\TokenRevoked;
 use Slash\Booking\Persistence\GoogleAccountRepository;
 
 final class GoogleClientBuilder
 {
+    public const SCOPE = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly';
+
     public function __construct(
         private readonly Encryption $encryption,
         private readonly GoogleAccountRepository $accounts,
+        private readonly BrokerGateway $broker,
     ) {
     }
 
     public function buildGateway(GoogleAccount $account): CalendarGateway
     {
+        // No client_id / client_secret: the plugin ships no Google credentials.
+        // Calendar API calls are authorized by the Bearer access token only.
         $client = new GoogleClient();
-        $client->setClientId((string) get_option('sb_google_client_id', ''));
-        $client->setClientSecret((string) get_option('sb_google_client_secret', ''));
-        $client->addScope(OAuthClient::SCOPE);
+        $client->addScope(self::SCOPE);
 
         $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
         if ($account->accessTokenExpired($now->modify('+30 seconds'))) {
-            $this->refresh($account, $client);
+            $tokens = $this->refreshAccessToken($account);
+            $client->setAccessToken([
+                'access_token' => $tokens['access_token'],
+                'expires_in'   => $tokens['expires_in'],
+                'created'      => $now->getTimestamp(),
+            ]);
         } else {
             $client->setAccessToken([
                 'access_token' => $this->encryption->decrypt($account->accessTokenEnc()),
@@ -39,29 +48,33 @@ final class GoogleClientBuilder
         return new GoogleApiCalendarGateway($client);
     }
 
-    private function refresh(GoogleAccount $account, GoogleClient $client): void
+    /**
+     * Refresh the access token through the broker, rotate + persist it.
+     *
+     * @return array{access_token:string, expires_in:int}
+     * @throws BrokerUnavailable broker down (retryable) — tokens are kept intact
+     * @throws TokenRevoked      refresh token revoked — account flagged, data kept
+     */
+    public function refreshAccessToken(GoogleAccount $account): array
     {
-        $oauth = new OAuthClient(
-            clientId: (string) get_option('sb_google_client_id', ''),
-            clientSecret: (string) get_option('sb_google_client_secret', ''),
-            redirectUri: '',
-        );
+        $refresh = $this->encryption->decrypt($account->refreshTokenEnc());
+
         try {
-            $refresh = $this->encryption->decrypt($account->refreshTokenEnc());
-            $tokens = $oauth->refreshAccessToken($refresh);
-        } catch (\Throwable $e) {
-            throw new OAuthFailure('Refresh failed: ' . $e->getMessage(), 0, $e);
+            $tokens = $this->broker->refresh($refresh);
+        } catch (BrokerUnavailable $e) {
+            // Retryable: do NOT clear tokens, do NOT persist. Caller will retry.
+            throw $e;
+        } catch (TokenRevoked $e) {
+            $account->markReconnectRequired();
+            $this->accounts->save($account);
+            throw $e;
         }
 
-        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
-        $expiresAt = $now->modify('+' . (int) $tokens['expires_in'] . ' seconds');
-        $account->rotateAccessToken($this->encryption->encrypt((string) $tokens['access_token']), $expiresAt);
+        $now       = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $expiresAt = $now->modify('+' . $tokens['expires_in'] . ' seconds');
+        $account->rotateAccessToken($this->encryption->encrypt($tokens['access_token']), $expiresAt);
         $this->accounts->save($account);
 
-        $client->setAccessToken([
-            'access_token' => (string) $tokens['access_token'],
-            'expires_in'   => (int) $tokens['expires_in'],
-            'created'      => $now->getTimestamp(),
-        ]);
+        return $tokens;
     }
 }
