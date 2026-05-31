@@ -6,6 +6,25 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.0.25] — 2026-05-31
+
+### Security
+
+- **Rate limit du formulaire de réservation** : échoue désormais en mode fermé (`fail-closed`) quand aucune IP client n'est disponible, et ajoute un plafond global par minute en plus du quota par IP ; les clés IPv6 sont réduites au préfixe `/64` pour qu'un attaquant disposant d'un `/64` ne puisse pas générer de nouveaux compteurs.
+- **Notice d'administration** quand le formulaire public n'a pas de clé secrète Cloudflare Turnstile configurée (protection anti-robot désactivée).
+- **Webhook push Google durci** : rejet des canaux expirés/inactifs (ack 200 sans traitement), comparaison à temps constant du `channel-id` et du `X-Goog-Resource-Id`, et regroupement des rafales de notifications en un seul `pull` par fenêtre de 30 s.
+- **Gestion réservée aux administrateurs par défaut** (filtre `slashbooking_manage_roles` pour déléguer à d'autres rôles) ; le rôle éditeur, autorisé par les révisions précédentes, est révoqué à la mise à jour.
+- **Liens de décision/annulation** : affichent une page de confirmation intermédiaire en `GET` et n'effectuent la mutation (confirmer/refuser/annuler) qu'en `POST`. Les préchargeurs de lien et scanners d'e-mail ne peuvent plus déclencher un changement d'état.
+- **Plus de fuite de message d'exception** sur la page de décision : message fixe pour l'utilisateur + log de la cause réelle côté serveur.
+- **Séparation de domaine HMAC** : les jetons de décision et l'état OAuth dérivent désormais des sous-clés distinctes par contexte au lieu d'utiliser directement le secret racine partagé.
+- **Notice « clé de chiffrement en base »** escaladée de `warning` en `error`, précisant que les tokens Google ne sont PAS protégés contre une fuite de la base tant que la constante `SLASHBOOKING_ENC_KEY` n'est pas définie.
+
+### Migration
+
+- Le secret racine `sb_decision_secret` est conservé, mais la dérivation de clé HMAC change : les liens de décision/annulation déjà envoyés par e-mail (validité 72 h) ne seront plus valides après la mise à jour. Ils se régénèrent automatiquement pour les nouveaux e-mails et la fenêtre se résorbe d'elle-même sous 72 h. Aucune reconnexion Google requise (réservé au Plan B / 1.1.0).
+
+---
+
 ## [1.0.24] — 2026-05-26
 
 ### Fixed
