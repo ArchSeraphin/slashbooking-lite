@@ -224,6 +224,11 @@ final class Plugin
             $formatter,
             $clientBuilder
         ): void {
+            // Paid feature: pause outbound WP->Google push when the license is not
+            // valid (downgrade). Data is preserved; push resumes on re-validation.
+            if (!Config::isPaid()) {
+                return;
+            }
             $booking = $bookings->findById($bookingId);
             if ($booking === null) {
                 return;
