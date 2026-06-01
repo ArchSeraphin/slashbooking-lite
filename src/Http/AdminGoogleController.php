@@ -135,10 +135,24 @@ final class AdminGoogleController
 
     public function callback(WP_REST_Request $req): WP_REST_Response|WP_Error
     {
-        $claim = (string) $req->get_param('sb_claim');
-        $n     = (string) $req->get_param('n');
+        $claim   = (string) $req->get_param('sb_claim');
+        $n       = (string) $req->get_param('n');
+        $sbError = (string) $req->get_param('sb_error');
 
-        if ($claim === '' || $this->state->verify($n) === null) {
+        // Anti-CSRF nonce must be valid regardless of outcome.
+        if ($this->state->verify($n) === null) {
+            return new WP_Error('invalid_state', __('Invalid or expired OAuth state.', 'slashbooking'), ['status' => 403]);
+        }
+        // The broker reports OAuth failures via sb_error (and omits sb_claim).
+        // Surface the real reason instead of masking everything as invalid_state.
+        if ($sbError !== '') {
+            return new WP_Error(
+                'broker_oauth_error',
+                sprintf(__('La connexion Google a échoué côté broker (%s).', 'slashbooking'), sanitize_text_field($sbError)),
+                ['status' => 502]
+            );
+        }
+        if ($claim === '') {
             return new WP_Error('invalid_state', __('Invalid or expired OAuth state.', 'slashbooking'), ['status' => 403]);
         }
 

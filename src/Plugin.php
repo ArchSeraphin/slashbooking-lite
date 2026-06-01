@@ -5,7 +5,7 @@ namespace Slash\Booking;
 
 final class Plugin
 {
-    public const VERSION = '1.1.0';
+    public const VERSION = '1.1.1';
     public const TEXT_DOMAIN = 'slashbooking';
     public const DB_VERSION = 2;
     public const REST_NAMESPACE = 'slashbooking/v1';
@@ -100,6 +100,14 @@ final class Plugin
         $this->set(Http\RestRouter::class, $router);
 
         global $wpdb;
+
+        // Run pending schema migrations on every boot, not just on activation:
+        // plugin UPDATES (the 1-click updater) do NOT fire the activation hook,
+        // so without this a client who updates never gets new columns added in a
+        // newer DB_VERSION (e.g. reconnect_required). Migrator self-gates on the
+        // sb_db_version option, so this is a cheap no-op once the schema is current.
+        (new Persistence\Migrator($wpdb))->migrate();
+
         $services = new Persistence\ServiceRepository($wpdb);
         $shortcode = new PublicFront\Shortcode($services);
         $shortcode->register();

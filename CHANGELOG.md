@@ -6,6 +6,15 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.1.1] — 2026-06-01
+
+### Fixed
+
+- **Migrations de schéma appliquées aux mises à jour, pas seulement aux activations.** Le `Migrator` tourne désormais au boot (auto-gated par l'option `sb_db_version`) : une mise à jour 1-clic depuis une version antérieure ajoute bien les nouvelles colonnes (ex. `reconnect_required`). Sans ça, la connexion Google échouait après une mise à jour faite sans réactivation manuelle du plugin.
+- **Le callback OAuth admin remonte la vraie erreur du broker** (`sb_error`, ex. `google_error`) au lieu de tout masquer en « invalid_state ».
+
+---
+
 ## [1.1.0] — 2026-05-31
 
 ### Added
