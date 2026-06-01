@@ -6,6 +6,7 @@ namespace Slash\Booking\Notifications;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Slash\Booking\Config;
 use Slash\Booking\Persistence\BookingRepository;
 
 final class ReminderScheduler
@@ -23,6 +24,11 @@ final class ReminderScheduler
 
     public function run(): void
     {
+        // Paid feature: no automatic J-1 reminders in Free.
+        if (!Config::isPaid()) {
+            return;
+        }
+
         $now   = new DateTimeImmutable('now', new DateTimeZone('UTC'));
         $start = $now->modify('+23 hours');
         $end   = $now->modify('+25 hours');
