@@ -10,7 +10,7 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ### Added
 
-- **Connexion Google Calendar en 1 clic via le broker SlashBooking.** Le plugin ne contient plus de `client_id`/`client_secret` Google. Nouveau `BrokerClient` (start/claim/refresh/validate) parlant en serveur-à-serveur au broker `https://slashbox.fr/slashbooking/api` (base configurable via la constante `SB_BROKER_URL` / le filtre `sb_broker_url`). La connexion est conditionnée à une clé de licence (`sb_license_key`) validée par le broker. Nonce anti-CSRF `n` réutilisant `OAuthState`. Claim one-time : aucun token ne transite par une URL navigateur.
+- **Connexion Google Calendar en 1 clic via le broker SlashBooking.** Le plugin ne contient plus de `client_id`/`client_secret` Google. Nouveau `BrokerClient` (start/claim/refresh/validate) parlant en serveur-à-serveur au broker `https://broker.slashbox.fr` (base configurable via le filtre `sb_broker_url`). La connexion est conditionnée à une clé de licence (`sb_license_key`) validée par le broker. Nonce anti-CSRF `n` réutilisant `OAuthState`. Claim one-time : aucun token ne transite par une URL navigateur.
 
 ### Changed
 

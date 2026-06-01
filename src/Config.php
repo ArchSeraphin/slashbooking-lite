@@ -9,7 +9,7 @@ namespace Slash\Booking;
 final class Config
 {
     /** Default SlashBooking broker base URL (no trailing slash). */
-    public const BROKER_URL_DEFAULT = 'https://slashbox.fr/slashbooking/api';
+    public const BROKER_URL_DEFAULT = 'https://broker.slashbox.fr';
 
     /**
      * Resolve the broker base URL. Overridable via the 'sb_broker_url' filter.

@@ -11,7 +11,7 @@ final class ConfigTest extends TestCase
     public function test_default_broker_url(): void
     {
         $GLOBALS['__sb_filter'] = null;
-        self::assertSame('https://slashbox.fr/slashbooking/api', Config::brokerUrl());
+        self::assertSame('https://broker.slashbox.fr', Config::brokerUrl());
     }
 
     public function test_filter_overrides_broker_url(): void
