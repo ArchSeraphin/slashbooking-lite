@@ -347,6 +347,11 @@ final class Plugin
             $buildSyncEngine,
             $syncLogRepo
         ): void {
+            // Paid feature: pause all Google sync when the license is not valid
+            // (downgrade). Data is preserved; sync resumes on re-validation.
+            if (!Config::isPaid()) {
+                return;
+            }
             $job = new Google\PullEventJob(
                 findAccount: fn (int $id) => $accounts->findById($id),
                 buildGateway: fn (Domain\GoogleAccount $a) => $clientBuilder->buildGateway($a),
@@ -452,6 +457,9 @@ final class Plugin
 
         if (defined('WP_CLI') && WP_CLI) {
             $pullNow = static function (Domain\GoogleAccount $account) use ($clientBuilder, $buildSyncEngine): Google\PullResult {
+                if (!Config::isPaid()) {
+                    return new Google\PullResult();
+                }
                 $gateway = $clientBuilder->buildGateway($account);
                 return $buildSyncEngine()->pull($account, $gateway);
             };
