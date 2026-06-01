@@ -5,6 +5,7 @@ import { listMailTemplates } from './api';
 import TemplateEditor from './TemplateEditor';
 import EmailSettings from './EmailSettings';
 import FormSettings from './FormSettings';
+import PaidLock from './PaidLock';
 
 const EVENT_LABELS = {
 	'booking.pending.client'   : 'Demande reçue (client)',
@@ -16,6 +17,7 @@ const EVENT_LABELS = {
 };
 
 export default function TemplatesPage() {
+	const isPaid = window.SlashBooking?.isPaid ?? false;
 	const [ items, setItems ] = useState( null );
 	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ] = useState( null );
@@ -38,7 +40,7 @@ export default function TemplatesPage() {
 		reload();
 	}, [] );
 
-	if ( selected ) {
+	if ( selected && isPaid ) {
 		return (
 			<TemplateEditor
 				eventKey={ selected }
@@ -55,6 +57,13 @@ export default function TemplatesPage() {
 			<EmailSettings />
 			<FormSettings />
 
+			<PaidLock
+				locked={ ! isPaid }
+				message={ __(
+					'La personnalisation des e-mails est disponible en version payante.',
+					'slashbooking'
+				) }
+			>
 			<Card>
 				<CardHeader>
 					<h2>{ __( 'Templates e-mail', 'slashbooking' ) }</h2>
@@ -115,6 +124,7 @@ export default function TemplatesPage() {
 					) }
 				</CardBody>
 			</Card>
+			</PaidLock>
 		</div>
 	);
 }
