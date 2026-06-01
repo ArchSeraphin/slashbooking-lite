@@ -20,4 +20,13 @@ final class Config
         $url = (string) apply_filters('sb_broker_url', self::BROKER_URL_DEFAULT);
         return rtrim($url, '/');
     }
+
+    /**
+     * True when the install holds a valid (Paid) SlashBooking license.
+     * Single source of truth for Free vs Paid feature gating.
+     */
+    public static function isPaid(): bool
+    {
+        return (string) get_option('sb_license_status', 'absent') === 'valid';
+    }
 }
