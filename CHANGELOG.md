@@ -6,6 +6,19 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.2.0] — 2026-06-01
+
+### Added
+
+- **Paliers Free / Payant.** Un palier gratuit et un palier payant (licence valide). Le palier payant débloque : synchronisation Google Calendar, personnalisation des modèles d'e-mail, rappels automatiques J-1. Source de vérité unique `Config::isPaid()` (= `sb_license_status === 'valid'`).
+
+### Changed
+
+- La synchronisation Google se met en pause si la licence n'est plus valide (downgrade) — données conservées, reprise automatique à la re-validation.
+- L'édition/restauration/test des modèles d'e-mail exige une licence valide (les modèles par défaut restent utilisés en Free). Les routes mail-templates appliquent le verrou côté serveur ; la SPA verrouille la section avec un encart « version payante ».
+
+---
+
 ## [1.1.1] — 2026-06-01
 
 ### Fixed

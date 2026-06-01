@@ -4,7 +4,7 @@ Tags: booking, appointment, calendar, google-calendar, calendly
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,9 @@ Les chaînes du plugin sont localisables (text domain `slashbooking`). Le fronte
 Oui. Les schémas de tables sont versionnés et migrés automatiquement, les options sont préservées, et le plugin teste sur les 3 versions de PHP actives (8.1, 8.2, 8.3) à chaque release.
 
 == Changelog ==
+
+= 1.2.0 =
+*Versions Free et Payante.* La version gratuite couvre la prise de RDV et les e-mails transactionnels (modèles par défaut). La version payante (clé de licence valide) débloque la synchronisation Google Calendar, la personnalisation des e-mails et les rappels automatiques J-1.
 
 = 1.1.1 =
 *Correctif de mise à jour.* Les nouvelles colonnes de base de données sont désormais appliquées automatiquement lors d'une mise à jour 1-clic (avant, elles ne l'étaient qu'à la réactivation manuelle du plugin) — ce qui pouvait empêcher la connexion Google après une mise à jour depuis une version antérieure. Les échecs de connexion Google affichent aussi leur cause réelle au lieu d'un message générique.
