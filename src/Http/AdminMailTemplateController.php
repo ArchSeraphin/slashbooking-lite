@@ -6,6 +6,7 @@ namespace Slash\Booking\Http;
 use DateTimeImmutable;
 use DateTimeZone;
 use Slash\Booking\Admin\Capabilities;
+use Slash\Booking\Config;
 use Slash\Booking\Notifications\Events\EventKey;
 use Slash\Booking\Notifications\MailDispatcher;
 use Slash\Booking\Notifications\TemplateRenderer;
@@ -27,6 +28,10 @@ final class AdminMailTemplateController
     public function registerRoutes(): void
     {
         $cap = static fn (): bool => current_user_can(Capabilities::MANAGE);
+        // Email template customization is a Paid feature: editing/restoring/testing
+        // requires both the manage capability AND a valid license. Reading (list/get)
+        // and read-only preview stay on the capability check so the locked UI renders.
+        $paidCap = static fn (): bool => current_user_can(Capabilities::MANAGE) && Config::isPaid();
         $ns  = Plugin::REST_NAMESPACE;
 
         register_rest_route($ns, '/admin/mail-templates', [
@@ -34,14 +39,14 @@ final class AdminMailTemplateController
         ]);
         register_rest_route($ns, '/admin/mail-templates/(?P<event_key>[a-z0-9_.]+)', [
             ['methods' => 'GET',    'callback' => [$this, 'get'],     'permission_callback' => $cap],
-            ['methods' => 'POST',   'callback' => [$this, 'save'],    'permission_callback' => $cap],
-            ['methods' => 'DELETE', 'callback' => [$this, 'restore'], 'permission_callback' => $cap],
+            ['methods' => 'POST',   'callback' => [$this, 'save'],    'permission_callback' => $paidCap],
+            ['methods' => 'DELETE', 'callback' => [$this, 'restore'], 'permission_callback' => $paidCap],
         ]);
         register_rest_route($ns, '/admin/mail-templates/(?P<event_key>[a-z0-9_.]+)/preview', [
             ['methods' => 'POST', 'callback' => [$this, 'preview'], 'permission_callback' => $cap],
         ]);
         register_rest_route($ns, '/admin/mail-templates/(?P<event_key>[a-z0-9_.]+)/test', [
-            ['methods' => 'POST', 'callback' => [$this, 'test'], 'permission_callback' => $cap],
+            ['methods' => 'POST', 'callback' => [$this, 'test'], 'permission_callback' => $paidCap],
         ]);
     }
 
