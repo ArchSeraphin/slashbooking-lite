@@ -28,7 +28,13 @@ final class SlotGeneratorTest extends TestCase
     public function test_generates_aligned_slots_for_one_day(): void
     {
         $svc = $this->service(90);
-        $gen = new SlotGenerator(stepMinutes: 15, siteTimezone: 'Europe/Paris');
+        $gen = new SlotGenerator(
+            stepMinutes: 15,
+            siteTimezone: 'Europe/Paris',
+            // Fixed clock so the test is deterministic: without it, slots before the
+            // real "now" get filtered once the wall clock reaches/passes 2026-06-01.
+            now: new DateTimeImmutable('2026-05-31T00:00:00', new DateTimeZone('UTC')),
+        );
         $slots = $gen->generate(
             $svc,
             from: new DateTimeImmutable('2026-06-01', new DateTimeZone('Europe/Paris')),
