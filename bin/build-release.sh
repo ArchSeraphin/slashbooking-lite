@@ -29,8 +29,19 @@ echo "→ composer install --no-dev (production deps)"
 (cd "${ROOT_DIR}" && composer install --no-dev --optimize-autoloader --no-interaction --quiet)
 
 # 3. Build npm assets (production webpack)
-echo "→ npm run build (SPA assets)"
-(cd "${ROOT_DIR}" && npm ci --silent && npm run build --silent)
+# SKIP_NPM_BUILD=1 reuses the already-compiled bundle in assets/dist — use for
+# PHP-only patches, or while the React sources are mid-refactor. Requires a
+# current assets/dist/index.jsx.js to exist.
+if [ "${SKIP_NPM_BUILD:-0}" = "1" ]; then
+    if [ ! -f "${ROOT_DIR}/assets/dist/index.jsx.js" ]; then
+        echo "✗ SKIP_NPM_BUILD=1 but assets/dist/index.jsx.js is missing — cannot reuse bundle." >&2
+        exit 1
+    fi
+    echo "→ SKIP_NPM_BUILD=1: reusing existing assets/dist bundle (no webpack rebuild)"
+else
+    echo "→ npm run build (SPA assets)"
+    (cd "${ROOT_DIR}" && npm ci --silent && npm run build --silent)
+fi
 
 # 4. Run PHP-Scoper to produce scoped src/ + vendor/
 echo "→ php-scoper (prefix Slash\\Booking\\Vendor)"
@@ -67,7 +78,7 @@ cp -R "${SCOPED_DIR}/src" "${STAGING_DIR}/src"
 cp -R "${SCOPED_DIR}/vendor" "${STAGING_DIR}/vendor"
 cp "${ROOT_DIR}/slashbooking.php" "${STAGING_DIR}/slashbooking.php"
 cp "${ROOT_DIR}/uninstall.php" "${STAGING_DIR}/uninstall.php"
-cp "${ROOT_DIR}/README.md" "${STAGING_DIR}/README.md"
+cp "${ROOT_DIR}/README.md" "${STAGING_DIR}/README.md" 2>/dev/null || true
 cp "${ROOT_DIR}/CHANGELOG.md" "${STAGING_DIR}/CHANGELOG.md" 2>/dev/null || true
 cp "${ROOT_DIR}/readme.txt" "${STAGING_DIR}/readme.txt" 2>/dev/null || true
 cp -R "${ROOT_DIR}/assets" "${STAGING_DIR}/assets"

@@ -183,6 +183,7 @@ final class RestRouter
             $watchMgr,
             $clientBuilder,
             $enqueuePull,
+            $busy,
         ))->registerRoutes();
 
         $syncLog = new \Slash\Booking\Persistence\SyncLogRepository($wpdb);

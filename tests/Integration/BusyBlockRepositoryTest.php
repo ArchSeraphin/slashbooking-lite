@@ -87,4 +87,41 @@ final class BusyBlockRepositoryTest extends TestCase
         $repo->deleteBySourceId(1, 'gcal_nonexistent');
         self::assertTrue(true);
     }
+
+    public function test_delete_by_account_removes_only_that_accounts_blocks(): void
+    {
+        global $wpdb;
+        $repo = new BusyBlockRepository($wpdb);
+
+        $utc = new DateTimeZone('UTC');
+        $repo->upsertFromGoogle(BusyBlock::fromGoogleEvent(
+            1,
+            'gcal_d1',
+            new DateTimeImmutable('2026-06-04 09:00:00', $utc),
+            new DateTimeImmutable('2026-06-04 10:00:00', $utc),
+            'acct1-a',
+        ));
+        $repo->upsertFromGoogle(BusyBlock::fromGoogleEvent(
+            1,
+            'gcal_d2',
+            new DateTimeImmutable('2026-06-04 11:00:00', $utc),
+            new DateTimeImmutable('2026-06-04 12:00:00', $utc),
+            'acct1-b',
+        ));
+        $repo->upsertFromGoogle(BusyBlock::fromGoogleEvent(
+            2,
+            'gcal_e1',
+            new DateTimeImmutable('2026-06-04 13:00:00', $utc),
+            new DateTimeImmutable('2026-06-04 14:00:00', $utc),
+            'acct2-a',
+        ));
+
+        $removed = $repo->deleteByAccount(1);
+
+        self::assertSame(2, $removed);
+        self::assertNull($repo->findBySourceId(1, 'gcal_d1'));
+        self::assertNull($repo->findBySourceId(1, 'gcal_d2'));
+        // Other accounts are untouched.
+        self::assertNotNull($repo->findBySourceId(2, 'gcal_e1'));
+    }
 }

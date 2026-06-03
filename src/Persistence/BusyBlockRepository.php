@@ -89,6 +89,22 @@ final class BusyBlockRepository
     }
 
     /**
+     * Purge every Google busy block belonging to an account. Used when the synced
+     * calendar changes: the old calendar's events keep different source_ids, so the
+     * incremental pull can never mark them cancelled — they'd linger and block slots
+     * on days that look empty. Returns the number of rows removed.
+     */
+    public function deleteByAccount(int $googleAccountId): int
+    {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $deleted = $this->wpdb->delete($this->table, [
+            'source'            => 'google',
+            'google_account_id' => $googleAccountId,
+        ]);
+        return is_int($deleted) ? $deleted : 0;
+    }
+
+    /**
      * @param list<array<string, mixed>> $rows
      * @return list<BusyBlock>
      */

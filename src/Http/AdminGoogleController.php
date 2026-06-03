@@ -16,6 +16,7 @@ use Slash\Booking\Google\Exceptions\OAuthFailure;
 use Slash\Booking\Google\GoogleClientBuilder;
 use Slash\Booking\Google\OAuthState;
 use Slash\Booking\Google\WatchChannelManager;
+use Slash\Booking\Persistence\BusyBlockRepository;
 use Slash\Booking\Persistence\GoogleAccountRepository;
 use Slash\Booking\Plugin;
 use WP_Error;
@@ -35,6 +36,7 @@ final class AdminGoogleController
         private readonly WatchChannelManager $watchManager,
         private readonly GoogleClientBuilder $clientBuilder,
         private readonly Closure $enqueuePull,
+        private readonly BusyBlockRepository $busyBlocks,
     ) {
     }
 
@@ -291,8 +293,24 @@ final class AdminGoogleController
             return new WP_Error('no_account', __('Aucun compte Google connecté.', 'slashbooking'), ['status' => 400]);
         }
 
+        $calendarChanged = $account->calendarId() !== $calendarId;
         $account->setCalendarId($calendarId);
+
+        if ($calendarChanged && $account->id() !== null) {
+            // Switching calendars: the previous calendar's busy blocks are now stale
+            // and will never be re-pulled (their event ids belong to the old calendar),
+            // so the incremental sync can't remove them — they'd keep blocking slots on
+            // days that look empty. Purge them and drop the sync token so the next pull
+            // is a clean full sync of the newly selected calendar.
+            $this->busyBlocks->deleteByAccount((int) $account->id());
+            $account->clearSyncToken();
+        }
+
         $this->accounts->save($account);
+
+        if ($calendarChanged && $account->id() !== null) {
+            ($this->enqueuePull)((int) $account->id());
+        }
 
         return new WP_REST_Response([
             'ok'          => true,
