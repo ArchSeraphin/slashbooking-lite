@@ -6,6 +6,14 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.2.1] — 2026-06-03
+
+### Fixed
+
+- **Changer de calendrier Google synchronisé n'orpheline plus les anciens créneaux occupés.** Le `setCalendar()` purge désormais les busy blocks de l'ancien calendrier et relance une synchronisation complète propre. Avant, ces événements restaient en base (`findInRange()` ignore le compte) et bloquaient des créneaux sur des journées en réalité libres — symptôme typique : seuls quelques créneaux en fin de journée apparaissaient disponibles. Nettoyage manuel d'un site déjà touché : `DELETE FROM wp_sb_busy_blocks WHERE source='google'` puis `UPDATE wp_sb_google_accounts SET sync_token = NULL`.
+
+---
+
 ## [1.2.0] — 2026-06-01
 
 ### Added
