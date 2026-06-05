@@ -101,8 +101,7 @@ export default function GooglePage() {
 			await Promise.all( [ reload(), refreshDiag() ] );
 		} catch ( e ) {
 			setCalendarMsg(
-				__( 'Erreur : ', 'slashbooking' ) +
-					( e.message ?? String( e ) )
+				__( 'Erreur : ', 'slashbooking' ) + ( e.message ?? String( e ) )
 			);
 		} finally {
 			setBusy( false );
@@ -182,8 +181,7 @@ export default function GooglePage() {
 			await refreshDiag();
 		} catch ( e ) {
 			setPanelMsg(
-				__( 'Erreur : ', 'slashbooking' ) +
-					( e.message ?? String( e ) )
+				__( 'Erreur : ', 'slashbooking' ) + ( e.message ?? String( e ) )
 			);
 		} finally {
 			setBusy( false );
@@ -205,8 +203,7 @@ export default function GooglePage() {
 			await refreshDiag();
 		} catch ( e ) {
 			setPanelMsg(
-				__( 'Erreur : ', 'slashbooking' ) +
-					( e.message ?? String( e ) )
+				__( 'Erreur : ', 'slashbooking' ) + ( e.message ?? String( e ) )
 			);
 		} finally {
 			setBusy( false );
@@ -226,8 +223,7 @@ export default function GooglePage() {
 			);
 		} catch ( e ) {
 			setPanelMsg(
-				__( 'Erreur : ', 'slashbooking' ) +
-					( e.message ?? String( e ) )
+				__( 'Erreur : ', 'slashbooking' ) + ( e.message ?? String( e ) )
 			);
 		} finally {
 			setBusy( false );
@@ -249,7 +245,9 @@ export default function GooglePage() {
 			{ settings && (
 				<Card>
 					<CardHeader>
-						<h2>{ __( 'Licence SlashBooking', 'slashbooking' ) }</h2>
+						<h2>
+							{ __( 'Licence SlashBooking', 'slashbooking' ) }
+						</h2>
 					</CardHeader>
 					<CardBody>
 						<p style={ { marginTop: 0, color: '#475569' } }>
@@ -259,11 +257,16 @@ export default function GooglePage() {
 							) }
 						</p>
 						<p>
-							<strong>{ __( 'Statut : ', 'slashbooking' ) }</strong>
+							<strong>
+								{ __( 'Statut : ', 'slashbooking' ) }
+							</strong>
 							{ settings.license_status === 'valid' &&
 								__( 'Licence valide ✓', 'slashbooking' ) }
 							{ settings.license_status === 'invalid' &&
-								__( 'Licence invalide ou expirée', 'slashbooking' ) }
+								__(
+									'Licence invalide ou expirée',
+									'slashbooking'
+								) }
 							{ settings.license_status === 'absent' &&
 								__( 'Aucune licence', 'slashbooking' ) }
 							{ settings.license_status === 'unknown' &&
@@ -273,7 +276,10 @@ export default function GooglePage() {
 						<TextControl
 							label={
 								settings.has_license
-									? __( 'Clé de licence (saisir pour remplacer)', 'slashbooking' )
+									? __(
+											'Clé de licence (saisir pour remplacer)',
+											'slashbooking'
+									  )
 									: __( 'Clé de licence', 'slashbooking' )
 							}
 							value={ licenseKey }
@@ -323,20 +329,31 @@ export default function GooglePage() {
 									gap: 6,
 									margin: '8px 0 0',
 									padding: '4px 10px',
-									background: 'var(--sb-c-surface-alt, #f1f5f9)',
+									background:
+										'var(--sb-c-surface-alt, #f1f5f9)',
 									border: '1px solid var(--sb-c-border, #e2e8f0)',
 									borderRadius: 999,
 									fontSize: 12,
 									color: 'var(--sb-c-text-soft, #475569)',
 								} }
 								title={ __(
-									'L\'access token Google a une durée de vie de 1h. SlashBooking utilise le refresh token (longue durée) pour le régénérer automatiquement avant chaque appel API. Aucune action de votre part.',
+									"L'access token Google a une durée de vie de 1h. SlashBooking utilise le refresh token (longue durée) pour le régénérer automatiquement avant chaque appel API. Aucune action de votre part.",
 									'slashbooking'
 								) }
 							>
-								↻ { __( 'Renouvellement auto :', 'slashbooking' ) }{ ' ' }
-								<strong style={ { color: 'var(--sb-c-text, #0f172a)' } }>
-									{ new Date( status.expires_at ).toLocaleString() }
+								↻{ ' ' }
+								{ __(
+									'Renouvellement auto :',
+									'slashbooking'
+								) }{ ' ' }
+								<strong
+									style={ {
+										color: 'var(--sb-c-text, #0f172a)',
+									} }
+								>
+									{ new Date(
+										status.expires_at
+									).toLocaleString() }
 								</strong>
 							</p>
 
@@ -344,10 +361,7 @@ export default function GooglePage() {
 
 							<p>
 								<strong>
-									{ __(
-										'Calendrier cible',
-										'slashbooking'
-									) }
+									{ __( 'Calendrier cible', 'slashbooking' ) }
 								</strong>
 								<br />
 								<span style={ { color: '#6b7280' } }>
@@ -464,13 +478,20 @@ export default function GooglePage() {
 							</p>
 							{ settings?.license_status !== 'valid' ? (
 								<>
-									<Notice status="warning" isDismissible={ false }>
+									<Notice
+										status="warning"
+										isDismissible={ false }
+									>
 										{ __(
 											'Saisis une clé de licence valide dans la carte « Licence SlashBooking » ci-dessus avant de te connecter.',
 											'slashbooking'
 										) }
 									</Notice>
-									<Button variant="primary" disabled style={ { marginTop: 10 } }>
+									<Button
+										variant="primary"
+										disabled
+										style={ { marginTop: 10 } }
+									>
 										{ __(
 											'Connecter Google Calendar',
 											'slashbooking'
@@ -513,10 +534,7 @@ export default function GooglePage() {
 						<>
 							<p>
 								<strong>
-									{ __(
-										'Watch channel :',
-										'slashbooking'
-									) }{ ' ' }
+									{ __( 'Watch channel :', 'slashbooking' ) }{ ' ' }
 								</strong>
 								{ diag.watch?.channelId
 									? diag.watch.channelId +

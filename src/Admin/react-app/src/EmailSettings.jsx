@@ -12,14 +12,14 @@ import { __ } from '@wordpress/i18n';
 import { fetchSettings, saveSettings } from './api';
 
 export default function EmailSettings() {
-	const [ loading, setLoading ]       = useState( true );
-	const [ saving, setSaving ]         = useState( false );
-	const [ error, setError ]           = useState( null );
-	const [ savedMsg, setSavedMsg ]     = useState( '' );
+	const [ loading, setLoading ] = useState( true );
+	const [ saving, setSaving ] = useState( false );
+	const [ error, setError ] = useState( null );
+	const [ savedMsg, setSavedMsg ] = useState( '' );
 	const [ notifEmail, setNotifEmail ] = useState( '' );
-	const [ fallback, setFallback ]     = useState( '' );
-	const [ logo, setLogo ]             = useState( '' );
-	const [ phone, setPhone ]           = useState( '' );
+	const [ fallback, setFallback ] = useState( '' );
+	const [ logo, setLogo ] = useState( '' );
+	const [ phone, setPhone ] = useState( '' );
 
 	const load = async () => {
 		setLoading( true );
@@ -37,7 +37,9 @@ export default function EmailSettings() {
 		}
 	};
 
-	useEffect( () => { load(); }, [] );
+	useEffect( () => {
+		load();
+	}, [] );
 
 	const save = async () => {
 		setSaving( true );
@@ -46,12 +48,10 @@ export default function EmailSettings() {
 		try {
 			await saveSettings( {
 				notificationEmail: notifEmail,
-				companyLogo:       logo,
-				companyPhone:      phone,
+				companyLogo: logo,
+				companyPhone: phone,
 			} );
-			setSavedMsg(
-				__( 'Paramètres enregistrés.', 'slashbooking' )
-			);
+			setSavedMsg( __( 'Paramètres enregistrés.', 'slashbooking' ) );
 			await load();
 		} catch ( e ) {
 			setError( e.message ?? String( e ) );
@@ -86,9 +86,11 @@ export default function EmailSettings() {
 									? __(
 											"Laissé vide : les notifications vont à l'e-mail admin WP (",
 											'slashbooking'
-									  ) + fallback + ').'
+									  ) +
+									  fallback +
+									  ').'
 									: __(
-											'Les notifications de nouvelles demandes iront ici, indépendamment de l\'e-mail admin WP.',
+											"Les notifications de nouvelles demandes iront ici, indépendamment de l'e-mail admin WP.",
 											'slashbooking'
 									  )
 							}
@@ -102,7 +104,10 @@ export default function EmailSettings() {
 						<div style={ { height: 12 } } />
 
 						<TextControl
-							label={ __( 'URL logo société (utilisé par {company_logo})', 'slashbooking' ) }
+							label={ __(
+								'URL logo société (utilisé par {company_logo})',
+								'slashbooking'
+							) }
 							type="url"
 							value={ logo }
 							onChange={ setLogo }
@@ -113,27 +118,58 @@ export default function EmailSettings() {
 						<div style={ { height: 12 } } />
 
 						<TextControl
-							label={ __( 'Téléphone société (utilisé par {company_phone})', 'slashbooking' ) }
+							label={ __(
+								'Téléphone société (utilisé par {company_phone})',
+								'slashbooking'
+							) }
 							value={ phone }
 							onChange={ setPhone }
 							placeholder="+33 1 23 45 67 89"
 							__nextHasNoMarginBottom
 						/>
 
-						<div style={ { marginTop: 16, display: 'flex', gap: 8, alignItems: 'center' } }>
-							<Button variant="primary" onClick={ save } disabled={ saving }>
+						<div
+							style={ {
+								marginTop: 16,
+								display: 'flex',
+								gap: 8,
+								alignItems: 'center',
+							} }
+						>
+							<Button
+								variant="primary"
+								onClick={ save }
+								disabled={ saving }
+							>
 								{ __( 'Enregistrer', 'slashbooking' ) }
 							</Button>
 							{ savedMsg && (
-								<span style={ { color: '#15803d', fontSize: 13 } }>
+								<span
+									style={ { color: '#15803d', fontSize: 13 } }
+								>
 									{ savedMsg }
 								</span>
 							) }
 						</div>
 
-						<p style={ { marginTop: 16, fontSize: 12, color: '#6b7280' } }>
-							{ __( 'Les notifications "nouvelle demande" partiront vers : ', 'slashbooking' ) }
-							<strong>{ effectiveTarget || __( '(aucune adresse définie)', 'slashbooking' ) }</strong>
+						<p
+							style={ {
+								marginTop: 16,
+								fontSize: 12,
+								color: '#6b7280',
+							} }
+						>
+							{ __(
+								'Les notifications "nouvelle demande" partiront vers : ',
+								'slashbooking'
+							) }
+							<strong>
+								{ effectiveTarget ||
+									__(
+										'(aucune adresse définie)',
+										'slashbooking'
+									) }
+							</strong>
 						</p>
 					</>
 				) }

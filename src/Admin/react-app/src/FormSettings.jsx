@@ -1,4 +1,4 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useId, useState } from '@wordpress/element';
 import {
 	Button,
 	Card,
@@ -14,19 +14,19 @@ import { __ } from '@wordpress/i18n';
 import { fetchSettings, saveSettings } from './api';
 
 export default function FormSettings() {
-	const [ loading, setLoading ]           = useState( true );
-	const [ saving, setSaving ]             = useState( false );
-	const [ error, setError ]               = useState( null );
-	const [ savedMsg, setSavedMsg ]         = useState( '' );
-	const [ disclaimer, setDisclaimer ]     = useState( '' );
+	const [ loading, setLoading ] = useState( true );
+	const [ saving, setSaving ] = useState( false );
+	const [ error, setError ] = useState( null );
+	const [ savedMsg, setSavedMsg ] = useState( '' );
+	const [ disclaimer, setDisclaimer ] = useState( '' );
 	const [ primaryColor, setPrimaryColor ] = useState( '' );
-	const [ accentColor, setAccentColor ]   = useState( '' );
-	const [ siteKey, setSiteKey ]           = useState( '' );
-	const [ secretInput, setSecretInput ]   = useState( '' );
-	const [ secretSet, setSecretSet ]       = useState( false );
+	const [ accentColor, setAccentColor ] = useState( '' );
+	const [ siteKey, setSiteKey ] = useState( '' );
+	const [ secretInput, setSecretInput ] = useState( '' );
+	const [ secretSet, setSecretSet ] = useState( false );
 
 	const DEFAULT_PRIMARY = '#2563eb';
-	const DEFAULT_ACCENT  = '#10b981';
+	const DEFAULT_ACCENT = '#10b981';
 
 	const load = async () => {
 		setLoading( true );
@@ -46,7 +46,9 @@ export default function FormSettings() {
 		}
 	};
 
-	useEffect( () => { load(); }, [] );
+	useEffect( () => {
+		load();
+	}, [] );
 
 	const save = async () => {
 		setSaving( true );
@@ -54,9 +56,9 @@ export default function FormSettings() {
 		setError( null );
 		try {
 			const payload = {
-				formDisclaimer:   disclaimer,
+				formDisclaimer: disclaimer,
 				formPrimaryColor: primaryColor,
-				formAccentColor:  accentColor,
+				formAccentColor: accentColor,
 				turnstileSiteKey: siteKey,
 			};
 			// Only send secret if user typed something. Empty input = keep current.
@@ -74,8 +76,14 @@ export default function FormSettings() {
 	};
 
 	const clearSecret = async () => {
-		// eslint-disable-next-line no-alert
-		if ( ! window.confirm( __( 'Effacer la clé secrète Turnstile ? Cela désactivera la vérification anti-robot.', 'slashbooking' ) ) ) {
+		// eslint-disable-next-line no-alert -- confirmation destructive volontaire (admin WP)
+		const ok = window.confirm(
+			__(
+				'Effacer la clé secrète Turnstile ? Cela désactivera la vérification anti-robot.',
+				'slashbooking'
+			)
+		);
+		if ( ! ok ) {
 			return;
 		}
 		setSaving( true );
@@ -92,51 +100,83 @@ export default function FormSettings() {
 		}
 	};
 
-	const turnstileActive = siteKey.trim() !== '' && ( secretSet || secretInput.trim() !== '' );
+	const turnstileActive =
+		siteKey.trim() !== '' && ( secretSet || secretInput.trim() !== '' );
 
 	return (
 		<Card>
 			<CardHeader>
-				<h2>{ __( 'Paramètres du formulaire public', 'slashbooking' ) }</h2>
+				<h2>
+					{ __( 'Paramètres du formulaire public', 'slashbooking' ) }
+				</h2>
 			</CardHeader>
 			<CardBody>
 				{ loading && <Spinner /> }
 				{ error && (
-					<Notice status="error" isDismissible={ false }>{ error }</Notice>
+					<Notice status="error" isDismissible={ false }>
+						{ error }
+					</Notice>
 				) }
 
 				{ ! loading && (
 					<>
 						<TextareaControl
-							label={ __( 'Mention en bas du formulaire', 'slashbooking' ) }
+							label={ __(
+								'Mention en bas du formulaire',
+								'slashbooking'
+							) }
 							help={ __(
-								"Affichée juste au-dessus du bouton « Confirmer la demande ». Laissez vide pour ne rien afficher.",
+								'Affichée juste au-dessus du bouton « Confirmer la demande ». Laissez vide pour ne rien afficher.',
 								'slashbooking'
 							) }
 							value={ disclaimer }
 							onChange={ setDisclaimer }
 							rows={ 3 }
 							placeholder={ __(
-								'Ex : Notre équipe devra approuver la date et l\'heure proposées afin de confirmer votre rendez-vous.',
+								"Ex : Notre équipe devra approuver la date et l'heure proposées afin de confirmer votre rendez-vous.",
 								'slashbooking'
 							) }
 							__nextHasNoMarginBottom
 						/>
 
-						<hr style={ { margin: '24px 0', border: 'none', borderTop: '1px solid #e5e7eb' } } />
+						<hr
+							style={ {
+								margin: '24px 0',
+								border: 'none',
+								borderTop: '1px solid #e5e7eb',
+							} }
+						/>
 
-						<h3 style={ { margin: '0 0 4px', fontSize: 14, fontWeight: 600 } }>
-							{ __( "Couleurs d'accent du formulaire", 'slashbooking' ) }
-						</h3>
-						<p style={ { margin: '0 0 16px', fontSize: 13, color: '#6b7280' } }>
+						<h3
+							style={ {
+								margin: '0 0 4px',
+								fontSize: 14,
+								fontWeight: 600,
+							} }
+						>
 							{ __(
-								"Personnalisez les couleurs du bouton de confirmation, des créneaux sélectionnés et des accents de calendrier. Laissez vide pour utiliser les couleurs par défaut SlashBooking.",
+								"Couleurs d'accent du formulaire",
+								'slashbooking'
+							) }
+						</h3>
+						<p
+							style={ {
+								margin: '0 0 16px',
+								fontSize: 13,
+								color: '#6b7280',
+							} }
+						>
+							{ __(
+								'Personnalisez les couleurs du bouton de confirmation, des créneaux sélectionnés et des accents de calendrier. Laissez vide pour utiliser les couleurs par défaut SlashBooking.',
 								'slashbooking'
 							) }
 						</p>
 
 						<ColorRow
-							label={ __( 'Couleur principale (boutons, sélection)', 'slashbooking' ) }
+							label={ __(
+								'Couleur principale (boutons, sélection)',
+								'slashbooking'
+							) }
 							value={ primaryColor }
 							onChange={ setPrimaryColor }
 							placeholder={ DEFAULT_PRIMARY }
@@ -145,26 +185,59 @@ export default function FormSettings() {
 						<div style={ { height: 12 } } />
 
 						<ColorRow
-							label={ __( "Couleur d'accent (états disponibles, indicateurs)", 'slashbooking' ) }
+							label={ __(
+								"Couleur d'accent (états disponibles, indicateurs)",
+								'slashbooking'
+							) }
 							value={ accentColor }
 							onChange={ setAccentColor }
 							placeholder={ DEFAULT_ACCENT }
 						/>
 
-						<hr style={ { margin: '24px 0', border: 'none', borderTop: '1px solid #e5e7eb' } } />
+						<hr
+							style={ {
+								margin: '24px 0',
+								border: 'none',
+								borderTop: '1px solid #e5e7eb',
+							} }
+						/>
 
-						<h3 style={ { margin: '0 0 4px', fontSize: 14, fontWeight: 600 } }>
-							{ __( 'Cloudflare Turnstile (anti-robot)', 'slashbooking' ) }
+						<h3
+							style={ {
+								margin: '0 0 4px',
+								fontSize: 14,
+								fontWeight: 600,
+							} }
+						>
+							{ __(
+								'Cloudflare Turnstile (anti-robot)',
+								'slashbooking'
+							) }
 						</h3>
-						<p style={ { margin: '0 0 16px', fontSize: 13, color: '#6b7280' } }>
-							{ __( 'Optionnel — protège le formulaire contre les bots. Laissez vide pour désactiver.', 'slashbooking' ) }{ ' ' }
+						<p
+							style={ {
+								margin: '0 0 16px',
+								fontSize: 13,
+								color: '#6b7280',
+							} }
+						>
+							{ __(
+								'Optionnel — protège le formulaire contre les bots. Laissez vide pour désactiver.',
+								'slashbooking'
+							) }{ ' ' }
 							<ExternalLink href="https://dash.cloudflare.com/?to=/:account/turnstile">
-								{ __( 'Créer un site sur Cloudflare Turnstile', 'slashbooking' ) }
+								{ __(
+									'Créer un site sur Cloudflare Turnstile',
+									'slashbooking'
+								) }
 							</ExternalLink>
 						</p>
 
 						<TextControl
-							label={ __( 'Site Key (publique)', 'slashbooking' ) }
+							label={ __(
+								'Site Key (publique)',
+								'slashbooking'
+							) }
 							value={ siteKey }
 							onChange={ setSiteKey }
 							placeholder="0x4AAAAAAA..."
@@ -176,34 +249,71 @@ export default function FormSettings() {
 						<TextControl
 							label={
 								secretSet
-									? __( 'Secret Key — déjà configurée (saisir pour remplacer)', 'slashbooking' )
-									: __( 'Secret Key (privée)', 'slashbooking' )
+									? __(
+											'Secret Key — déjà configurée (saisir pour remplacer)',
+											'slashbooking'
+									  )
+									: __(
+											'Secret Key (privée)',
+											'slashbooking'
+									  )
 							}
 							type="password"
 							value={ secretInput }
 							onChange={ setSecretInput }
-							placeholder={ secretSet ? '••••••••••••••' : '0x4AAAAAAA...' }
+							placeholder={
+								secretSet ? '••••••••••••••' : '0x4AAAAAAA...'
+							}
 							__nextHasNoMarginBottom
 						/>
 
 						{ secretSet && (
 							<p style={ { margin: '6px 0 0' } }>
-								<Button variant="link" isDestructive onClick={ clearSecret } disabled={ saving }>
-									{ __( 'Effacer la clé secrète (= désactiver Turnstile)', 'slashbooking' ) }
+								<Button
+									variant="link"
+									isDestructive
+									onClick={ clearSecret }
+									disabled={ saving }
+								>
+									{ __(
+										'Effacer la clé secrète (= désactiver Turnstile)',
+										'slashbooking'
+									) }
 								</Button>
 							</p>
 						) }
 
-						<div style={ { marginTop: 20, display: 'flex', gap: 8, alignItems: 'center' } }>
-							<Button variant="primary" onClick={ save } disabled={ saving }>
+						<div
+							style={ {
+								marginTop: 20,
+								display: 'flex',
+								gap: 8,
+								alignItems: 'center',
+							} }
+						>
+							<Button
+								variant="primary"
+								onClick={ save }
+								disabled={ saving }
+							>
 								{ __( 'Enregistrer', 'slashbooking' ) }
 							</Button>
 							{ savedMsg && (
-								<span style={ { color: '#15803d', fontSize: 13 } }>{ savedMsg }</span>
+								<span
+									style={ { color: '#15803d', fontSize: 13 } }
+								>
+									{ savedMsg }
+								</span>
 							) }
 						</div>
 
-						<p style={ { marginTop: 16, fontSize: 12, color: '#6b7280' } }>
+						<p
+							style={ {
+								marginTop: 16,
+								fontSize: 12,
+								color: '#6b7280',
+							} }
+						>
 							{ __( 'Statut anti-robot : ', 'slashbooking' ) }
 							<strong>
 								{ turnstileActive
@@ -222,16 +332,39 @@ export default function FormSettings() {
  * A compact color input pair: native <input type="color"> swatch + hex text
  * input + reset button. Two-way bound — typing in either control updates
  * both. Empty value = restore plugin default.
+ * @param {Object}              root0             Props.
+ * @param {string}              root0.label       Libellé affiché au-dessus du couple d'inputs.
+ * @param {string}              root0.value       Hex courant ('' = défaut du plugin).
+ * @param {(v: string) => void} root0.onChange    Reçoit le nouvel hex (ou '').
+ * @param {string}              root0.placeholder Hex par défaut, affiché en placeholder.
  */
 function ColorRow( { label, value, onChange, placeholder } ) {
+	const id = useId();
 	const safe = /^#[0-9a-fA-F]{6}$/.test( value ) ? value : placeholder;
 	return (
 		<div>
-			<label style={ { fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#1e1e1e' } }>
+			<label
+				htmlFor={ id }
+				style={ {
+					fontSize: 11,
+					fontWeight: 500,
+					textTransform: 'uppercase',
+					letterSpacing: '0.04em',
+					color: '#1e1e1e',
+				} }
+			>
 				{ label }
 			</label>
-			<div style={ { display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 } }>
+			<div
+				style={ {
+					display: 'flex',
+					alignItems: 'center',
+					gap: 10,
+					marginTop: 4,
+				} }
+			>
 				<input
+					id={ id }
 					type="color"
 					value={ safe }
 					onChange={ ( e ) => onChange( e.target.value ) }
@@ -255,7 +388,8 @@ function ColorRow( { label, value, onChange, placeholder } ) {
 						padding: '6px 10px',
 						border: '1px solid #c3c4c7',
 						borderRadius: 4,
-						fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+						fontFamily:
+							'ui-monospace, SFMono-Regular, Menlo, monospace',
 						fontSize: 13,
 					} }
 				/>

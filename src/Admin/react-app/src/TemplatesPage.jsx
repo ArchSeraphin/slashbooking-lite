@@ -1,5 +1,12 @@
 import { useEffect, useState } from '@wordpress/element';
-import { Card, CardBody, CardHeader, Notice, Spinner, Button } from '@wordpress/components';
+import {
+	Card,
+	CardBody,
+	CardHeader,
+	Notice,
+	Spinner,
+	Button,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { listMailTemplates } from './api';
 import TemplateEditor from './TemplateEditor';
@@ -8,12 +15,12 @@ import FormSettings from './FormSettings';
 import PaidLock from './PaidLock';
 
 const EVENT_LABELS = {
-	'booking.pending.client'   : 'Demande reçue (client)',
-	'booking.pending.admin'    : 'Nouvelle demande (admin)',
-	'booking.confirmed.client' : 'RDV confirmé (client)',
-	'booking.rejected.client'  : 'RDV refusé (client)',
-	'booking.cancelled.client' : 'Annulation prise en compte (client)',
-	'booking.reminder.client'  : 'Rappel J-1 (client)',
+	'booking.pending.client': 'Demande reçue (client)',
+	'booking.pending.admin': 'Nouvelle demande (admin)',
+	'booking.confirmed.client': 'RDV confirmé (client)',
+	'booking.rejected.client': 'RDV refusé (client)',
+	'booking.cancelled.client': 'Annulation prise en compte (client)',
+	'booking.reminder.client': 'Rappel J-1 (client)',
 };
 
 export default function TemplatesPage() {
@@ -64,66 +71,95 @@ export default function TemplatesPage() {
 					'slashbooking'
 				) }
 			>
-			<Card>
-				<CardHeader>
-					<h2>{ __( 'Templates e-mail', 'slashbooking' ) }</h2>
-				</CardHeader>
-				<CardBody>
-					{ loading && <Spinner /> }
-					{ error && (
-						<Notice status="error" isDismissible={ false }>
-							{ error }
-						</Notice>
-					) }
-					{ items && (
-						<table className="widefat striped sb-templates-table">
-							<thead>
-								<tr>
-									<th>{ __( 'Évènement', 'slashbooking' ) }</th>
-									<th>{ __( 'Sujet', 'slashbooking' ) }</th>
-									<th>{ __( 'État', 'slashbooking' ) }</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								{ items.map( ( t ) => (
-									<tr key={ t.event_key }>
-										<td>
-											<strong>
-												{ EVENT_LABELS[ t.event_key ] || t.event_key }
-											</strong>
-											<br />
-											<code style={ { fontSize: '11px', color: '#666' } }>
-												{ t.event_key }
-											</code>
-										</td>
-										<td>{ t.subject }</td>
-										<td>
-											{ t.is_custom ? (
-												<span className="sb-badge sb-badge-custom">
-													{ __( 'Personnalisé', 'slashbooking' ) }
-												</span>
-											) : (
-												<span className="sb-badge sb-badge-default">
-													{ __( 'Défaut', 'slashbooking' ) }
-												</span>
+				<Card>
+					<CardHeader>
+						<h2>{ __( 'Templates e-mail', 'slashbooking' ) }</h2>
+					</CardHeader>
+					<CardBody>
+						{ loading && <Spinner /> }
+						{ error && (
+							<Notice status="error" isDismissible={ false }>
+								{ error }
+							</Notice>
+						) }
+						{ items && (
+							<table className="widefat striped sb-templates-table">
+								<thead>
+									<tr>
+										<th>
+											{ __(
+												'Évènement',
+												'slashbooking'
 											) }
-										</td>
-										<td>
-											<Button
-												variant="secondary"
-												onClick={ () => setSelected( t.event_key ) }
-											>
-												{ __( 'Modifier', 'slashbooking' ) }
-											</Button>
-										</td>
+										</th>
+										<th>
+											{ __( 'Sujet', 'slashbooking' ) }
+										</th>
+										<th>
+											{ __( 'État', 'slashbooking' ) }
+										</th>
+										<th></th>
 									</tr>
-								) ) }
-							</tbody>
-						</table>
-					) }
-				</CardBody>
-			</Card>
+								</thead>
+								<tbody>
+									{ items.map( ( t ) => (
+										<tr key={ t.event_key }>
+											<td>
+												<strong>
+													{ EVENT_LABELS[
+														t.event_key
+													] || t.event_key }
+												</strong>
+												<br />
+												<code
+													style={ {
+														fontSize: '11px',
+														color: '#666',
+													} }
+												>
+													{ t.event_key }
+												</code>
+											</td>
+											<td>{ t.subject }</td>
+											<td>
+												{ t.is_custom ? (
+													<span className="sb-badge sb-badge-custom">
+														{ __(
+															'Personnalisé',
+															'slashbooking'
+														) }
+													</span>
+												) : (
+													<span className="sb-badge sb-badge-default">
+														{ __(
+															'Défaut',
+															'slashbooking'
+														) }
+													</span>
+												) }
+											</td>
+											<td>
+												<Button
+													variant="secondary"
+													onClick={ () =>
+														setSelected(
+															t.event_key
+														)
+													}
+												>
+													{ __(
+														'Modifier',
+														'slashbooking'
+													) }
+												</Button>
+											</td>
+										</tr>
+									) ) }
+								</tbody>
+							</table>
+						) }
+					</CardBody>
+				</Card>
 			</PaidLock>
 		</div>
 	);

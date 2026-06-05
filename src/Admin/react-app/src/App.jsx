@@ -37,11 +37,20 @@ export default function App() {
 			<TabPanel
 				className="sb-tabs"
 				tabs={ [
-					{ name: 'bookings',  title: __( 'Réservations', 'slashbooking' ) },
-					{ name: 'services',  title: __( 'Services', 'slashbooking' ) },
-					{ name: 'google',    title: __( 'Google', 'slashbooking' ) },
-					{ name: 'templates', title: __( 'Templates', 'slashbooking' ) },
-					{ name: 'log',       title: __( 'Journal', 'slashbooking' ) },
+					{
+						name: 'bookings',
+						title: __( 'Réservations', 'slashbooking' ),
+					},
+					{
+						name: 'services',
+						title: __( 'Services', 'slashbooking' ),
+					},
+					{ name: 'google', title: __( 'Google', 'slashbooking' ) },
+					{
+						name: 'templates',
+						title: __( 'Templates', 'slashbooking' ),
+					},
+					{ name: 'log', title: __( 'Journal', 'slashbooking' ) },
 				] }
 				initialTabName={ initial }
 				onSelect={ ( name ) => {
@@ -49,10 +58,18 @@ export default function App() {
 				} }
 			>
 				{ ( tab ) => {
-					if ( tab.name === 'services' )  return <ServicesPage />;
-					if ( tab.name === 'google' )    return <GooglePage />;
-					if ( tab.name === 'templates' ) return <TemplatesPage />;
-					if ( tab.name === 'log' )       return <SyncLogPage />;
+					if ( tab.name === 'services' ) {
+						return <ServicesPage />;
+					}
+					if ( tab.name === 'google' ) {
+						return <GooglePage />;
+					}
+					if ( tab.name === 'templates' ) {
+						return <TemplatesPage />;
+					}
+					if ( tab.name === 'log' ) {
+						return <SyncLogPage />;
+					}
 					return <BookingsPage />;
 				} }
 			</TabPanel>

@@ -1,15 +1,27 @@
 import { useEffect, useState, useRef } from '@wordpress/element';
 import {
-	Card, CardBody, CardHeader,
-	Button, TextControl, TextareaControl,
-	Notice, Spinner, SelectControl, Flex, FlexItem,
+	Card,
+	CardBody,
+	CardHeader,
+	Button,
+	TextControl,
+	TextareaControl,
+	Notice,
+	Spinner,
+	SelectControl,
+	Flex,
+	FlexItem,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import CodeMirror from '@uiw/react-codemirror';
 import { html as htmlLang } from '@codemirror/lang-html';
 import {
-	fetchMailTemplate, saveMailTemplate, restoreMailTemplate,
-	previewMailTemplate, sendTestMailTemplate, listTags,
+	fetchMailTemplate,
+	saveMailTemplate,
+	restoreMailTemplate,
+	previewMailTemplate,
+	sendTestMailTemplate,
+	listTags,
 } from './api';
 
 export default function TemplateEditor( { eventKey, onClose } ) {
@@ -94,7 +106,9 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 	};
 
 	const insertTag = ( tagName ) => {
-		if ( ! tagName ) return;
+		if ( ! tagName ) {
+			return;
+		}
 		const insertion = `{{${ tagName }}}`;
 		setHtmlBody( ( current ) => current + insertion );
 		setIsDirty( true );
@@ -123,8 +137,11 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 	};
 
 	const restore = async () => {
-		// eslint-disable-next-line no-alert
-		if ( ! window.confirm( __( 'Restaurer le template par défaut ?', 'slashbooking' ) ) ) {
+		// eslint-disable-next-line no-alert -- confirmation destructive volontaire (admin WP)
+		const ok = window.confirm(
+			__( 'Restaurer le template par défaut ?', 'slashbooking' )
+		);
+		if ( ! ok ) {
 			return;
 		}
 		try {
@@ -138,11 +155,14 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 
 	const sendTest = async () => {
 		try {
-			const r = await sendTestMailTemplate( eventKey, { subject, htmlBody } );
+			const r = await sendTestMailTemplate( eventKey, {
+				subject,
+				htmlBody,
+			} );
 			setMessage(
 				r.sent
 					? __( 'E-mail de test envoyé à : ', 'slashbooking' ) + r.to
-					: __( 'Échec de l\'envoi du test.', 'slashbooking' )
+					: __( "Échec de l'envoi du test.", 'slashbooking' )
 			);
 		} catch ( e ) {
 			setError( e.message ?? String( e ) );
@@ -151,8 +171,14 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 
 	const close = () => {
 		if ( isDirty ) {
-			// eslint-disable-next-line no-alert
-			if ( ! window.confirm( __( 'Modifications non sauvegardées, quitter ?', 'slashbooking' ) ) ) {
+			// eslint-disable-next-line no-alert -- confirmation volontaire (perte de modifs)
+			const ok = window.confirm(
+				__(
+					'Modifications non sauvegardées, quitter ?',
+					'slashbooking'
+				)
+			);
+			if ( ! ok ) {
 				return;
 			}
 		}
@@ -169,7 +195,9 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 		);
 	}
 
-	const tagOptions = [ { label: __( '— Insérer un tag —', 'slashbooking' ), value: '' } ];
+	const tagOptions = [
+		{ label: __( '— Insérer un tag —', 'slashbooking' ), value: '' },
+	];
 	tagGroups.forEach( ( g ) => {
 		g.tags.forEach( ( t ) => {
 			tagOptions.push( {
@@ -188,7 +216,10 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 							{ __( 'Édition : ', 'slashbooking' ) }
 							<code>{ eventKey }</code>
 							{ template?.is_custom && (
-								<span className="sb-badge sb-badge-custom" style={ { marginLeft: 8 } }>
+								<span
+									className="sb-badge sb-badge-custom"
+									style={ { marginLeft: 8 } }
+								>
 									{ __( 'Personnalisé', 'slashbooking' ) }
 								</span>
 							) }
@@ -203,7 +234,10 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 			</CardHeader>
 			<CardBody>
 				{ message && (
-					<Notice status="success" onRemove={ () => setMessage( null ) }>
+					<Notice
+						status="success"
+						onRemove={ () => setMessage( null ) }
+					>
 						{ message }
 					</Notice>
 				) }
@@ -216,14 +250,17 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 				<div className="sb-template-split">
 					<div className="sb-template-edit">
 						<TextControl
-							label={ __( 'Sujet de l\'e-mail', 'slashbooking' ) }
+							label={ __( "Sujet de l'e-mail", 'slashbooking' ) }
 							value={ subject }
 							onChange={ onSubjectChange }
 						/>
 
 						<div className="sb-tag-picker">
 							<SelectControl
-								label={ __( 'Insérer un tag dans le corps HTML', 'slashbooking' ) }
+								label={ __(
+									'Insérer un tag dans le corps HTML',
+									'slashbooking'
+								) }
 								options={ tagOptions }
 								value={ selectedTag }
 								onChange={ ( v ) => {
@@ -233,10 +270,15 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 							/>
 						</div>
 
-						<label className="sb-cm-label">
+						{ /* span, pas label : CodeMirror n'est pas un contrôle
+						     labellisable (jsx-a11y/label-has-associated-control). */ }
+						<span className="sb-cm-label">
 							{ __( 'Corps HTML', 'slashbooking' ) }
-						</label>
-						<div className="sb-codemirror-wrap" ref={ codeMirrorRef }>
+						</span>
+						<div
+							className="sb-codemirror-wrap"
+							ref={ codeMirrorRef }
+						>
 							<CodeMirror
 								value={ htmlBody }
 								height="380px"
@@ -246,7 +288,10 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 						</div>
 
 						<TextareaControl
-							label={ __( 'Version texte (laisser vide pour génération auto)', 'slashbooking' ) }
+							label={ __(
+								'Version texte (laisser vide pour génération auto)',
+								'slashbooking'
+							) }
 							value={ textBody }
 							onChange={ onTextChange }
 							rows={ 5 }
@@ -254,18 +299,34 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 
 						<Flex gap={ 2 } className="sb-template-actions">
 							<FlexItem>
-								<Button variant="primary" onClick={ save } isBusy={ saving } disabled={ ! isDirty || saving }>
+								<Button
+									variant="primary"
+									onClick={ save }
+									isBusy={ saving }
+									disabled={ ! isDirty || saving }
+								>
 									{ __( 'Enregistrer', 'slashbooking' ) }
 								</Button>
 							</FlexItem>
 							<FlexItem>
-								<Button variant="secondary" onClick={ sendTest }>
+								<Button
+									variant="secondary"
+									onClick={ sendTest }
+								>
 									{ __( 'Envoyer un test', 'slashbooking' ) }
 								</Button>
 							</FlexItem>
 							<FlexItem>
-								<Button variant="tertiary" isDestructive onClick={ restore } disabled={ ! template?.is_custom }>
-									{ __( 'Restaurer le défaut', 'slashbooking' ) }
+								<Button
+									variant="tertiary"
+									isDestructive
+									onClick={ restore }
+									disabled={ ! template?.is_custom }
+								>
+									{ __(
+										'Restaurer le défaut',
+										'slashbooking'
+									) }
 								</Button>
 							</FlexItem>
 						</Flex>
@@ -274,7 +335,9 @@ export default function TemplateEditor( { eventKey, onClose } ) {
 					<div className="sb-template-preview">
 						<h4>{ __( 'Aperçu live', 'slashbooking' ) }</h4>
 						<div className="sb-preview-subject">
-							<strong>{ __( 'Sujet rendu : ', 'slashbooking' ) }</strong>
+							<strong>
+								{ __( 'Sujet rendu : ', 'slashbooking' ) }
+							</strong>
 							{ preview.subject }
 						</div>
 						<iframe

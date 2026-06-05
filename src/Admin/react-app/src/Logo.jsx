@@ -7,6 +7,9 @@
  *
  * Scales perfectly. The PNG export at assets/logo/slashbooking-{size}.png
  * is generated from this same geometry — keep them in sync if you change it.
+ * @param {Object} root0            Props.
+ * @param {number} root0.size       Largeur/hauteur rendue en px.
+ * @param {string} root0.gradientId Id SVG unique du dégradé (évite les collisions si plusieurs logos).
  */
 export default function Logo( { size = 40, gradientId = 'sb-logo-bg' } ) {
 	return (
@@ -24,7 +27,12 @@ export default function Logo( { size = 40, gradientId = 'sb-logo-bg' } ) {
 					<stop offset="100%" stopColor="#10b981" />
 				</linearGradient>
 			</defs>
-			<rect width="64" height="64" rx="14" fill={ `url(#${ gradientId })` } />
+			<rect
+				width="64"
+				height="64"
+				rx="14"
+				fill={ `url(#${ gradientId })` }
+			/>
 			<path
 				d="M 20 50 L 44 14"
 				stroke="#ffffff"

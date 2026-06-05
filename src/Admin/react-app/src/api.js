@@ -129,7 +129,10 @@ export async function fetchMailTemplate( eventKey ) {
 	return apiFetch( { path: `admin/mail-templates/${ eventKey }` } );
 }
 
-export async function saveMailTemplate( eventKey, { subject, htmlBody, textBody, enabled } ) {
+export async function saveMailTemplate(
+	eventKey,
+	{ subject, htmlBody, textBody, enabled }
+) {
 	return apiFetch( {
 		path: `admin/mail-templates/${ eventKey }`,
 		method: 'POST',
@@ -188,16 +191,36 @@ export async function saveSettings( {
 	turnstileSecretKey,
 } = {} ) {
 	const data = {};
-	if ( legalPageId !== undefined )          data.legal_page_id          = legalPageId;
-	if ( bookingRetentionDays !== undefined ) data.booking_retention_days = bookingRetentionDays;
-	if ( notificationEmail !== undefined )    data.notification_email     = notificationEmail;
-	if ( companyLogo !== undefined )          data.company_logo           = companyLogo;
-	if ( companyPhone !== undefined )         data.company_phone          = companyPhone;
-	if ( formDisclaimer !== undefined )       data.form_disclaimer        = formDisclaimer;
-	if ( formPrimaryColor !== undefined )     data.form_primary_color     = formPrimaryColor;
-	if ( formAccentColor !== undefined )      data.form_accent_color      = formAccentColor;
-	if ( turnstileSiteKey !== undefined )     data.turnstile_site_key     = turnstileSiteKey;
-	if ( turnstileSecretKey !== undefined )   data.turnstile_secret_key   = turnstileSecretKey;
+	if ( legalPageId !== undefined ) {
+		data.legal_page_id = legalPageId;
+	}
+	if ( bookingRetentionDays !== undefined ) {
+		data.booking_retention_days = bookingRetentionDays;
+	}
+	if ( notificationEmail !== undefined ) {
+		data.notification_email = notificationEmail;
+	}
+	if ( companyLogo !== undefined ) {
+		data.company_logo = companyLogo;
+	}
+	if ( companyPhone !== undefined ) {
+		data.company_phone = companyPhone;
+	}
+	if ( formDisclaimer !== undefined ) {
+		data.form_disclaimer = formDisclaimer;
+	}
+	if ( formPrimaryColor !== undefined ) {
+		data.form_primary_color = formPrimaryColor;
+	}
+	if ( formAccentColor !== undefined ) {
+		data.form_accent_color = formAccentColor;
+	}
+	if ( turnstileSiteKey !== undefined ) {
+		data.turnstile_site_key = turnstileSiteKey;
+	}
+	if ( turnstileSecretKey !== undefined ) {
+		data.turnstile_secret_key = turnstileSecretKey;
+	}
 	return apiFetch( {
 		path: 'admin/settings',
 		method: 'POST',
