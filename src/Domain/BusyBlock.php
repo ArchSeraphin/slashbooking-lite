@@ -6,16 +6,18 @@ namespace Slash\Booking\Domain;
 use DateTimeImmutable;
 use DateTimeZone;
 
-final readonly class BusyBlock
+// NB : readonly par propriété, pas `readonly class` — syntaxe PHP 8.2 alors que
+// le plugin annonce "Requires PHP: 8.1" (fatal au parse sur les hôtes 8.1).
+final class BusyBlock
 {
     public function __construct(
-        public ?int $id,
-        public string $source,
-        public string $sourceId,
-        public ?int $googleAccountId,
-        public TimeSlot $slot,
-        public string $summary,
-        public ?DateTimeImmutable $lastSyncedAt = null,
+        public readonly ?int $id,
+        public readonly string $source,
+        public readonly string $sourceId,
+        public readonly ?int $googleAccountId,
+        public readonly TimeSlot $slot,
+        public readonly string $summary,
+        public readonly ?DateTimeImmutable $lastSyncedAt = null,
     ) {
     }
 

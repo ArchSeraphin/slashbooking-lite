@@ -8,23 +8,25 @@ use InvalidArgumentException;
 /**
  * @phpstan-type WeeklyHours array<int, list<array{open:string, close:string}>>
  */
-final readonly class Service
+// NB : readonly par propriété, pas `readonly class` — syntaxe PHP 8.2 alors que
+// le plugin annonce "Requires PHP: 8.1" (fatal au parse sur les hôtes 8.1).
+final class Service
 {
     /**
      * @param WeeklyHours $weeklyHours
      */
     public function __construct(
-        public ?int $id,
-        public string $slug,
-        public string $name,
-        public int $durationMin,
-        public int $bufferBeforeMin,
-        public int $bufferAfterMin,
-        public int $minLeadTimeHours,
-        public int $maxHorizonDays,
-        public array $weeklyHours,
-        public bool $active,
-        public string $color,
+        public readonly ?int $id,
+        public readonly string $slug,
+        public readonly string $name,
+        public readonly int $durationMin,
+        public readonly int $bufferBeforeMin,
+        public readonly int $bufferAfterMin,
+        public readonly int $minLeadTimeHours,
+        public readonly int $maxHorizonDays,
+        public readonly array $weeklyHours,
+        public readonly bool $active,
+        public readonly string $color,
     ) {
         if ($durationMin < 1) {
             throw new InvalidArgumentException('Service duration must be >= 1 minute.');

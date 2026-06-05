@@ -7,11 +7,13 @@ use DateTimeImmutable;
 use DateTimeZone;
 use InvalidArgumentException;
 
-final readonly class TimeSlot
+// NB : readonly par propriété, pas `readonly class` — syntaxe PHP 8.2 alors que
+// le plugin annonce "Requires PHP: 8.1" (fatal au parse sur les hôtes 8.1).
+final class TimeSlot
 {
     public function __construct(
-        public DateTimeImmutable $start,
-        public DateTimeImmutable $end,
+        public readonly DateTimeImmutable $start,
+        public readonly DateTimeImmutable $end,
     ) {
         if ($start->getOffset() !== 0 || $end->getOffset() !== 0) {
             throw new InvalidArgumentException('TimeSlot dates must be UTC.');
