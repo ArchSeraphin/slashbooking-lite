@@ -6,6 +6,19 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.2.2] — 2026-06-05
+
+### Fixed
+
+- **Le formulaire ne perd plus ses services quand la page est mise en cache.** Cause racine : le widget localisait un nonce REST (`wp_create_nonce('wp_rest')`) dans le HTML ; un cache de page (WP Fastest Cache, etc.) figeait ce nonce qui expire en 12-24 h, et le core WP rejette toute requête portant un `X-WP-Nonce` invalide en 403 `rest_cookie_invalid_nonce` — même sur routes publiques (notre `unblockPublicEndpoints` ne bypasse pas ce code, par design). Le nonce est retiré du widget (routes `__return_true` ; la protection réelle est Turnstile + honeypot + rate-limiting) : le widget est désormais insensible au cache.
+- **Les flèches de navigation du calendrier ne sont plus invisibles avec certains thèmes.** Les attributs de présentation SVG (`stroke="currentColor"`, `fill="none"`) perdent contre n'importe quelle règle CSS de thème (`svg { fill/stroke }`, `.entry-content button { color }`…). Bloc de hardening CSS en fin de `booking.css` : `fill`/`stroke` verrouillés sur toutes les icônes du widget, et trait des chevrons décorrélé de la couleur `<button>` imposée par le thème.
+
+### Added
+
+- **Exclusion automatique du cache de page** (`PublicFront\CacheCompat`) pour toute page rendant le widget : constante `DONOTCACHEPAGE` (WP Fastest Cache, WP Rocket, W3TC, WP Super Cache, Cache Enabler, WP-Optimize, Hummingbird…), `nocache_headers()` (navigateur, CDN, Varnish), action `litespeed_control_set_nocache` (LiteSpeed). Détection au hook `wp` via `has_shortcode()` + fallback au rendu du shortcode pour les page builders qui stockent le contenu hors `post_content`. Défense en profondeur contre les minifications HTML/JS agressives des plugins de cache.
+
+---
+
 ## [1.2.1] — 2026-06-03
 
 ### Fixed
