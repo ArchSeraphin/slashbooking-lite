@@ -4,7 +4,7 @@ Tags: booking, appointment, calendar, google-calendar, calendly
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,9 +85,12 @@ Les chaînes du plugin sont localisables (text domain `slashbooking`). Le fronte
 
 = Le plugin survit-il à une mise à jour de WordPress ? =
 
-Oui. Les schémas de tables sont versionnés et migrés automatiquement, les options sont préservées, et le plugin teste sur les 3 versions de PHP actives (8.1, 8.2, 8.3) à chaque release.
+Oui. Les schémas de tables sont versionnés et migrés automatiquement, les options sont préservées, et le plugin est testé sur PHP 8.1, 8.2, 8.3 et 8.4 à chaque release.
 
 == Changelog ==
+
+= 1.2.3 =
+*Allègement et compatibilité PHP 8.1.* Le plugin est ~30% plus léger (retrait d'outils de build embarqués par erreur dans l'archive) et fonctionne désormais réellement sur les hébergements PHP 8.1 (certaines classes utilisaient une syntaxe PHP 8.2 et provoquaient une erreur fatale). Aucun changement fonctionnel.
 
 = 1.2.2 =
 *Compatibilité plugins de cache + correctif visuel.* Le formulaire de réservation fonctionne désormais même si la page est mise en cache (WP Fastest Cache, WP Rocket, LiteSpeed, W3 Total Cache…) : les services ne disparaissent plus au bout de quelques heures. La page contenant le widget est en plus automatiquement exclue du cache de page. Correctif visuel : les flèches de navigation du calendrier ne sont plus invisibles avec certains thèmes.

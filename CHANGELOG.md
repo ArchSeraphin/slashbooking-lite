@@ -6,6 +6,19 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.2.3] — 2026-06-05
+
+### Fixed
+
+- **Compatibilité PHP 8.1 réelle.** `Domain/TimeSlot`, `Service` et `BusyBlock` utilisaient `readonly class` (syntaxe PHP 8.2) : le plugin fatalait au parse sur tout hébergement PHP 8.1, en contradiction avec l'en-tête « Requires PHP: 8.1 » — et ce depuis l'introduction de ces classes. Converti en `readonly` par propriété (sémantique identique). Jamais détecté car la CI était rouge à l'étape d'installation depuis la v1.0.15 (voir ci-dessous).
+- **Le ZIP livré n'embarque plus l'outillage de build (~500 Ko).** php-scoper vivait dans `require-dev` et son arbre de dépendances (`symfony/console`, `symfony/string` ^PHP8.4, `var-dumper`…) était réinstallé avant le scoping puis scopé et expédié dans l'archive (`scoper.inc.php` inclut `vendor/symfony`). php-scoper est désormais un PHAR épinglé (version + SHA-256) hors de l'arbre Composer ; le ZIP passe de 1,7 Mo à 1,2 Mo, avec exactement les mêmes 16 paquets de production.
+
+### Changed
+
+- **CI réparée et durcie** : `composer.lock` redevenu installable sur PHP 8.1→8.3 (l'arbre php-scoper l'en empêchait — matrice rouge depuis la v1.0.15 du 22 mai), PHP 8.4 ajouté à la matrice, dette PHPStan/PHPCS soldée (duck-typing des appels PUC sans figer le namespace versionné `v5p6`, commentaire `translators:` manquant), et passe ESLint complète sur la SPA admin (402 problèmes → 0 erreur, bundle régénéré).
+
+---
+
 ## [1.2.2] — 2026-06-05
 
 ### Fixed
