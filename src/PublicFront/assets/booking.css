@@ -716,3 +716,39 @@
 		transition-duration: 0.01ms !important;
 	}
 }
+
+/* ============================================================
+   Hardening anti-thème — icônes SVG
+   Les attributs de présentation SVG (fill="none" stroke="currentColor")
+   perdent contre N'IMPORTE QUELLE règle CSS d'un thème (ex :
+   `svg { fill: #000; stroke: none }`, `button svg { ... }`), et certains
+   thèmes forcent la couleur des <button> avec une spécificité supérieure
+   (ex : `.entry-content button { color: #fff }`) → chevrons du calendrier
+   invisibles (blanc sur blanc ou trait supprimé). On verrouille ici.
+   Toutes les icônes du widget sont monochromes, tracées au trait (2px),
+   colorées via currentColor — ces règles sont donc sans perte.
+   ============================================================ */
+.sb-widget svg {
+	fill: none !important;
+	stroke: currentColor !important;
+	stroke-width: 2px !important;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+.sb-widget svg * {
+	fill: none !important;
+	stroke: inherit !important;
+	stroke-width: inherit !important;
+}
+
+/* Spécificité renforcée sur la couleur des boutons de navigation, pour
+   battre les règles de thème type `.entry-content button { color: ... }`. */
+.sb-widget .sb-cal__nav { color: var(--sb-c-text-soft); }
+.sb-widget .sb-cal__nav:hover,
+.sb-widget .sb-cal__nav:focus-visible { color: var(--sb-c-text); }
+
+/* Ceinture + bretelles : le trait du chevron ne dépend même plus de la
+   couleur <button> que le thème pourrait imposer. */
+.sb-widget .sb-cal__nav svg { stroke: var(--sb-c-text-soft) !important; }
+.sb-widget .sb-cal__nav:hover svg,
+.sb-widget .sb-cal__nav:focus-visible svg { stroke: var(--sb-c-text) !important; }

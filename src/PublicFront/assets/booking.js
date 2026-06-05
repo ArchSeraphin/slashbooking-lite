@@ -16,7 +16,10 @@
 		var rest = root.dataset.sbRest;
 		var rawServiceAttr = (root.dataset.sbService || '').trim();
 		var serviceWhitelist = rawServiceAttr === '' ? [] : rawServiceAttr.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
-		var nonce = window.SlashBooking && window.SlashBooking.nonce;
+		// NB : aucun X-WP-Nonce sur les appels REST. Les routes du widget sont
+		// publiques (__return_true) ; un nonce figé dans une page mise en cache
+		// expirait (12-24 h) et le core WP rejetait alors TOUS les appels en 403
+		// rest_cookie_invalid_nonce → formulaire sans services.
 		// WP returns "fr_FR" (underscore); Intl APIs want BCP-47 "fr-FR" (hyphen).
 		// Without this conversion, toLocaleTimeString throws RangeError and we fall
 		// back to printing the raw ISO string in slot buttons.
@@ -66,7 +69,7 @@
 		}
 
 		function fetchServices() {
-			return fetch(rest + 'services', { headers: { 'X-WP-Nonce': nonce || '' } })
+			return fetch(rest + 'services')
 				.then(function (r) { return r.json(); })
 				.catch(function () { return []; });
 		}
@@ -350,9 +353,7 @@
 			var to = toIso(new Date(state.month.getFullYear(), state.month.getMonth() + 1, 1));
 			state.dayStates = {};
 			refreshCalendar();
-			fetch(rest + 'availability?service=' + encodeURIComponent(state.service) + '&from=' + from + '&to=' + to, {
-				headers: { 'X-WP-Nonce': nonce || '' },
-			})
+			fetch(rest + 'availability?service=' + encodeURIComponent(state.service) + '&from=' + from + '&to=' + to)
 				.then(function (r) { return r.json(); })
 				.then(function (data) {
 					var byDay = {};
@@ -418,9 +419,7 @@
 			var from = state.date;
 			var to = addDaysISO(from, 1);
 			root.classList.add('sb-loading');
-			fetch(rest + 'availability?service=' + encodeURIComponent(state.service) + '&from=' + from + '&to=' + to, {
-				headers: { 'X-WP-Nonce': nonce || '' },
-			})
+			fetch(rest + 'availability?service=' + encodeURIComponent(state.service) + '&from=' + from + '&to=' + to)
 				.then(function (r) { return r.json(); })
 				.then(function (data) {
 					root.classList.remove('sb-loading');
@@ -591,10 +590,7 @@
 
 			fetch(rest + 'bookings', {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-WP-Nonce': nonce || '',
-				},
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(data),
 			})
 				.then(function (r) { return r.json().then(function (body) { return { status: r.status, body: body }; }); })

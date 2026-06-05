@@ -8,13 +8,15 @@ use Slash\Booking\Plugin;
 
 final class Shortcode
 {
-    public function __construct(private readonly ServiceRepository $services)
-    {
+    public function __construct(
+        private readonly ServiceRepository $services,
+        private readonly CacheCompat $cacheCompat,
+    ) {
     }
 
     public function register(): void
     {
-        add_shortcode('slashbooking', [$this, 'render']);
+        add_shortcode(CacheCompat::SHORTCODE_TAG, [$this, 'render']);
     }
 
     /**
@@ -23,6 +25,10 @@ final class Shortcode
     public function render($attrs): string
     {
         $attrs = is_array($attrs) ? $attrs : [];
+
+        // Fallback no-cache : couvre les page builders qui rendent le shortcode
+        // hors post_content (la détection au hook `wp` ne l'a pas vu). Idempotent.
+        $this->cacheCompat->disableCache();
 
         // The shortcode supports three forms:
         //   [slashbooking]                   -> user picks service in the widget (all active services)
@@ -141,8 +147,12 @@ final class Shortcode
         $legalId  = (int) get_option('sb_legal_page_id', 0);
         $legalUrl = $legalId > 0 ? (string) get_permalink($legalId) : '';
 
+        // NB : pas de nonce REST ici. Les routes publiques du widget sont en
+        // permission_callback __return_true (protection réelle = Turnstile +
+        // honeypot + rate-limiting) et un nonce figé par un cache de page
+        // expirait au bout de 12-24 h → le core WP renvoyait 403
+        // rest_cookie_invalid_nonce sur tous les appels → plus de services.
         wp_localize_script('slashbooking-public', 'SlashBooking', [
-            'nonce'           => wp_create_nonce('wp_rest'),
             'locale'          => get_locale(),
             'legalUrl'        => $legalUrl,
             'disclaimer'      => (string) get_option('sb_form_disclaimer', ''),

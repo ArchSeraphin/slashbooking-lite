@@ -5,7 +5,7 @@ namespace Slash\Booking;
 
 final class Plugin
 {
-    public const VERSION = '1.2.1';
+    public const VERSION = '1.2.2';
     public const TEXT_DOMAIN = 'slashbooking';
     public const DB_VERSION = 2;
     public const REST_NAMESPACE = 'slashbooking/v1';
@@ -109,7 +109,13 @@ final class Plugin
         (new Persistence\Migrator($wpdb))->migrate();
 
         $services = new Persistence\ServiceRepository($wpdb);
-        $shortcode = new PublicFront\Shortcode($services);
+
+        // Pages contenant le widget : exclues du cache de page (nonce périmé,
+        // minification agressive — voir PublicFront\CacheCompat).
+        $cacheCompat = PublicFront\CacheCompat::forWordPress();
+        $cacheCompat->register();
+
+        $shortcode = new PublicFront\Shortcode($services, $cacheCompat);
         $shortcode->register();
 
         $bookings = new Persistence\BookingRepository($wpdb);
