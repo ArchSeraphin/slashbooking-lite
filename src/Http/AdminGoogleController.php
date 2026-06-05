@@ -150,7 +150,11 @@ final class AdminGoogleController
         if ($sbError !== '') {
             return new WP_Error(
                 'broker_oauth_error',
-                sprintf(__('La connexion Google a échoué côté broker (%s).', 'slashbooking'), sanitize_text_field($sbError)),
+                sprintf(
+                    /* translators: %s: code d'erreur renvoyé par le broker OAuth (ex. access_denied). */
+                    __('La connexion Google a échoué côté broker (%s).', 'slashbooking'),
+                    sanitize_text_field($sbError)
+                ),
                 ['status' => 502]
             );
         }

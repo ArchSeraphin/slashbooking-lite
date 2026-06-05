@@ -40,10 +40,18 @@ final class UpdateChecker
             $pluginFile,
             self::PLUGIN_SLUG,
         );
-        $checker->setBranch(self::RELEASE_BRANCH);
 
-        $vcs = $checker->getVcsApi();
-        if ($vcs !== null && method_exists($vcs, 'enableReleaseAssets')) {
+        // buildUpdateChecker() est typé en union Plugin|Theme|Vcs\BaseChecker
+        // qui ne portent pas tous setBranch()/getVcsApi(). On duck-type plutôt
+        // que d'instanceof-er la classe concrète : son namespace contient la
+        // version PUC (v5p6) et changerait silencieusement à la prochaine bump
+        // de la lib (même piège que le dispatch runtime déjà documenté plus haut).
+        if (method_exists($checker, 'setBranch')) {
+            $checker->setBranch(self::RELEASE_BRANCH);
+        }
+
+        $vcs = method_exists($checker, 'getVcsApi') ? $checker->getVcsApi() : null;
+        if (is_object($vcs) && method_exists($vcs, 'enableReleaseAssets')) {
             // GitHub release asset (the .zip uploaded by the Actions workflow)
             // is the installable artifact — without this, PUC tries to install
             // a source-tree tarball which has no built /vendor.
