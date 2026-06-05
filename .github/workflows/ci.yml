@@ -10,7 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3' ]
+        # 8.1 = plancher annoncé du plugin (readme.txt "Requires PHP"),
+        # 8.4 = environnement de dev + builder de release. NB : composer.lock
+        # doit rester installable sur 8.1 — php-scoper (outil de build, PHP
+        # ≥8.2) vit hors require-dev, en PHAR épinglé dans bin/build-release.sh.
+        php: [ '8.1', '8.2', '8.3', '8.4' ]
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2

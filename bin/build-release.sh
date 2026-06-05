@@ -44,11 +44,28 @@ else
 fi
 
 # 4. Run PHP-Scoper to produce scoped src/ + vendor/
+#
+# php-scoper est un OUTIL DE BUILD, pas une dépendance de dev : son arbre
+# (symfony/console, symfony/string ^PHP8.4, fidry/*…) rendait composer.lock
+# non installable sur PHP 8.1-8.3 (CI rouge) ET — pire — se faisait scoper
+# puis EMBARQUER dans le ZIP livré (scoper.inc.php inclut vendor/symfony,
+# qui doit rester prod-only). On utilise donc le PHAR officiel, épinglé par
+# version + SHA-256, et vendor/ reste --no-dev au moment du scoping.
+SCOPER_VERSION="0.18.18"
+SCOPER_SHA256="06d52b9b3020d06f3301803b7bc5b015f50cd1541d2c322883481b5cc40be6a2"
+SCOPER_PHAR="${ROOT_DIR}/.tools/php-scoper-${SCOPER_VERSION}.phar"
+if [ ! -f "${SCOPER_PHAR}" ]; then
+    echo "→ downloading php-scoper ${SCOPER_VERSION} PHAR"
+    mkdir -p "${ROOT_DIR}/.tools"
+    curl -sSL -o "${SCOPER_PHAR}" \
+        "https://github.com/humbug/php-scoper/releases/download/${SCOPER_VERSION}/php-scoper.phar"
+fi
+echo "${SCOPER_SHA256}  ${SCOPER_PHAR}" | shasum -a 256 -c - > /dev/null \
+    || { echo "✗ php-scoper PHAR checksum mismatch — abort." >&2; rm -f "${SCOPER_PHAR}"; exit 1; }
+
 echo "→ php-scoper (prefix Slash\\Booking\\Vendor)"
-# Re-install dev to get php-scoper binary
-(cd "${ROOT_DIR}" && composer install --quiet)
 # Memory limit 1G is required: scoper processes ~34k files
-(cd "${ROOT_DIR}" && php -d memory_limit=1G vendor/bin/php-scoper add-prefix \
+(cd "${ROOT_DIR}" && php -d memory_limit=1G "${SCOPER_PHAR}" add-prefix \
     --config=scoper.inc.php \
     --output-dir="${SCOPED_DIR}" \
     --force \
@@ -97,6 +114,11 @@ echo "→ packaging ZIP ${ZIP_PATH}"
 # 8. Checksum
 CHECKSUM=$(shasum -a 256 "${ZIP_PATH}" | awk '{print $1}')
 echo "${CHECKSUM}  $(basename "${ZIP_PATH}")" > "${ZIP_PATH}.sha256"
+
+# 8b. Restore the dev vendor (step 2 left it --no-dev) so phpunit/phpstan/phpcs
+# keep working locally after a build.
+echo "→ composer install (restore dev vendor)"
+(cd "${ROOT_DIR}" && composer install --no-interaction --quiet)
 
 # 9. Done
 SIZE=$(du -h "${ZIP_PATH}" | awk '{print $1}')

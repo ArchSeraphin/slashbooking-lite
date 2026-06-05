@@ -27,3 +27,6 @@ coverage/
 # Build artefacts
 *.zip
 /build/
+
+# Build tooling (php-scoper PHAR, downloaded on demand by bin/build-release.sh)
+/.tools/
