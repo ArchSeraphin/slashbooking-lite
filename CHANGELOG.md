@@ -6,6 +6,14 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.4.0] — 2026-06-08
+
+### Added
+
+- **Boutons « Passer à Pro »** là où une fonctionnalité payante est verrouillée : carte Licence (onglet Réglages), blocage de la connexion Google Calendar, et sections verrouillées (templates e-mail). Ils ouvrent la page tarifs dans un nouvel onglet pour faciliter le passage en Pro. L'URL d'upsell est exposée côté serveur (`window.SlashBooking.pricingUrl`).
+
+---
+
 ## [1.3.0] — 2026-06-08
 
 ### Added
