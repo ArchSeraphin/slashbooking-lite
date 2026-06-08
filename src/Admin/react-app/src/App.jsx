@@ -1,10 +1,11 @@
-import { TabPanel } from '@wordpress/components';
+import { Button, TabPanel } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import BookingsPage from './BookingsPage';
 import ServicesPage from './ServicesPage';
 import SettingsPage from './SettingsPage';
 import Logo from './Logo';
+import { PRO_URL } from './ProUpsell';
 
 export default function App() {
 	const readTab = () =>
@@ -35,9 +36,21 @@ export default function App() {
 						</p>
 					</div>
 				</div>
-				{ version && (
-					<span className="sb-app-header__version">v{ version }</span>
-				) }
+				<div className="sb-app-header__cta">
+					<Button
+						variant="primary"
+						href={ PRO_URL }
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{ __( 'Passer à Pro', 'slashbooking' ) }
+					</Button>
+					{ version && (
+						<span className="sb-app-header__version">
+							v{ version }
+						</span>
+					) }
+				</div>
 			</header>
 
 			<TabPanel
