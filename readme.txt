@@ -4,7 +4,7 @@ Tags: booking, appointment, calendar, google-calendar, calendly
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,9 @@ Les chaînes du plugin sont localisables (text domain `slashbooking`). Le fronte
 Oui. Les schémas de tables sont versionnés et migrés automatiquement, les options sont préservées, et le plugin est testé sur PHP 8.1, 8.2, 8.3 et 8.4 à chaque release.
 
 == Changelog ==
+
+= 1.4.2 =
+*Logo unifié.* Le logo affiché dans l'administration du plugin est désormais le logo officiel SlashBooking, identique à celui du site et des e-mails.
 
 = 1.4.1 =
 *Mise en avant de la version Pro.* Un bouton « Passer à Pro » dans l'en-tête et un bandeau d'information apparaissent tant que la version gratuite est utilisée, pour repérer en un clin d'œil ce que débloque le plan Pro.

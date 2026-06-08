@@ -6,6 +6,14 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.4.2] — 2026-06-08
+
+### Fixed
+
+- **Logo de l'administration** : remplacé par le logo officiel SlashBooking (le calendrier de `slashbooking.fr`), aligné avec le site, le favicon et les e-mails.
+
+---
+
 ## [1.4.1] — 2026-06-08
 
 ### Added
