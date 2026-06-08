@@ -1,191 +1,85 @@
 === SlashBooking ===
 Contributors: ArchSeraphin
-Tags: booking, appointment, calendar, google-calendar, calendly
+Tags: booking, appointment, scheduling, reservations, calendar
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 1.4.2
+Stable tag: 1.0.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Prise de rendez-vous en ligne style Calendly, synchronisée avec Google Calendar. Pensée pour les commerciaux PV et IRVE, utilisable partout.
+Self-hosted online appointment booking for WordPress: a real-time public calendar via shortcode, with one-click email confirmation.
 
 == Description ==
 
-**SlashBooking** transforme n'importe quelle page WordPress en tunnel de prise de rendez-vous self-service. Le visiteur choisit un service, voit les créneaux libres en temps réel, et confirme son RDV en moins d'une minute. De l'autre côté, le commercial reçoit l'alerte par e-mail et valide en un clic — sans ouvrir WordPress, sans logiciel tiers, sans abonnement SaaS.
+**SlashBooking** turns any WordPress page into a self-service appointment funnel. A visitor picks a service, sees the available slots in real time, and books in under a minute. You receive an email alert and confirm or decline in one click — no need to log in to WordPress, no third-party SaaS, no recurring fees.
 
-= Pourquoi SlashBooking =
+It is a self-hosted scheduling tool: your data stays in your WordPress database.
 
-À l'origine conçu pour les métiers de la transition énergétique (photovoltaïque, bornes de recharge), SlashBooking sert aujourd'hui tout artisan, indépendant ou TPE qui cale des RDV de qualification, de devis ou de chantier. C'est un Calendly auto-hébergé, sans frais récurrents, qui vit dans ton WordPress.
+= Main features =
 
-= Fonctionnalités principales =
+* **Public booking form via shortcode** — A single `[slashbooking]` in any page. Multiple services, date picker, real-time slots, customer form, fully responsive.
+* **One-click email confirmation** — Every request arrives with two buttons, *Confirm* and *Decline*. No WordPress login required. The action links are signed with HMAC-SHA256 and cannot be forged.
+* **Smart buffers around appointments** — Configure padding (travel, prep) between appointments. Applied automatically.
+* **Multi-slot opening hours** — Monday 9–12 + 14–18, Tuesday morning only, Wednesday off… Each day and each service is configured independently.
+* **Transactional emails with .ics** — Confirmation, decline and acknowledgement emails, each with an automatic `.ics` attachment so the customer adds the appointment to their calendar in one click.
+* **Built-in GDPR compliance** — Explicit consent before submission, WP_Privacy exporters/erasers, configurable retention, automatic anonymisation.
+* **Optional anti-spam** — Built-in honeypot, per-IP rate limiting, and optional Cloudflare Turnstile (you provide your own keys).
 
-* **Formulaire public via shortcode** — Un simple `[slashbooking]` dans une page suffit. Multi-services, sélecteur de date, créneaux temps-réel, formulaire client, le tout responsive.
-* **Synchro bidirectionnelle Google Calendar** — Les RDV pris sur le site apparaissent instantanément dans ton agenda Google. À l'inverse, les événements ajoutés manuellement dans Google bloquent les créneaux côté formulaire. Zéro double-saisie.
-* **Validation 1-clic par e-mail** — Chaque demande arrive avec deux boutons *Confirmer* / *Refuser*. Pas besoin de te connecter à WordPress. Les liens sont signés HMAC-SHA256, impossibles à forger.
-* **Buffer intelligent autour des RDV** — Configure 30 min de battement (route, prépa) entre les RDV. Appliqué automatiquement, y compris autour des événements externes de ton Google Calendar.
-* **Plages horaires multi-créneaux** — Lundi 9h-12h + 14h-18h, mardi matin seulement, mercredi off… Chaque jour et chaque service se règle indépendamment.
-* **E-mails brandés et personnalisables** — 5 templates HTML éditables : confirmation client, notif commercial, rappel J-1, confirmation, refus. Pièce jointe `.ics` automatique pour ajout au calendrier en 1 clic.
-* **Conformité RGPD intégrée** — Consentement explicite avant soumission, exporters/erasers WP_Privacy, rétention configurable, anonymisation automatique.
-* **Mises à jour 1-clic** — Le plugin se connecte à ses propres releases GitHub. WordPress affiche "Mise à jour disponible" comme pour un plugin officiel.
+= Who it is for =
 
-= Sécurité =
-
-* Cloudflare Turnstile optionnel pour bloquer les bots
-* Honeypot anti-spam intégré
-* Liens de décision signés HMAC-SHA256
-* Token Google OAuth chiffré au repos via libsodium
-* Rate-limiting par IP sur les endpoints publics
-
-= Pour qui =
-
-* Entreprises PV / IRVE qui veulent éviter le ping-pong téléphonique
-* Commerciaux indépendants en quête d'un Calendly auto-hébergé
-* Agences WordPress qui packagent un site + tunnel de RDV
-* Tout métier où "réserver un créneau" ouvre le parcours client
+* Freelancers and small businesses who want a self-hosted scheduling page
+* Agencies packaging a website with a booking funnel
+* Any business where "book a slot" opens the customer journey
 
 == Installation ==
 
-1. Téléverse le ZIP via **Extensions → Ajouter → Téléverser une extension** (ou décompresse-le dans `wp-content/plugins/`).
-2. Active **SlashBooking** dans la liste des extensions.
-3. Configure le plugin depuis le menu **SlashBooking** ajouté à l'admin :
-   * **Services** — durée des RDV, buffer avant/après, jours et plages horaires, couleur d'affichage
-   * **Google** — assistant guidé de connexion OAuth pour la synchro Calendar
-   * **Modèles d'e-mail** — personnalise les 5 templates HTML avec tags dynamiques
-   * **Réglages** — Cloudflare Turnstile, couleurs GCal, rétention RGPD
-4. Colle `[slashbooking]` dans n'importe quelle page publique pour afficher le formulaire.
-
-Pour la synchro Google Calendar, suis l'assistant de l'onglet **Google** : il te guide pour créer le projet GCP, l'OAuth consent screen, et copier les identifiants. Compte 10 minutes la première fois.
+1. Upload the ZIP via **Plugins → Add New → Upload Plugin** (or unzip it into `wp-content/plugins/`).
+2. Activate **SlashBooking** in the plugins list.
+3. Configure it from the **SlashBooking** admin menu:
+   * **Services** — appointment duration, before/after buffers, days and opening hours, display colour
+   * **Settings** — booking form colours, consent message, GDPR retention, notification email, optional Cloudflare Turnstile keys
+4. Paste `[slashbooking]` into any public page to display the booking form.
 
 == Frequently Asked Questions ==
 
-= Faut-il un compte Google obligatoirement ? =
+= How do emails get sent? =
 
-Non. Sans connexion Google, le plugin fonctionne en mode autonome : les RDV restent dans WordPress, les e-mails partent normalement. Tu perds la double-direction (les events ajoutés manuellement dans Google ne bloquent plus les créneaux), mais le formulaire et la validation par e-mail fonctionnent à 100%.
+By default via `wp_mail()`. If you have an SMTP plugin installed (WP Mail SMTP, FluentSMTP, etc.), SlashBooking uses it automatically — no extra configuration.
 
-= Combien de commerciaux puis-je gérer ? =
+= Is a customer account required to book? =
 
-La V1 est mono-commercial — un seul Google Calendar connecté à la fois. Le multi-commerciaux et le load-balancing sont sur la roadmap.
+No. Visitors book without creating an account. You collect only the fields you need (name, email, phone, etc.).
 
-= Les e-mails partent comment ? =
+= Is it GDPR compliant? =
 
-Par défaut via `wp_mail()`. Si tu as installé un plugin SMTP (WP Mail SMTP, FluentSMTP, etc.), SlashBooking l'utilise automatiquement — aucune config supplémentaire.
+Yes. The form requires explicit consent, the plugin registers WordPress privacy data exporters and erasers, supports a configurable retention period, and anonymises old bookings automatically.
 
-= Comment fonctionnent les mises à jour ? =
+= Does it work with page caching plugins? =
 
-À partir de la v1.0.17, le plugin sonde les releases GitHub toutes les 12h. Quand une nouvelle version est publiée, WordPress affiche la notif standard dans **Extensions** avec le bouton **Mettre à jour**. Aucun token, aucune licence, aucun compte à saisir côté client.
+Yes. The page that contains the widget is automatically excluded from page caching so the form keeps working.
 
-= Si Google tombe, le formulaire continue ? =
+= Does it survive a WordPress update? =
 
-Oui. Le formulaire enregistre les RDV directement dans WordPress même si l'API Google est indisponible. La synchro reprend automatiquement dès que Google répond, et un cron de réconciliation quotidien rattrape les RDV manqués pour les pousser dans le Calendar.
+Yes. Database schemas are versioned and migrated automatically, and options are preserved.
 
-= Compatible avec WPML ou Polylang ? =
+== External services ==
 
-Les chaînes du plugin sont localisables (text domain `slashbooking`). Le frontend du formulaire utilise la locale WP. Aucun problème connu avec WPML/Polylang, mais pas explicitement testé. Remontez les bugs sur le repo si vous en croisez.
+This plugin can optionally connect to one third-party service. It is **disabled by default** and only used if you choose to enable it.
 
-= Le plugin survit-il à une mise à jour de WordPress ? =
+**Cloudflare Turnstile (optional anti-bot check)**
 
-Oui. Les schémas de tables sont versionnés et migrés automatiquement, les options sont préservées, et le plugin est testé sur PHP 8.1, 8.2, 8.3 et 8.4 à chaque release.
+If — and only if — you enter Cloudflare Turnstile keys in the plugin settings, the public booking form loads the Turnstile widget from Cloudflare, and when a visitor submits the form the plugin sends the Turnstile response token together with the visitor's IP address to Cloudflare's verification endpoint (`https://challenges.cloudflare.com/turnstile/v0/siteverify`) to confirm the request is not a bot. No data is sent to Cloudflare when Turnstile is not configured.
+
+- Cloudflare Terms of Service: https://www.cloudflare.com/terms/
+- Cloudflare Privacy Policy: https://www.cloudflare.com/privacypolicy/
 
 == Changelog ==
 
-= 1.4.2 =
-*Logo unifié.* Le logo affiché dans l'administration du plugin est désormais le logo officiel SlashBooking, identique à celui du site et des e-mails.
-
-= 1.4.1 =
-*Mise en avant de la version Pro.* Un bouton « Passer à Pro » dans l'en-tête et un bandeau d'information apparaissent tant que la version gratuite est utilisée, pour repérer en un clin d'œil ce que débloque le plan Pro.
-
-= 1.4.0 =
-*Passage en Pro facilité.* Des boutons « Passer à Pro » apparaissent désormais là où une fonctionnalité payante est verrouillée (carte Licence, connexion Google Calendar, personnalisation des e-mails), pour guider l'utilisateur en un clic vers le déblocage.
-
-= 1.3.0 =
-*Réorganisation de l'administration.* Nouvel onglet « Réglages » qui regroupe au même endroit la licence SlashBooking, les paramètres e-mail et les réglages du formulaire public (couleurs, disclaimer, clés captcha Turnstile). Un sous-menu d'accès rapide apparaît dans la barre latérale WordPress, avec un lien direct vers chaque section. L'onglet « Journal » de synchronisation est retiré.
-
-= 1.2.3 =
-*Allègement et compatibilité PHP 8.1.* Le plugin est ~30% plus léger (retrait d'outils de build embarqués par erreur dans l'archive) et fonctionne désormais réellement sur les hébergements PHP 8.1 (certaines classes utilisaient une syntaxe PHP 8.2 et provoquaient une erreur fatale). Aucun changement fonctionnel.
-
-= 1.2.2 =
-*Compatibilité plugins de cache + correctif visuel.* Le formulaire de réservation fonctionne désormais même si la page est mise en cache (WP Fastest Cache, WP Rocket, LiteSpeed, W3 Total Cache…) : les services ne disparaissent plus au bout de quelques heures. La page contenant le widget est en plus automatiquement exclue du cache de page. Correctif visuel : les flèches de navigation du calendrier ne sont plus invisibles avec certains thèmes.
-
-= 1.2.1 =
-*Correctif Google Calendar.* Changer de calendrier synchronisé efface désormais les événements de l'ancien calendrier et relance une synchronisation complète propre. Avant, ces événements restaient en base et bloquaient des créneaux sur des journées en réalité libres (seuls quelques créneaux en fin de journée apparaissaient disponibles).
-
-= 1.2.0 =
-*Versions Free et Payante.* La version gratuite couvre la prise de RDV et les e-mails transactionnels (modèles par défaut). La version payante (clé de licence valide) débloque la synchronisation Google Calendar, la personnalisation des e-mails et les rappels automatiques J-1.
-
-= 1.1.1 =
-*Correctif de mise à jour.* Les nouvelles colonnes de base de données sont désormais appliquées automatiquement lors d'une mise à jour 1-clic (avant, elles ne l'étaient qu'à la réactivation manuelle du plugin) — ce qui pouvait empêcher la connexion Google après une mise à jour depuis une version antérieure. Les échecs de connexion Google affichent aussi leur cause réelle au lieu d'un message générique.
-
-= 1.1.0 =
-*Connexion Google en 1 clic via le service SlashBooking.* Plus besoin de créer un projet Google Cloud ni de coller un Client ID/Secret : saisis ta clé de licence, clique « Connecter Google Calendar », c'est tout. Le plugin ne contient plus aucun secret Google. **Migration :** les connexions Google existantes doivent être renouvelées une fois (1 clic) après la mise à jour — une notice te le rappelle. Tes RDV et réglages sont conservés.
-
-= 1.0.25 =
-*Sorti le 2026-05-31.* **Durcissement sécurité (audit).** Rate limit anti-abus du formulaire (fail-closed + plafond global, clés IPv6 /64), notice quand Turnstile n'est pas configuré, webhook Google durci (expiration + resource id en temps constant + anti-rafale), gestion réservée aux administrateurs par défaut (filtre `slashbooking_manage_roles`, révocation de l'éditeur à la mise à jour), liens de décision/annulation passés en page de confirmation (le `GET` n'agit plus, seul le `POST` agit), suppression d'une fuite de message d'exception, clés HMAC séparées par contexte, et notice « clé de chiffrement en base » escaladée. ⚠️ Les liens de décision/annulation déjà envoyés par e-mail (validité 72 h) devront être régénérés après la mise à jour.
-
-= 1.0.24 =
-*Sorti le 2026-05-26.* **Fix visuel calendrier** : les jours sans plage horaire configurée (typiquement samedi + dimanche sur un service Lun-Ven) apparaissaient en rouge "Complet" au lieu de gris "Fermé". Le widget différencie désormais correctement les deux états en s'appuyant sur `weekly_hours` du service.
-
-= 1.0.23 =
-*Sorti le 2026-05-26.* **Fix mobile calendrier** : les chiffres des jours débordaient encore visuellement de leur case sur les écrans étroits (iPhone SE, certaines mises en page avec sidebar mobile). Trois correctifs CSS combinés : padding `<button>` par défaut du navigateur supprimé, `min-width: 0` ajouté aux cellules grid (évite le blowout des colonnes), `line-height: 1` pour éviter le débordement vertical hérité, plus une nouvelle media query sous 380 px qui réduit le padding du step et la taille de police pour garantir 7 colonnes propres jusqu'à 320 px.
-
-= 1.0.22 =
-*Sorti le 2026-05-26.* **Fix critique frontend public** : le widget de booking restait bloqué (étape "Projet" invisible, calendrier grisé) pour les visiteurs non connectés sur les sites qui restreignent la REST API aux utilisateurs authentifiés (Disable REST API, Wordfence, iThemes Security, snippets custom). SlashBooking whiteliste désormais ses routes publiques (`services`, `availability`, `bookings`, `cancel`, `decide`, `google/webhook`) au niveau de `rest_authentication_errors` — les autres endpoints REST restent protégés par la config du site.
-
-= 1.0.21 =
-*Sorti le 2026-05-22.* **Widget Dashboard** : ajoute un encart dans le tableau de bord WP qui affiche les **réservations en attente** (à valider) et les **RDV confirmés à venir sous 7 jours**. Pour chaque ligne : date+heure, nom client, service. Compteur badge sur chaque section. Lien direct vers la liste complète. Visible par admin + éditeur.
-
-= 1.0.20 =
-*Sorti le 2026-05-22.* Le rôle WP **Éditeur** a maintenant accès au menu SlashBooking et à toutes les opérations (gestion des réservations, services, Google, modèles d'e-mail, réglages). Utile quand un commercial ou un assistant gère les RDV sans avoir les droits d'admin technique. Migration automatique pour les installations existantes — pas besoin de désactiver/réactiver.
-
-= 1.0.19 =
-*Sorti le 2026-05-22.* Fix défensif sur le parsing de la version : ajout d'un `trim()` via filtre PUC pour les contextes où `_cleanup_header_comment` n'est pas disponible (cron, builds WP exotiques). Le `is_admin()` guard sur le bootstrap est retiré : PUC tourne maintenant dans tous les contextes qui peuvent rafraîchir le transient `update_plugins`.
-
-= 1.0.18 =
-*Sorti le 2026-05-22.* Ajout du `readme.txt` au format wp.org pour la page "Afficher les détails" dans wp-admin.
-
-= 1.0.17 =
-*Sorti le 2026-05-22.* Fix critique : système de mise à jour PUC opérationnel (le `classmap-authoritative` du build composer bypassait l'init du registre PUC).
-
-= 1.0.16 =
-*Sorti le 2026-05-22.* Fix : patcher PHP-Scoper qui préserve les clés string du registre PUC après scoping.
-
-= 1.0.15 =
-*Sorti le 2026-05-22.* Mises à jour 1-clic depuis wp-admin via Plugin Update Checker + GitHub Releases. Workflow GitHub Actions qui build et publie une release sur push de tag.
-
-= 1.0.14 =
-*Sorti le 2026-05-22.* Buffer symétrique de 30 min autour des événements Google Calendar. Le dernier créneau peut maintenant démarrer à l'heure de fin de plage.
-
-= Versions antérieures =
-Voir le [CHANGELOG complet](https://github.com/ArchSeraphin/slashbooking/blob/main/CHANGELOG.md).
+= 1.0.0 =
+First public release: shortcode booking form with real-time availability, one-click signed email confirmation (Confirm/Decline), `.ics` attachments, per-service opening hours and buffers, GDPR exporters/erasers and retention, honeypot + rate limiting, and optional Cloudflare Turnstile.
 
 == Upgrade Notice ==
 
-= 1.1.0 =
-Nouvelle connexion Google en 1 clic (licence SlashBooking). Après mise à jour, reconnecte Google Calendar une fois depuis l'onglet Google (tes données sont conservées).
-
-= 1.0.25 =
-Durcissement sécurité (anti-abus booking, webhook Google, liens de confirmation GET→POST, clés HMAC séparées par contexte, accès admin par défaut). ⚠️ Les liens d'annulation/décision déjà envoyés par e-mail (validité 72 h) ne fonctionneront plus après la mise à jour — ils sont régénérés automatiquement pour les nouveaux envois. Pas de reconnexion Google requise.
-
-= 1.0.24 =
-Fix visuel : les jours non travaillés (samedi/dimanche par défaut) s'affichent maintenant "Fermé" gris au lieu de "Complet" rouge.
-
-= 1.0.23 =
-Fix UI mobile : les chiffres du calendrier ne débordent plus de leur case sur les petits écrans. Pas de breaking change.
-
-= 1.0.22 =
-Fix critique : le booking redevient utilisable en mode visiteur (non connecté) sur les sites qui bloquent la REST API aux guests. À installer si ton formulaire reste figé en chargement pour les clients.
-
-= 1.0.21 =
-Nouveau widget Dashboard pour voir les réservations en attente et à venir en un coup d'œil.
-
-= 1.0.20 =
-Le rôle Éditeur a maintenant accès au plugin. Migration automatique des permissions, aucune action requise.
-
-= 1.0.19 =
-Fix critique du parsing de version dans le système de mise à jour. Si tu es sur 1.0.17 ou 1.0.18, installe celle-ci manuellement (les mises à jour 1-clic ne détectaient pas la nouvelle version à cause d'un whitespace).
-
-= 1.0.18 =
-Ajoute la page de description riche dans wp-admin. Pas de breaking change.
-
-= 1.0.17 =
-Fix critique du système de mise à jour. Si tu es sur 1.0.15 ou 1.0.16, installe celle-ci pour débloquer les futures mises à jour 1-clic.
+= 1.0.0 =
+First public release.

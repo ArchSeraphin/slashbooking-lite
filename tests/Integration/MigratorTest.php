@@ -18,9 +18,6 @@ final class MigratorTest extends WP_UnitTestCase
         $expected = [
             $wpdb->prefix . 'sb_services',
             $wpdb->prefix . 'sb_bookings',
-            $wpdb->prefix . 'sb_busy_blocks',
-            $wpdb->prefix . 'sb_google_accounts',
-            $wpdb->prefix . 'sb_sync_log',
             $wpdb->prefix . 'sb_mail_templates',
         ];
 

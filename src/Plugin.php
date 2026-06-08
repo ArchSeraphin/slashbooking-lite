@@ -5,7 +5,7 @@ namespace Slash\Booking;
 
 final class Plugin
 {
-    public const VERSION = '1.4.2';
+    public const VERSION = '1.0.0';
     public const TEXT_DOMAIN = 'slashbooking';
     public const DB_VERSION = 2;
     public const REST_NAMESPACE = 'slashbooking/v1';
@@ -85,12 +85,6 @@ final class Plugin
         // install fatals on `new DecisionTokenSigner('')` further down.
         Activator::ensureDecisionSecret();
 
-        // No is_admin() guard: PUC's filters need to be registered in any
-        // context that may refresh the update_plugins transient — including
-        // WP-Cron (DOING_CRON=true, is_admin()=false). Skipping bootstrap on
-        // those contexts left the transient stale and made updates undetectable.
-        Updates\UpdateChecker::bootstrap($this->pluginFile);
-
         // Propagate capability changes to existing installs that were activated
         // under an older revision (e.g. before editor role got plugin access).
         Admin\Capabilities::syncOnUpgrade();
@@ -102,9 +96,8 @@ final class Plugin
         global $wpdb;
 
         // Run pending schema migrations on every boot, not just on activation:
-        // plugin UPDATES (the 1-click updater) do NOT fire the activation hook,
-        // so without this a client who updates never gets new columns added in a
-        // newer DB_VERSION (e.g. reconnect_required). Migrator self-gates on the
+        // plugin UPDATES do NOT fire the activation hook, so without this a client
+        // who updates never gets new columns. Migrator self-gates on the
         // sb_db_version option, so this is a cheap no-op once the schema is current.
         (new Persistence\Migrator($wpdb))->migrate();
 
@@ -120,10 +113,7 @@ final class Plugin
 
         $bookings = new Persistence\BookingRepository($wpdb);
 
-        $reminder = new Notifications\ReminderScheduler($bookings);
-        $reminder->register();
-
-        // Plan 5: WP privacy data exporters / erasers
+        // WP privacy data exporters / erasers
         $privacyExporter = new Privacy\BookingExporter(
             findByEmail: fn (string $email) => $bookings->findByCustomerEmail($email),
         );
@@ -146,7 +136,8 @@ final class Plugin
             return $erasers;
         });
 
-        // Cron interval must also be present at runtime, not just at activation.
+        // Custom monthly cron interval (used by the retention purger). Must also
+        // be present at runtime, not just at activation.
         add_filter('cron_schedules', static function (array $s): array {
             if (!isset($s['sb_monthly'])) {
                 $s['sb_monthly'] = [
@@ -180,307 +171,10 @@ final class Plugin
             $urls,
         ))->register();
 
-        // ----- Google sync (Plan 3) -----
-        $accounts    = new Persistence\GoogleAccountRepository($wpdb);
-
-        (new Migration\BrokerMigration($accounts))->run();
-        add_action('admin_notices', static function () use ($accounts): void {
-            if (!current_user_can('manage_options')) {
-                return;
-            }
-            $account = $accounts->findSingle();
-            if ($account === null || !$account->reconnectRequired()) {
-                return;
-            }
-            $url = admin_url('admin.php?page=slashbooking#/google');
-            printf(
-                '<div class="notice notice-warning"><p><strong>SlashBooking :</strong> %s <a href="%s">%s</a></p></div>',
-                esc_html__('La connexion Google Calendar doit être renouvelée (1 clic).', 'slashbooking'),
-                esc_url($url),
-                esc_html__('Reconnecter maintenant', 'slashbooking')
-            );
-        });
-
-        $syncLogRepo = new Persistence\SyncLogRepository($wpdb);
-        $keyResolver = new Google\EncryptionKeyResolver();
-        $encryption  = new Google\Encryption($keyResolver->resolve());
-
-        $pendingColor   = (string) get_option('sb_gcal_color_pending', '6');
-        $confirmedColor = (string) get_option('sb_gcal_color_confirmed', '10');
-        $formatter      = new Google\EventFormatter($pendingColor, $confirmedColor);
-
-        (new Google\PushScheduler())->register();
-
-        (new Google\SyncLogPurger(
-            purge: fn (\DateTimeImmutable $cutoff): int => $syncLogRepo->purgeOlderThan($cutoff),
-        ))->register();
-
-        $broker        = new Google\BrokerClient(
-            baseUrl: Config::brokerUrl(),
-            license: (string) get_option('sb_license_key', ''),
-        );
-        $clientBuilder = new Google\GoogleClientBuilder($encryption, $accounts, $broker);
-
-        // Register Action Scheduler handler.
-        add_action(Google\PushScheduler::HOOK, function (int $bookingId, string $action) use (
-            $bookings,
-            $services,
-            $accounts,
-            $syncLogRepo,
-            $formatter,
-            $clientBuilder
-        ): void {
-            // Paid feature: pause outbound WP->Google push when the license is not
-            // valid (downgrade). Data is preserved; push resumes on re-validation.
-            if (!Config::isPaid()) {
-                return;
-            }
-            $booking = $bookings->findById($bookingId);
-            if ($booking === null) {
-                return;
-            }
-            $service = $services->findById($booking->serviceId());
-            if ($service === null) {
-                return;
-            }
-
-            $account = $accounts->findSingle();
-            if ($account === null) {
-                $syncLogRepo->append(
-                    level: 'warn',
-                    direction: 'wp_to_g',
-                    entity: 'booking',
-                    entityId: $bookingId,
-                    googleEventId: null,
-                    action: $action,
-                    status: 'failed',
-                    payload: [],
-                    errorMessage: 'No Google account connected',
-                );
-                return;
-            }
-
-            try {
-                $gateway = $clientBuilder->buildGateway($account);
-            } catch (\Throwable $e) {
-                $syncLogRepo->append(
-                    level: 'error',
-                    direction: 'wp_to_g',
-                    entity: 'booking',
-                    entityId: $bookingId,
-                    googleEventId: $booking->googleEventId(),
-                    action: $action,
-                    status: 'failed',
-                    payload: [],
-                    errorMessage: 'Token refresh failed: ' . $e->getMessage(),
-                );
-                return;
-            }
-
-            $job = new Google\PushEventJob(
-                findBooking: fn () => $booking,
-                findAccount: fn () => $account,
-                persistBooking: fn (Domain\Booking $b) => $bookings->save($b),
-                gateway: $gateway,
-                formatter: $formatter,
-                service: $service,
-                log: function (array $entry) use ($syncLogRepo): void {
-                    $syncLogRepo->append(
-                        level: (string) $entry['level'],
-                        direction: (string) $entry['direction'],
-                        entity: (string) $entry['entity'],
-                        entityId: (int) $entry['entity_id'],
-                        googleEventId: $entry['google_event_id'] !== null ? (string) $entry['google_event_id'] : null,
-                        action: (string) $entry['action'],
-                        status: (string) $entry['status'],
-                        payload: [],
-                        errorMessage: $entry['error_message'] !== null ? (string) $entry['error_message'] : null,
-                    );
-                },
-            );
-
-            $job->handle($bookingId, $action);
-        }, 10, 2);
-
-        // ----- Google sync inbound (Plan 4) -----
-        $busyRepo = new Persistence\BusyBlockRepository($wpdb);
-        $watchMgr = new Google\WatchChannelManager(
-            persist: fn (Domain\GoogleAccount $a) => $accounts->save($a),
-            ttlSeconds: 604_800, // 7 days
-        );
-
-        // Custom 15-minute cron interval. Filter must be present at every boot
-        // (cron itself fires from WP-Cron which calls these filters at runtime).
-        add_filter('cron_schedules', static function (array $s): array {
-            if (!isset($s['sb_fifteen_minutes'])) {
-                $s['sb_fifteen_minutes'] = [
-                    'interval' => 900,
-                    'display'  => 'Every 15 minutes (SlashBooking)',
-                ];
-            }
-            return $s;
-        });
-
-        // SyncEngine factory closure (each pull builds a new instance with fresh closures).
-        $buildSyncEngine = static function () use ($bookings, $busyRepo, $accounts, $syncLogRepo): Google\SyncEngine {
-            return new Google\SyncEngine(
-                findBookingByEventId: function (string $eventId) use ($bookings): ?int {
-                    $b = $bookings->findByGoogleEventId($eventId);
-                    return $b?->id();
-                },
-                upsertBusyBlock: fn (Domain\BusyBlock $bb) => $busyRepo->upsertFromGoogle($bb),
-                deleteBusyBlock: fn (int $accountId, string $sourceId) => $busyRepo->deleteBySourceId($accountId, $sourceId),
-                persistAccount: fn (Domain\GoogleAccount $a) => $accounts->save($a),
-                log: function (array $entry) use ($syncLogRepo): void {
-                    $syncLogRepo->append(
-                        level: (string) $entry['level'],
-                        direction: (string) $entry['direction'],
-                        entity: (string) $entry['entity'],
-                        entityId: $entry['entity_id'] !== null ? (int) $entry['entity_id'] : null,
-                        googleEventId: $entry['google_event_id'] !== null ? (string) $entry['google_event_id'] : null,
-                        action: (string) $entry['action'],
-                        status: (string) $entry['status'],
-                        payload: is_array($entry['payload'] ?? null) ? $entry['payload'] : [],
-                        errorMessage: $entry['error_message'] !== null ? (string) $entry['error_message'] : null,
-                    );
-                },
-            );
-        };
-
-        // Action Scheduler handler for inbound pulls.
-        // Producers (webhook controller, admin "pull now", cron fallback) call:
-        //   as_schedule_single_action(time() + 5, 'sb/google_pull', [$accountId], 'slashbooking')
-        // RestRouter constructs its own enqueuePull closure with the same hook name — keeps the
-        // producer-side wiring close to the controllers without dragging Plugin.php into them.
-        add_action('sb/google_pull', static function (int $accountId) use (
-            $accounts,
-            $clientBuilder,
-            $buildSyncEngine,
-            $syncLogRepo
-        ): void {
-            // Paid feature: pause all Google sync when the license is not valid
-            // (downgrade). Data is preserved; sync resumes on re-validation.
-            if (!Config::isPaid()) {
-                return;
-            }
-            $job = new Google\PullEventJob(
-                findAccount: fn (int $id) => $accounts->findById($id),
-                buildGateway: fn (Domain\GoogleAccount $a) => $clientBuilder->buildGateway($a),
-                pull: fn (Domain\GoogleAccount $a, Google\CalendarGateway $g) => $buildSyncEngine()->pull($a, $g),
-                log: function (array $entry) use ($syncLogRepo): void {
-                    $syncLogRepo->append(
-                        level: (string) $entry['level'],
-                        direction: (string) $entry['direction'],
-                        entity: (string) $entry['entity'],
-                        entityId: $entry['entity_id'] !== null ? (int) $entry['entity_id'] : null,
-                        googleEventId: $entry['google_event_id'] !== null ? (string) $entry['google_event_id'] : null,
-                        action: (string) $entry['action'],
-                        status: (string) $entry['status'],
-                        payload: is_array($entry['payload'] ?? null) ? $entry['payload'] : [],
-                        errorMessage: $entry['error_message'] !== null ? (string) $entry['error_message'] : null,
-                    );
-                },
-            );
-            $job->handle($accountId);
-        }, 10, 1);
-
-        // Daily watch renewal check: renew if expiration < now+1 day.
-        add_action('sb/watch_renew_check', static function () use ($accounts, $clientBuilder, $watchMgr, $syncLogRepo): void {
-            $account = $accounts->findSingle();
-            if ($account === null) {
-                return;
-            }
-            $expiresAt = $account->watchExpiresAt();
-            $now       = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-            $threshold = $now->modify('+1 day');
-            if ($expiresAt !== null && $expiresAt > $threshold) {
-                return; // Still > 24h before expiration.
-            }
-            try {
-                $gateway    = $clientBuilder->buildGateway($account);
-                $webhookUrl = rest_url(Plugin::REST_NAMESPACE . '/google/webhook');
-                $watchMgr->renew($account, $gateway, $webhookUrl);
-                $syncLogRepo->append(
-                    level: 'info',
-                    direction: 'internal',
-                    entity: 'watch',
-                    entityId: $account->id(),
-                    googleEventId: null,
-                    action: 'watch_renewed',
-                    status: 'ok',
-                    payload: ['channelId' => $account->watchChannelId()],
-                    errorMessage: null,
-                );
-            } catch (\Throwable $e) {
-                $syncLogRepo->append(
-                    level: 'error',
-                    direction: 'internal',
-                    entity: 'watch',
-                    entityId: $account->id(),
-                    googleEventId: null,
-                    action: 'watch_renew',
-                    status: 'failed',
-                    payload: [],
-                    errorMessage: $e->getMessage(),
-                );
-            }
-        });
-
-        // 15-min cron fallback: enqueue one pull per account (V1: a single account).
-        add_action('sb/google_pull_all', static function () use ($accounts): void {
-            $account = $accounts->findSingle();
-            if ($account === null) {
-                return;
-            }
-            if (function_exists('as_schedule_single_action')) {
-                as_schedule_single_action(time() + 5, 'sb/google_pull', [(int) $account->id()], 'slashbooking');
-                return;
-            }
-            do_action('sb/google_pull', (int) $account->id());
-        });
-
-        // Admin notice if encryption key falls back to the database option.
-        // Escalated to notice-error: while the fallback works, the Google tokens
-        // are NOT protected at rest against a DB dump until the constant is set.
-        if ($keyResolver->usingFallback()) {
-            add_action('admin_notices', function (): void {
-                if (!current_user_can('manage_options')) {
-                    return;
-                }
-                echo '<div class="notice notice-error"><p><strong>SlashBooking — '
-                    . esc_html__('sécurité', 'slashbooking') . ' :</strong> '
-                    . esc_html__(
-                        'la clé de chiffrement est stockée dans la base de données. Les tokens Google ne sont donc PAS protégés en cas de fuite de la base. Définissez la constante',
-                        'slashbooking'
-                    )
-                    . ' <code>SLASHBOOKING_ENC_KEY</code> '
-                    . esc_html__('dans', 'slashbooking')
-                    . ' <code>wp-config.php</code> '
-                    . esc_html__('pour utiliser une clé hors base.', 'slashbooking')
-                    . '</p></div>';
-            });
-        }
-
         (new Admin\TurnstileNotice())->register();
         (new Admin\AdminMenu())->register();
         (new Admin\Assets($this))->register();
         (new Admin\DashboardWidget($bookings, $services))->register();
-
-        if (defined('WP_CLI') && WP_CLI) {
-            $pullNow = static function (Domain\GoogleAccount $account) use ($clientBuilder, $buildSyncEngine): Google\PullResult {
-                if (!Config::isPaid()) {
-                    return new Google\PullResult();
-                }
-                $gateway = $clientBuilder->buildGateway($account);
-                return $buildSyncEngine()->pull($account, $gateway);
-            };
-            /** @phpstan-ignore-next-line Class.NotFound (WP_CLI conditionally available) */
-            \WP_CLI::add_command('slashbooking doctor', new Cli\DoctorCommand(
-                $accounts,
-                $clientBuilder,
-                $pullNow,
-            ));
-        }
 
         add_action('init', [$this, 'loadTextDomain']);
     }

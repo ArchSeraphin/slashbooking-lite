@@ -71,56 +71,6 @@ final class Migrator
                 KEY idx_google_event (google_event_id)
             ) {$charset};",
 
-            "CREATE TABLE {$prefix}sb_busy_blocks (
-                id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                source VARCHAR(16) NOT NULL,
-                source_id VARCHAR(255) NOT NULL,
-                google_account_id BIGINT UNSIGNED NULL,
-                starts_at_utc DATETIME NOT NULL,
-                ends_at_utc DATETIME NOT NULL,
-                summary VARCHAR(255) NULL,
-                last_synced_at DATETIME NOT NULL,
-                PRIMARY KEY (id),
-                UNIQUE KEY uk_source (source, source_id),
-                KEY idx_range (starts_at_utc, ends_at_utc)
-            ) {$charset};",
-
-            "CREATE TABLE {$prefix}sb_google_accounts (
-                id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                label VARCHAR(120) NOT NULL,
-                calendar_id VARCHAR(200) NOT NULL,
-                oauth_refresh_token_enc LONGTEXT NULL,
-                oauth_access_token_enc LONGTEXT NULL,
-                oauth_expires_at DATETIME NULL,
-                watch_channel_id VARCHAR(80) NULL,
-                watch_resource_id VARCHAR(255) NULL,
-                watch_token_secret VARCHAR(80) NULL,
-                watch_expires_at DATETIME NULL,
-                sync_token VARCHAR(255) NULL,
-                last_full_sync_at DATETIME NULL,
-                reconnect_required TINYINT(1) NOT NULL DEFAULT 0,
-                created_at DATETIME NOT NULL,
-                updated_at DATETIME NOT NULL,
-                PRIMARY KEY (id)
-            ) {$charset};",
-
-            "CREATE TABLE {$prefix}sb_sync_log (
-                id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                ts DATETIME NOT NULL,
-                level VARCHAR(10) NOT NULL,
-                direction VARCHAR(8) NOT NULL,
-                entity VARCHAR(32) NOT NULL,
-                entity_id BIGINT UNSIGNED NULL,
-                google_event_id VARCHAR(255) NULL,
-                action VARCHAR(40) NOT NULL,
-                payload LONGTEXT NULL,
-                status VARCHAR(16) NOT NULL,
-                error_message TEXT NULL,
-                PRIMARY KEY (id),
-                KEY idx_ts (ts),
-                KEY idx_entity (entity, entity_id)
-            ) {$charset};",
-
             "CREATE TABLE {$prefix}sb_mail_templates (
                 id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
                 event_key VARCHAR(64) NOT NULL,

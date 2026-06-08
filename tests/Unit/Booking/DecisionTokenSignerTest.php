@@ -57,20 +57,4 @@ final class DecisionTokenSignerTest extends TestCase
 
         self::assertNotSame($rawHmac, $sig, 'signer must derive a context subkey, not use the root secret directly');
     }
-
-    public function test_decision_and_oauth_state_do_not_share_effective_key(): void
-    {
-        $root = str_repeat('s', 32);
-        $signer = new DecisionTokenSigner($root);
-        $state  = new \Slash\Booking\Google\OAuthState($root);
-
-        $exp = time() + 600;
-        $decisionSig = $signer->sign('x', $exp);
-
-        // OAuthState issues a token; confirm its bytes don't embed the decision
-        // signature for the same root secret, proving distinct derived keys.
-        $token = $state->issue(0);
-        self::assertNotSame('', $token);
-        self::assertStringNotContainsString($decisionSig, $token);
-    }
 }

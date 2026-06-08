@@ -48,12 +48,9 @@ final class Assets
         );
 
         wp_localize_script('slashbooking-admin', 'SlashBooking', [
-            'restUrl'       => esc_url_raw(rest_url(Plugin::REST_NAMESPACE)),
-            'nonce'         => wp_create_nonce('wp_rest'),
-            'version'       => Plugin::VERSION,
-            'isPaid'        => \Slash\Booking\Config::isPaid(),
-            'licenseStatus' => (string) get_option('sb_license_status', 'absent'),
-            'pricingUrl'    => 'https://slashbooking.fr/#tarifs',
+            'restUrl' => esc_url_raw(rest_url(Plugin::REST_NAMESPACE)),
+            'nonce'   => wp_create_nonce('wp_rest'),
+            'version' => Plugin::VERSION,
         ]);
     }
 }

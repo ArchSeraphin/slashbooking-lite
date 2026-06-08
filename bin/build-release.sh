@@ -2,6 +2,9 @@
 # Build a distribution ZIP for slashbooking.
 # Usage: bin/build-release.sh [version]
 #        version defaults to the value read from src/Plugin.php
+#
+# This build has NO third-party runtime dependencies, so there is nothing to
+# scope: vendor/ holds only Composer's PSR-4 autoloader for Slash\Booking.
 
 set -euo pipefail
 
@@ -9,7 +12,6 @@ PLUGIN_SLUG="slashbooking"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="${ROOT_DIR}/build"
 STAGING_DIR="${BUILD_DIR}/${PLUGIN_SLUG}"
-SCOPED_DIR="${BUILD_DIR}/scoped"
 
 VERSION="${1:-}"
 if [ -z "$VERSION" ]; then
@@ -22,105 +24,48 @@ echo "→ Building ${PLUGIN_SLUG} v${VERSION}"
 
 # 1. Clean previous build
 rm -rf "${BUILD_DIR}"
-mkdir -p "${STAGING_DIR}" "${SCOPED_DIR}"
+mkdir -p "${STAGING_DIR}"
 
-# 2. Install Composer prod dependencies (without dev) into vendor/
-echo "→ composer install --no-dev (production deps)"
+# 2. Composer autoloader only (no runtime deps, no dev)
+echo "→ composer install --no-dev (autoloader only)"
 (cd "${ROOT_DIR}" && composer install --no-dev --optimize-autoloader --no-interaction --quiet)
 
-# 3. Build npm assets (production webpack)
-# SKIP_NPM_BUILD=1 reuses the already-compiled bundle in assets/dist — use for
-# PHP-only patches, or while the React sources are mid-refactor. Requires a
-# current assets/dist/index.jsx.js to exist.
+# 3. Build the admin SPA assets (production webpack)
 if [ "${SKIP_NPM_BUILD:-0}" = "1" ]; then
-    if [ ! -f "${ROOT_DIR}/assets/dist/index.jsx.js" ]; then
-        echo "✗ SKIP_NPM_BUILD=1 but assets/dist/index.jsx.js is missing — cannot reuse bundle." >&2
-        exit 1
-    fi
-    echo "→ SKIP_NPM_BUILD=1: reusing existing assets/dist bundle (no webpack rebuild)"
+    [ -f "${ROOT_DIR}/assets/dist/index.jsx.js" ] \
+        || { echo "✗ SKIP_NPM_BUILD=1 but assets/dist/index.jsx.js is missing." >&2; exit 1; }
+    echo "→ SKIP_NPM_BUILD=1: reusing existing assets/dist bundle"
 else
     echo "→ npm run build (SPA assets)"
     (cd "${ROOT_DIR}" && npm ci --silent && npm run build --silent)
 fi
 
-# 4. Run PHP-Scoper to produce scoped src/ + vendor/
-#
-# php-scoper est un OUTIL DE BUILD, pas une dépendance de dev : son arbre
-# (symfony/console, symfony/string ^PHP8.4, fidry/*…) rendait composer.lock
-# non installable sur PHP 8.1-8.3 (CI rouge) ET — pire — se faisait scoper
-# puis EMBARQUER dans le ZIP livré (scoper.inc.php inclut vendor/symfony,
-# qui doit rester prod-only). On utilise donc le PHAR officiel, épinglé par
-# version + SHA-256, et vendor/ reste --no-dev au moment du scoping.
-SCOPER_VERSION="0.18.18"
-SCOPER_SHA256="06d52b9b3020d06f3301803b7bc5b015f50cd1541d2c322883481b5cc40be6a2"
-SCOPER_PHAR="${ROOT_DIR}/.tools/php-scoper-${SCOPER_VERSION}.phar"
-if [ ! -f "${SCOPER_PHAR}" ]; then
-    echo "→ downloading php-scoper ${SCOPER_VERSION} PHAR"
-    mkdir -p "${ROOT_DIR}/.tools"
-    curl -sSL -o "${SCOPER_PHAR}" \
-        "https://github.com/humbug/php-scoper/releases/download/${SCOPER_VERSION}/php-scoper.phar"
-fi
-echo "${SCOPER_SHA256}  ${SCOPER_PHAR}" | shasum -a 256 -c - > /dev/null \
-    || { echo "✗ php-scoper PHAR checksum mismatch — abort." >&2; rm -f "${SCOPER_PHAR}"; exit 1; }
-
-echo "→ php-scoper (prefix Slash\\Booking\\Vendor)"
-# Memory limit 1G is required: scoper processes ~34k files
-(cd "${ROOT_DIR}" && php -d memory_limit=1G "${SCOPER_PHAR}" add-prefix \
-    --config=scoper.inc.php \
-    --output-dir="${SCOPED_DIR}" \
-    --force \
-    --no-interaction \
-    --quiet)
-
-# 5. Regenerate Composer autoload classmap inside the scoped tree
-echo "→ composer dump-autoload (scoped, classmap-authoritative)"
-# Copy a minimal composer.json into scoped dir for dump-autoload to work
-cp "${ROOT_DIR}/composer.json" "${SCOPED_DIR}/composer.json"
-# Strip require-dev (we don't ship test deps) AND inject a classmap entry that
-# scans vendor/ directly. Without this, composer would need vendor/composer/installed.json
-# to enumerate prefixed packages — but scoper doesn't produce one, so vendor classes
-# would not be autoloadable (Class Slash\Booking\Vendor\Google\Client not found).
-SCOPED_COMPOSER="${SCOPED_DIR}/composer.json" php -r '
-$path = getenv("SCOPED_COMPOSER");
-$j = json_decode(file_get_contents($path), true);
-unset($j["require-dev"], $j["autoload-dev"], $j["scripts"]);
-$j["autoload"]["classmap"] = ["vendor/"];
-file_put_contents($path, json_encode($j, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
-'
-(cd "${SCOPED_DIR}" && composer dump-autoload --classmap-authoritative --no-interaction --quiet)
-
-# 6. Stage final tree
+# 4. Stage the plugin tree
 echo "→ staging files into ${STAGING_DIR}"
-cp -R "${SCOPED_DIR}/src" "${STAGING_DIR}/src"
-cp -R "${SCOPED_DIR}/vendor" "${STAGING_DIR}/vendor"
 cp "${ROOT_DIR}/slashbooking.php" "${STAGING_DIR}/slashbooking.php"
-cp "${ROOT_DIR}/uninstall.php" "${STAGING_DIR}/uninstall.php"
-cp "${ROOT_DIR}/README.md" "${STAGING_DIR}/README.md" 2>/dev/null || true
-cp "${ROOT_DIR}/CHANGELOG.md" "${STAGING_DIR}/CHANGELOG.md" 2>/dev/null || true
-cp "${ROOT_DIR}/readme.txt" "${STAGING_DIR}/readme.txt" 2>/dev/null || true
+cp "${ROOT_DIR}/readme.txt" "${STAGING_DIR}/readme.txt"
+[ -f "${ROOT_DIR}/uninstall.php" ] && cp "${ROOT_DIR}/uninstall.php" "${STAGING_DIR}/uninstall.php"
+[ -f "${ROOT_DIR}/CHANGELOG.md" ] && cp "${ROOT_DIR}/CHANGELOG.md" "${STAGING_DIR}/CHANGELOG.md"
+cp -R "${ROOT_DIR}/src" "${STAGING_DIR}/src"
+cp -R "${ROOT_DIR}/vendor" "${STAGING_DIR}/vendor"
 cp -R "${ROOT_DIR}/assets" "${STAGING_DIR}/assets"
-cp -R "${ROOT_DIR}/languages" "${STAGING_DIR}/languages"
-# Strip JSX sources from staged copy (we shipped only assets/dist)
-rm -rf "${STAGING_DIR}/src/Admin/react-app"
-# Copy non-PHP public assets that scoper skipped (it only globs *.php).
-# These are vanilla JS/CSS that don't need namespace prefixing.
-mkdir -p "${STAGING_DIR}/src/PublicFront/assets"
-cp -R "${ROOT_DIR}/src/PublicFront/assets/." "${STAGING_DIR}/src/PublicFront/assets/"
+[ -d "${ROOT_DIR}/languages" ] && cp -R "${ROOT_DIR}/languages" "${STAGING_DIR}/languages"
 
-# 7. ZIP
+# Ship only the compiled bundle (assets/dist), not the JSX/SCSS sources.
+rm -rf "${STAGING_DIR}/src/Admin/react-app"
+
+# 5. ZIP
 echo "→ packaging ZIP ${ZIP_PATH}"
 (cd "${BUILD_DIR}" && zip -r -q "${ZIP_PATH}" "${PLUGIN_SLUG}")
 
-# 8. Checksum
+# 6. Checksum
 CHECKSUM=$(shasum -a 256 "${ZIP_PATH}" | awk '{print $1}')
 echo "${CHECKSUM}  $(basename "${ZIP_PATH}")" > "${ZIP_PATH}.sha256"
 
-# 8b. Restore the dev vendor (step 2 left it --no-dev) so phpunit/phpstan/phpcs
-# keep working locally after a build.
+# 7. Restore the dev vendor so phpunit/phpstan/phpcs keep working locally.
 echo "→ composer install (restore dev vendor)"
 (cd "${ROOT_DIR}" && composer install --no-interaction --quiet)
 
-# 9. Done
 SIZE=$(du -h "${ZIP_PATH}" | awk '{print $1}')
 echo ""
 echo "✓ Release built:"

@@ -8,7 +8,6 @@ use Slash\Booking\Availability\SlotGenerator;
 use Slash\Booking\Booking\CreateBooking;
 use Slash\Booking\Domain\TimeSlot;
 use Slash\Booking\Persistence\BookingRepository;
-use Slash\Booking\Persistence\BusyBlockRepository;
 use Slash\Booking\Persistence\ServiceRepository;
 use Slash\Booking\Plugin;
 use Slash\Booking\PublicFront\TurnstileVerifier;
@@ -25,7 +24,6 @@ final class PublicBookingController
     public function __construct(
         private readonly ServiceRepository $services,
         private readonly BookingRepository $bookings,
-        private readonly BusyBlockRepository $busyBlocks,
         private readonly SlotGenerator $slotGenerator,
         private readonly CreateBooking $createBooking,
         private readonly ?TurnstileVerifier $turnstile = null,
@@ -113,27 +111,11 @@ final class PublicBookingController
         $rangeStart = $candidates[0]->start;
         $rangeEnd   = $candidates[count($candidates) - 1]->end;
 
-        $blocking = array_map(
+        $busy = array_map(
             static fn ($b) => $b->slot(),
             $this->bookings->findOverlapping(
                 (int) ($svc->id ?? 0),
                 new TimeSlot($rangeStart, $rangeEnd),
-            ),
-        );
-
-        // Calendar events get an additional "after" cushion (in addition to the
-        // candidate's bufferAfter that already covers the "before" side) so external
-        // events end up with a symmetric buffer on both sides — matching the
-        // behavior expected for personal calendar commitments.
-        $busyEntries = $this->busyBlocks->findInRange(
-            $rangeStart->modify('-' . $svc->bufferAfterMin . ' minutes'),
-            $rangeEnd->modify('+' . $svc->bufferAfterMin . ' minutes'),
-        );
-        $busy = array_merge(
-            $blocking,
-            array_map(
-                static fn ($bb) => $bb->slot->expand(0, $svc->bufferAfterMin),
-                $busyEntries,
             ),
         );
 

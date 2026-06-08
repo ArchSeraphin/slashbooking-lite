@@ -17,32 +17,6 @@ final class Activator
         self::seedServices($wpdb);
         Admin\Capabilities::install();
 
-        if (!wp_next_scheduled(\Slash\Booking\Notifications\ReminderScheduler::HOOK)) {
-            wp_schedule_event(self::tomorrowAt10SiteTz(), 'daily', \Slash\Booking\Notifications\ReminderScheduler::HOOK);
-        }
-
-        if (!wp_next_scheduled(\Slash\Booking\Google\SyncLogPurger::HOOK)) {
-            wp_schedule_event(self::tomorrowAt3SiteTz(), 'daily', \Slash\Booking\Google\SyncLogPurger::HOOK);
-        }
-
-        if (!wp_next_scheduled('sb/watch_renew_check')) {
-            wp_schedule_event(self::tomorrowAt4SiteTz(), 'daily', 'sb/watch_renew_check');
-        }
-
-        // 15-minute cron interval: filter must be registered before scheduling.
-        add_filter('cron_schedules', static function (array $s): array {
-            if (!isset($s['sb_fifteen_minutes'])) {
-                $s['sb_fifteen_minutes'] = [
-                    'interval' => 900,
-                    'display'  => 'Every 15 minutes (SlashBooking)',
-                ];
-            }
-            return $s;
-        });
-        if (!wp_next_scheduled('sb/google_pull_all')) {
-            wp_schedule_event(time() + 900, 'sb_fifteen_minutes', 'sb/google_pull_all');
-        }
-
         // Custom monthly interval (WP doesn't ship one by default).
         add_filter('cron_schedules', static function (array $s): array {
             if (!isset($s['sb_monthly'])) {
@@ -63,25 +37,6 @@ final class Activator
         }
     }
 
-    private static function tomorrowAt10SiteTz(): int
-    {
-        $tz = function_exists('wp_timezone') ? wp_timezone() : new \DateTimeZone('UTC');
-        $when = new \DateTimeImmutable('tomorrow 10:00', $tz);
-        return $when->getTimestamp();
-    }
-
-    private static function tomorrowAt3SiteTz(): int
-    {
-        $tz = function_exists('wp_timezone') ? wp_timezone() : new \DateTimeZone('UTC');
-        return (new \DateTimeImmutable('tomorrow 03:00', $tz))->getTimestamp();
-    }
-
-    private static function tomorrowAt4SiteTz(): int
-    {
-        $tz = function_exists('wp_timezone') ? wp_timezone() : new \DateTimeZone('UTC');
-        return (new \DateTimeImmutable('tomorrow 04:00', $tz))->getTimestamp();
-    }
-
     private static function firstDayNextMonthAt0330SiteTz(): int
     {
         $tz = function_exists('wp_timezone') ? wp_timezone() : new \DateTimeZone('UTC');
@@ -89,9 +44,7 @@ final class Activator
     }
 
     /**
-     * Root HMAC secret. Both DecisionTokenSigner and Google\OAuthState derive
-     * DISTINCT context subkeys from this single value (HKDF-style domain
-     * separation), so do NOT add a second option — one stored secret is correct.
+     * Root HMAC secret used by DecisionTokenSigner (signed decision/cancel links).
      */
     public static function ensureDecisionSecret(): void
     {

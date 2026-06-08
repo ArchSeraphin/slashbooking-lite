@@ -3,12 +3,8 @@ import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import BookingsPage from './BookingsPage';
 import ServicesPage from './ServicesPage';
-import GooglePage from './GooglePage';
-import TemplatesPage from './TemplatesPage';
 import SettingsPage from './SettingsPage';
 import Logo from './Logo';
-import UpgradeButton from './UpgradeButton';
-import UpgradeBanner from './UpgradeBanner';
 
 export default function App() {
 	const readTab = () =>
@@ -21,8 +17,6 @@ export default function App() {
 	}, [] );
 	const version =
 		( window.SlashBooking && window.SlashBooking.version ) || '';
-	const isPaid =
-		( window.SlashBooking && window.SlashBooking.isPaid ) || false;
 
 	return (
 		<div className="sb-admin">
@@ -35,23 +29,16 @@ export default function App() {
 						<h1 className="sb-app-header__title">SlashBooking</h1>
 						<p className="sb-app-header__subtitle">
 							{ __(
-								'Réservations en ligne, synchronisées avec Google Calendar',
+								'Réservations en ligne pour WordPress',
 								'slashbooking'
 							) }
 						</p>
 					</div>
 				</div>
-				<div className="sb-app-header__cta">
-					{ version && (
-						<span className="sb-app-header__version">
-							v{ version }
-						</span>
-					) }
-					{ ! isPaid && <UpgradeButton variant="primary" /> }
-				</div>
+				{ version && (
+					<span className="sb-app-header__version">v{ version }</span>
+				) }
 			</header>
-
-			{ ! isPaid && <UpgradeBanner /> }
 
 			<TabPanel
 				key={ active }
@@ -64,11 +51,6 @@ export default function App() {
 					{
 						name: 'services',
 						title: __( 'Services', 'slashbooking' ),
-					},
-					{ name: 'google', title: __( 'Google', 'slashbooking' ) },
-					{
-						name: 'templates',
-						title: __( 'Templates', 'slashbooking' ),
 					},
 					{
 						name: 'settings',
@@ -83,12 +65,6 @@ export default function App() {
 				{ ( tab ) => {
 					if ( tab.name === 'services' ) {
 						return <ServicesPage />;
-					}
-					if ( tab.name === 'google' ) {
-						return <GooglePage />;
-					}
-					if ( tab.name === 'templates' ) {
-						return <TemplatesPage />;
 					}
 					if ( tab.name === 'settings' ) {
 						return <SettingsPage />;

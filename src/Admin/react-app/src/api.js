@@ -10,9 +10,6 @@ export function setupApi() {
 	}
 	// Prefix every path with our REST namespace so WordPress's default
 	// rootURL middleware builds wp-json/slashbooking/v1/<path> correctly.
-	// We do NOT override the rootURL itself — last-added middleware would
-	// run first, then WP's own rootURL middleware would overwrite the URL
-	// using the bare path, producing wp-json/<path> and a 404.
 	apiFetch.use( ( options, next ) => {
 		if ( typeof options.path === 'string' ) {
 			const clean = options.path.replace( /^\//, '' );
@@ -36,143 +33,7 @@ export async function actBooking( id, action ) {
 	} );
 }
 
-export async function fetchGoogleStatus() {
-	return apiFetch( { path: 'admin/google/status' } );
-}
-
-export async function startGoogleOAuth() {
-	return apiFetch( {
-		path: 'admin/google/oauth/start',
-		method: 'POST',
-	} );
-}
-
-export async function disconnectGoogle() {
-	return apiFetch( {
-		path: 'admin/google/disconnect',
-		method: 'POST',
-	} );
-}
-
-export async function fetchLicenseStatus() {
-	return apiFetch( { path: 'admin/google/settings' } );
-}
-
-export async function saveLicense( licenseKey ) {
-	return apiFetch( {
-		path: 'admin/google/settings',
-		method: 'POST',
-		data: { license_key: licenseKey },
-	} );
-}
-
-export async function fetchSyncLog( {
-	page = 1,
-	perPage = 50,
-	level,
-	status,
-} = {} ) {
-	const params = new URLSearchParams( { page, per_page: perPage } );
-	if ( level ) {
-		params.set( 'level', level );
-	}
-	if ( status ) {
-		params.set( 'status', status );
-	}
-	return apiFetch( { path: `admin/sync-log?${ params }` } );
-}
-
-export async function fetchGoogleDiagnostics() {
-	return apiFetch( { path: 'admin/google/diagnostics' } );
-}
-
-export async function startWatch() {
-	return apiFetch( {
-		path: 'admin/google/watch/start',
-		method: 'POST',
-	} );
-}
-
-export async function stopWatch() {
-	return apiFetch( {
-		path: 'admin/google/watch/stop',
-		method: 'POST',
-	} );
-}
-
-export async function forcePullNow() {
-	return apiFetch( {
-		path: 'admin/google/pull/now',
-		method: 'POST',
-	} );
-}
-
-export async function fetchGoogleCalendars() {
-	return apiFetch( { path: 'admin/google/calendars' } );
-}
-
-export async function setGoogleCalendar( calendarId ) {
-	return apiFetch( {
-		path: 'admin/google/calendar',
-		method: 'POST',
-		data: { calendar_id: calendarId },
-	} );
-}
-
-// --- Plan 5 : templates editor ---
-
-export async function listMailTemplates() {
-	return apiFetch( { path: 'admin/mail-templates' } );
-}
-
-export async function fetchMailTemplate( eventKey ) {
-	return apiFetch( { path: `admin/mail-templates/${ eventKey }` } );
-}
-
-export async function saveMailTemplate(
-	eventKey,
-	{ subject, htmlBody, textBody, enabled }
-) {
-	return apiFetch( {
-		path: `admin/mail-templates/${ eventKey }`,
-		method: 'POST',
-		data: {
-			subject,
-			html_body: htmlBody,
-			text_body: textBody,
-			enabled,
-		},
-	} );
-}
-
-export async function restoreMailTemplate( eventKey ) {
-	return apiFetch( {
-		path: `admin/mail-templates/${ eventKey }`,
-		method: 'DELETE',
-	} );
-}
-
-export async function previewMailTemplate( eventKey, { subject, htmlBody } ) {
-	return apiFetch( {
-		path: `admin/mail-templates/${ eventKey }/preview`,
-		method: 'POST',
-		data: { subject, html_body: htmlBody },
-	} );
-}
-
-export async function sendTestMailTemplate( eventKey, { subject, htmlBody } ) {
-	return apiFetch( {
-		path: `admin/mail-templates/${ eventKey }/test`,
-		method: 'POST',
-		data: { subject, html_body: htmlBody },
-	} );
-}
-
-export async function listTags() {
-	return apiFetch( { path: 'admin/tags' } );
-}
-
-// --- Plan 5 : settings (legal page, retention) ---
+// --- Settings (form, email notifications, retention) ---
 
 export async function fetchSettings() {
 	return apiFetch( { path: 'admin/settings' } );
@@ -228,7 +89,7 @@ export async function saveSettings( {
 	} );
 }
 
-// --- Plan 5+ : services CRUD ---
+// --- Services CRUD ---
 
 export async function listServices() {
 	return apiFetch( { path: 'admin/services' } );
