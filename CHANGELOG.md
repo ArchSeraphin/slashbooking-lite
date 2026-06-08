@@ -6,6 +6,14 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.4.1] — 2026-06-08
+
+### Added
+
+- **Upsell Free→Pro plus visible** : bouton « Passer à Pro » dans l'en-tête de l'admin et bandeau persistant au-dessus de chaque onglet tant que la licence n'est pas valide. Masqués automatiquement une fois la version Pro active.
+
+---
+
 ## [1.4.0] — 2026-06-08
 
 ### Added
