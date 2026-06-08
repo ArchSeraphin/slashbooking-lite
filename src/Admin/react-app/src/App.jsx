@@ -7,6 +7,8 @@ import GooglePage from './GooglePage';
 import TemplatesPage from './TemplatesPage';
 import SettingsPage from './SettingsPage';
 import Logo from './Logo';
+import UpgradeButton from './UpgradeButton';
+import UpgradeBanner from './UpgradeBanner';
 
 export default function App() {
 	const readTab = () =>
@@ -19,6 +21,8 @@ export default function App() {
 	}, [] );
 	const version =
 		( window.SlashBooking && window.SlashBooking.version ) || '';
+	const isPaid =
+		( window.SlashBooking && window.SlashBooking.isPaid ) || false;
 
 	return (
 		<div className="sb-admin">
@@ -37,10 +41,17 @@ export default function App() {
 						</p>
 					</div>
 				</div>
-				{ version && (
-					<span className="sb-app-header__version">v{ version }</span>
-				) }
+				<div className="sb-app-header__cta">
+					{ version && (
+						<span className="sb-app-header__version">
+							v{ version }
+						</span>
+					) }
+					{ ! isPaid && <UpgradeButton variant="primary" /> }
+				</div>
 			</header>
+
+			{ ! isPaid && <UpgradeBanner /> }
 
 			<TabPanel
 				key={ active }

@@ -180,6 +180,45 @@
 }
 
 /* ============================================================
+   Upsell (Free → Pro)
+   ============================================================ */
+.sb-admin .sb-app-header__cta {
+	display: flex;
+	align-items: center;
+	gap: var(--sb-space-3);
+}
+.sb-admin .sb-upsell-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--sb-space-4);
+	flex-wrap: wrap;
+	margin: 0 0 var(--sb-space-5);
+	padding: var(--sb-space-4) var(--sb-space-5);
+	border: 1px solid var(--sb-c-accent-soft);
+	border-left: 4px solid var(--sb-c-cta);
+	border-radius: var(--sb-radius);
+	background: linear-gradient(
+		100deg,
+		rgba(16, 185, 129, 0.1),
+		rgba(37, 99, 235, 0.08)
+	);
+}
+.sb-admin .sb-upsell-bar__msg {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.sb-admin .sb-upsell-bar__title {
+	font-weight: 700;
+	color: var(--sb-c-text);
+}
+.sb-admin .sb-upsell-bar__sub {
+	font-size: 13px;
+	color: var(--sb-c-text-soft);
+}
+
+/* ============================================================
    Shortcode memo (dashboard reminder)
    ============================================================ */
 .sb-shortcode-memo {
