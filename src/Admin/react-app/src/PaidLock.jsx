@@ -1,5 +1,6 @@
 import { Notice } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import UpgradeButton from './UpgradeButton';
 
 /**
  * Wraps a Paid-only section. When `locked`, shows an upsell notice and renders
@@ -17,12 +18,15 @@ export default function PaidLock( { locked, message, children } ) {
 	return (
 		<div className="sb-paidlock">
 			<Notice status="warning" isDismissible={ false }>
-				{ '🔒 ' }
-				{ message ||
-					__(
-						'Disponible dans la version payante de SlashBooking.',
-						'slashbooking'
-					) }
+				<p style={ { margin: '0 0 10px' } }>
+					{ '🔒 ' }
+					{ message ||
+						__(
+							'Disponible dans la version payante de SlashBooking.',
+							'slashbooking'
+						) }
+				</p>
+				<UpgradeButton variant="primary" small />
 			</Notice>
 			<div className="sb-paidlock__content" aria-disabled="true">
 				{ children }

@@ -10,6 +10,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { fetchLicenseStatus, saveLicense } from './api';
+import UpgradeButton from './UpgradeButton';
 
 export default function LicenseSettings() {
 	const [ settings, setSettings ] = useState( null );
@@ -89,6 +90,30 @@ export default function LicenseSettings() {
 								__( 'Licence non vérifiée', 'slashbooking' ) }
 							{ settings.plan && ` — ${ settings.plan }` }
 						</p>
+						{ settings.license_status !== 'valid' && (
+							<div
+								style={ {
+									margin: '0 0 18px',
+									padding: '14px 16px',
+									background: '#ecfdf5',
+									border: '1px solid #a7f3d0',
+									borderRadius: '10px',
+								} }
+							>
+								<p
+									style={ {
+										margin: '0 0 10px',
+										color: '#065f46',
+									} }
+								>
+									{ __(
+										'Débloquez la synchronisation Google Agenda, les e-mails personnalisables et les rappels automatiques.',
+										'slashbooking'
+									) }
+								</p>
+								<UpgradeButton variant="primary" />
+							</div>
+						) }
 						<TextControl
 							label={
 								settings.has_license

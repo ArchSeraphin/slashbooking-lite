@@ -53,6 +53,7 @@ final class Assets
             'version'       => Plugin::VERSION,
             'isPaid'        => \Slash\Booking\Config::isPaid(),
             'licenseStatus' => (string) get_option('sb_license_status', 'absent'),
+            'pricingUrl'    => 'https://slashbooking.fr/#tarifs',
         ]);
     }
 }

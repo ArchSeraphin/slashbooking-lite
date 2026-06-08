@@ -21,6 +21,7 @@ import {
 	fetchGoogleCalendars,
 	setGoogleCalendar,
 } from './api';
+import UpgradeButton from './UpgradeButton';
 
 export default function GooglePage() {
 	const [ status, setStatus ] = useState( null );
@@ -427,20 +428,26 @@ export default function GooglePage() {
 										isDismissible={ false }
 									>
 										{ __(
-											'Saisis une clé de licence valide dans l’onglet « Réglages » avant de te connecter.',
+											'Passe à Pro pour débloquer la connexion Google Calendar (ou saisis ta clé dans l’onglet « Réglages »).',
 											'slashbooking'
 										) }
 									</Notice>
-									<Button
-										variant="primary"
-										disabled
-										style={ { marginTop: 10 } }
+									<div
+										style={ {
+											display: 'flex',
+											gap: 8,
+											alignItems: 'center',
+											marginTop: 10,
+										} }
 									>
-										{ __(
-											'Connecter Google Calendar',
-											'slashbooking'
-										) }
-									</Button>
+										<UpgradeButton variant="primary" />
+										<Button variant="secondary" disabled>
+											{ __(
+												'Connecter Google Calendar',
+												'slashbooking'
+											) }
+										</Button>
+									</div>
 								</>
 							) : (
 								<Button variant="primary" onClick={ connect }>
