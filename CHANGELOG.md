@@ -6,6 +6,23 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) et le pr
 
 ---
 
+## [1.3.0] — 2026-06-08
+
+### Added
+
+- **Onglet « Réglages »** regroupant en un seul endroit la licence SlashBooking, les paramètres e-mail et les réglages du formulaire public (couleurs, message de consentement, clés captcha Turnstile).
+- **Sous-menu d'accès rapide** dans la barre latérale WordPress : un lien direct vers chaque section (Réservations, Services, Google, Templates, Réglages), avec bascule d'onglet immédiate même page déjà ouverte.
+
+### Changed
+
+- La **clé de licence** se gère désormais dans l'onglet « Réglages » ; l'onglet Google en conserve l'affichage du statut et y renvoie.
+
+### Removed
+
+- Onglet « Journal » de synchronisation (remplacé par « Réglages »).
+
+---
+
 ## [1.2.3] — 2026-06-05
 
 ### Fixed

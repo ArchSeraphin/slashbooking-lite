@@ -4,7 +4,7 @@ Tags: booking, appointment, calendar, google-calendar, calendly
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 1.2.3
+Stable tag: 1.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,9 @@ Les chaînes du plugin sont localisables (text domain `slashbooking`). Le fronte
 Oui. Les schémas de tables sont versionnés et migrés automatiquement, les options sont préservées, et le plugin est testé sur PHP 8.1, 8.2, 8.3 et 8.4 à chaque release.
 
 == Changelog ==
+
+= 1.3.0 =
+*Réorganisation de l'administration.* Nouvel onglet « Réglages » qui regroupe au même endroit la licence SlashBooking, les paramètres e-mail et les réglages du formulaire public (couleurs, disclaimer, clés captcha Turnstile). Un sous-menu d'accès rapide apparaît dans la barre latérale WordPress, avec un lien direct vers chaque section. L'onglet « Journal » de synchronisation est retiré.
 
 = 1.2.3 =
 *Allègement et compatibilité PHP 8.1.* Le plugin est ~30% plus léger (retrait d'outils de build embarqués par erreur dans l'archive) et fonctionne désormais réellement sur les hébergements PHP 8.1 (certaines classes utilisaient une syntaxe PHP 8.2 et provoquaient une erreur fatale). Aucun changement fonctionnel.
