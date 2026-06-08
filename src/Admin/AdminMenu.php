@@ -21,6 +21,33 @@ final class AdminMenu
             icon_url:   'dashicons-calendar-alt',
             position:   25,
         );
+
+        $this->addQuickLinks();
+    }
+
+    /**
+     * Quick-access submenu items that deep-link to the single-page React
+     * admin via the URL hash (#/<tab>). The app listens for `hashchange`,
+     * so these switch tabs even when the page is already open.
+     */
+    private function addQuickLinks(): void
+    {
+        $tabs = [
+            'bookings'  => __('Réservations', 'slashbooking'),
+            'services'  => __('Services', 'slashbooking'),
+            'google'    => __('Google', 'slashbooking'),
+            'templates' => __('Templates', 'slashbooking'),
+            'settings'  => __('Réglages', 'slashbooking'),
+        ];
+
+        global $submenu;
+        foreach ($tabs as $tab => $label) {
+            $submenu['slashbooking'][] = [
+                $label,
+                Capabilities::VIEW,
+                'admin.php?page=slashbooking#/' . $tab,
+            ];
+        }
     }
 
     public function render(): void

@@ -1,14 +1,22 @@
 import { TabPanel } from '@wordpress/components';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import BookingsPage from './BookingsPage';
 import ServicesPage from './ServicesPage';
 import GooglePage from './GooglePage';
-import SyncLogPage from './SyncLogPage';
 import TemplatesPage from './TemplatesPage';
+import SettingsPage from './SettingsPage';
 import Logo from './Logo';
 
 export default function App() {
-	const initial = window.location.hash.replace( '#/', '' ) || 'bookings';
+	const readTab = () =>
+		window.location.hash.replace( '#/', '' ) || 'bookings';
+	const [ active, setActive ] = useState( readTab );
+	useEffect( () => {
+		const onHashChange = () => setActive( readTab() );
+		window.addEventListener( 'hashchange', onHashChange );
+		return () => window.removeEventListener( 'hashchange', onHashChange );
+	}, [] );
 	const version =
 		( window.SlashBooking && window.SlashBooking.version ) || '';
 
@@ -35,6 +43,7 @@ export default function App() {
 			</header>
 
 			<TabPanel
+				key={ active }
 				className="sb-tabs"
 				tabs={ [
 					{
@@ -50,9 +59,12 @@ export default function App() {
 						name: 'templates',
 						title: __( 'Templates', 'slashbooking' ),
 					},
-					{ name: 'log', title: __( 'Journal', 'slashbooking' ) },
+					{
+						name: 'settings',
+						title: __( 'Réglages', 'slashbooking' ),
+					},
 				] }
-				initialTabName={ initial }
+				initialTabName={ active }
 				onSelect={ ( name ) => {
 					window.history.replaceState( null, '', `#/${ name }` );
 				} }
@@ -67,8 +79,8 @@ export default function App() {
 					if ( tab.name === 'templates' ) {
 						return <TemplatesPage />;
 					}
-					if ( tab.name === 'log' ) {
-						return <SyncLogPage />;
+					if ( tab.name === 'settings' ) {
+						return <SettingsPage />;
 					}
 					return <BookingsPage />;
 				} }

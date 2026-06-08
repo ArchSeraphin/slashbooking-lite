@@ -10,8 +10,6 @@ import {
 import { __ } from '@wordpress/i18n';
 import { listMailTemplates } from './api';
 import TemplateEditor from './TemplateEditor';
-import EmailSettings from './EmailSettings';
-import FormSettings from './FormSettings';
 import PaidLock from './PaidLock';
 
 const EVENT_LABELS = {
@@ -61,9 +59,6 @@ export default function TemplatesPage() {
 
 	return (
 		<div className="sb-templates-page">
-			<EmailSettings />
-			<FormSettings />
-
 			<PaidLock
 				locked={ ! isPaid }
 				message={ __(

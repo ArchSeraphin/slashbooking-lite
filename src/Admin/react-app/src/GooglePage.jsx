@@ -7,7 +7,6 @@ import {
 	Notice,
 	SelectControl,
 	Spinner,
-	TextControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
@@ -15,7 +14,6 @@ import {
 	startGoogleOAuth,
 	disconnectGoogle,
 	fetchLicenseStatus,
-	saveLicense,
 	fetchGoogleDiagnostics,
 	startWatch,
 	stopWatch,
@@ -27,8 +25,6 @@ import {
 export default function GooglePage() {
 	const [ status, setStatus ] = useState( null );
 	const [ settings, setSettings ] = useState( null );
-	const [ licenseKey, setLicenseKey ] = useState( '' );
-	const [ licenseMsg, setLicenseMsg ] = useState( '' );
 	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ] = useState( null );
 	const [ diag, setDiag ] = useState( null );
@@ -145,25 +141,6 @@ export default function GooglePage() {
 		}
 	};
 
-	const onSaveLicense = async () => {
-		setLicenseMsg( '' );
-		try {
-			const res = await saveLicense( licenseKey );
-			setLicenseKey( '' );
-			setSettings( res );
-			setLicenseMsg(
-				res.license_status === 'valid'
-					? __( 'Licence valide ✓', 'slashbooking' )
-					: __( 'Licence invalide ou expirée.', 'slashbooking' )
-			);
-			await reload();
-		} catch ( e ) {
-			setLicenseMsg(
-				__( 'Erreur : ', 'slashbooking' ) + ( e.message ?? String( e ) )
-			);
-		}
-	};
-
 	const onStartWatch = async () => {
 		setBusy( true );
 		setPanelMsg( '' );
@@ -217,7 +194,7 @@ export default function GooglePage() {
 			await forcePullNow();
 			setPanelMsg(
 				__(
-					'Pull enfilé. Vérifie le Journal dans quelques secondes.',
+					'Pull enfilé. La synchronisation s’effectue en arrière-plan dans quelques secondes.',
 					'slashbooking'
 				)
 			);
@@ -250,12 +227,6 @@ export default function GooglePage() {
 						</h2>
 					</CardHeader>
 					<CardBody>
-						<p style={ { marginTop: 0, color: '#475569' } }>
-							{ __(
-								'La connexion Google Calendar se fait en 1 clic via le service SlashBooking. Aucun projet Google Cloud à créer. Saisis ta clé de licence pour activer la connexion.',
-								'slashbooking'
-							) }
-						</p>
 						<p>
 							<strong>
 								{ __( 'Statut : ', 'slashbooking' ) }
@@ -273,39 +244,12 @@ export default function GooglePage() {
 								__( 'Licence non vérifiée', 'slashbooking' ) }
 							{ settings.plan && ` — ${ settings.plan }` }
 						</p>
-						<TextControl
-							label={
-								settings.has_license
-									? __(
-											'Clé de licence (saisir pour remplacer)',
-											'slashbooking'
-									  )
-									: __( 'Clé de licence', 'slashbooking' )
-							}
-							value={ licenseKey }
-							onChange={ setLicenseKey }
-						/>
-						<Button
-							variant="primary"
-							onClick={ onSaveLicense }
-							disabled={ ! licenseKey }
-						>
-							{ __( 'Enregistrer la licence', 'slashbooking' ) }
-						</Button>
-						{ licenseMsg && (
-							<Notice
-								status={
-									licenseMsg.startsWith( 'Erreur' ) ||
-									settings.license_status === 'invalid'
-										? 'error'
-										: 'success'
-								}
-								isDismissible={ false }
-								style={ { marginTop: '12px' } }
-							>
-								{ licenseMsg }
-							</Notice>
-						) }
+						<p style={ { marginBottom: 0, color: '#475569' } }>
+							{ __(
+								'La connexion Google Calendar se fait en 1 clic via le service SlashBooking, sans projet Google Cloud. Gérez votre clé de licence dans l’onglet « Réglages ».',
+								'slashbooking'
+							) }
+						</p>
 					</CardBody>
 				</Card>
 			) }
@@ -483,7 +427,7 @@ export default function GooglePage() {
 										isDismissible={ false }
 									>
 										{ __(
-											'Saisis une clé de licence valide dans la carte « Licence SlashBooking » ci-dessus avant de te connecter.',
+											'Saisis une clé de licence valide dans l’onglet « Réglages » avant de te connecter.',
 											'slashbooking'
 										) }
 									</Notice>
