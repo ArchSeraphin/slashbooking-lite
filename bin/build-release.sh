@@ -44,6 +44,9 @@ fi
 echo "→ staging files into ${STAGING_DIR}"
 cp "${ROOT_DIR}/slashbooking.php" "${STAGING_DIR}/slashbooking.php"
 cp "${ROOT_DIR}/readme.txt" "${STAGING_DIR}/readme.txt"
+# composer.json must ship alongside vendor/ — wp.org's Plugin Check warns when a
+# vendor/ directory is present without its companion composer.json.
+cp "${ROOT_DIR}/composer.json" "${STAGING_DIR}/composer.json"
 [ -f "${ROOT_DIR}/uninstall.php" ] && cp "${ROOT_DIR}/uninstall.php" "${STAGING_DIR}/uninstall.php"
 [ -f "${ROOT_DIR}/CHANGELOG.md" ] && cp "${ROOT_DIR}/CHANGELOG.md" "${STAGING_DIR}/CHANGELOG.md"
 cp -R "${ROOT_DIR}/src" "${STAGING_DIR}/src"
@@ -53,6 +56,11 @@ cp -R "${ROOT_DIR}/assets" "${STAGING_DIR}/assets"
 
 # Ship only the compiled bundle (assets/dist), not the JSX/SCSS sources.
 rm -rf "${STAGING_DIR}/src/Admin/react-app"
+
+# Strip hidden files (.gitkeep, .DS_Store, …) — wp.org's Plugin Check rejects
+# any hidden file in the ZIP.
+find "${STAGING_DIR}" -name '.gitkeep' -delete
+find "${STAGING_DIR}" -name '.DS_Store' -delete
 
 # 5. ZIP
 echo "→ packaging ZIP ${ZIP_PATH}"

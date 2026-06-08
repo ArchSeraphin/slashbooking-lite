@@ -167,10 +167,8 @@ final class DecisionController
     private function wrapHtml(string $inner): string
     {
         $title = esc_html__('Décision RDV', 'slashbooking');
-        return <<<HTML
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>{$title}</title>
+        return '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' . $title . '</title>
 <style>body{font-family:system-ui,sans-serif;max-width:560px;margin:80px auto;padding:0 16px;color:#111}</style>
-</head><body>{$inner}</body></html>
-HTML;
+</head><body>' . $inner . '</body></html>';
     }
 }
