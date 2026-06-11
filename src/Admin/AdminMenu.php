@@ -19,7 +19,9 @@ final class AdminMenu
             menu_slug:  'slashbooking',
             callback:   [$this, 'render'],
             icon_url:   'dashicons-calendar-alt',
-            position:   25,
+            // Placed in the lower menu cluster (near Appearance/Plugins) so it
+            // does not compete with core content items (Posts/Pages/Comments).
+            position:   58,
         );
 
         $this->addQuickLinks();

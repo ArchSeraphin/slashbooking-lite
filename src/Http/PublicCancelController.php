@@ -96,10 +96,13 @@ final class PublicCancelController
 
     private function htmlResponse(int $status, string $body): WP_REST_Response
     {
+        // Standalone HTTP document served directly by the REST API (text/html),
+        // outside the WordPress theme/wp_head() pipeline — there is no enqueue
+        // target here, so the minimal page styling is set via a style attribute.
         $title = esc_html__('Annulation RDV', 'slashbooking');
-        $html = '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' . $title . '</title>
-<style>body{font-family:system-ui,sans-serif;max-width:560px;margin:80px auto;padding:0 16px;color:#111}</style>
-</head><body>' . $body . '</body></html>';
+        $html = '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' . $title . '</title>'
+            . '</head><body style="font-family:system-ui,sans-serif;max-width:560px;margin:80px auto;padding:0 16px;color:#111">'
+            . $body . '</body></html>';
         return new WP_REST_Response($html, $status, ['Content-Type' => 'text/html; charset=UTF-8']);
     }
 }

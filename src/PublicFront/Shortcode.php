@@ -55,22 +55,27 @@ final class Shortcode
         // Enqueue assets directly here — WP queues them and prints in footer.
         $this->enqueueAssets();
 
-        $widget = sprintf(
+        // Brand-color overrides are attached to the enqueued public stylesheet
+        // as an inline style (no <style> tag is emitted in the shortcode output).
+        $colorCss = $this->colorOverrideCss();
+        if ($colorCss !== '') {
+            wp_add_inline_style('slashbooking-public', $colorCss);
+        }
+
+        return sprintf(
             '<div class="sb-widget" data-sb-service="%s" data-sb-rest="%s"></div>',
             esc_attr($serviceAttr),
-            esc_url_raw(rest_url(Plugin::REST_NAMESPACE . '/')),
+            esc_url(rest_url(Plugin::REST_NAMESPACE . '/')),
         );
-
-        return $this->colorOverrideStyle() . $widget;
     }
 
     /**
-     * Emit an inline <style> block that overrides the booking widget's
+     * Build a CSS rule (no <style> tag) that overrides the booking widget's
      * --sb-c-primary / --sb-c-accent CSS custom properties when an admin
-     * has set custom brand colors. Falls through to defaults from the
-     * stylesheet when both options are empty.
+     * has set custom brand colors. Returned as bare CSS so it can be attached
+     * via wp_add_inline_style(). Empty string when no override is configured.
      */
-    private function colorOverrideStyle(): string
+    private function colorOverrideCss(): string
     {
         $primary = (string) get_option('sb_form_primary_color', '');
         $accent  = (string) get_option('sb_form_accent_color', '');
@@ -92,7 +97,7 @@ final class Shortcode
         if ($rules === []) {
             return '';
         }
-        return '<style>.sb-widget{' . implode(';', $rules) . '}</style>';
+        return '.sb-widget{' . implode(';', $rules) . '}';
     }
 
     /**

@@ -44,7 +44,10 @@ final class MailDispatcher
 
             $attachments = [];
             if ($withIcsFor !== null) {
-                $attachments[] = $this->writeIcsTempFile($withIcsFor, $subject);
+                $icsPath = $this->writeIcsFile($withIcsFor, $subject);
+                if ($icsPath !== null) {
+                    $attachments[] = $icsPath;
+                }
             }
 
             // Tell PHPMailer to send multipart/alternative with the plain-text AltBody.
@@ -55,17 +58,14 @@ final class MailDispatcher
             };
             add_action('phpmailer_init', $altBodyHook);
             try {
-                // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- wp_mail is the WP-recommended mail function; used correctly here.
                 $sent = wp_mail($recipient, $subject, $html, $headers, $attachments);
             } finally {
                 remove_action('phpmailer_init', $altBodyHook);
             }
 
+            // The .ics exists in uploads only for the duration of the send.
             foreach ($attachments as $path) {
-                if (file_exists($path)) {
-                    // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.unlink_unlink -- intentional: temp ICS cleanup after send; error is non-critical; wp_delete_file() wraps unlink but is not available in all contexts and adds no value here.
-                    @unlink($path);
-                }
+                wp_delete_file($path);
             }
 
             if (!$sent) {
@@ -113,8 +113,26 @@ final class MailDispatcher
         return $admin !== '' ? $admin : $recipient;
     }
 
-    private function writeIcsTempFile(Booking $b, string $summary): string
+    /**
+     * Writes the booking's .ics calendar file into a dedicated, hardened folder
+     * inside the WordPress uploads directory (never the plugin folder nor the
+     * system temp dir) and returns its path so wp_mail() can attach it. The
+     * caller deletes it immediately after the message is sent. Returns null when
+     * the uploads directory is unavailable.
+     */
+    private function writeIcsFile(Booking $b, string $summary): ?string
     {
+        $uploads = wp_upload_dir();
+        if (!empty($uploads['error']) || empty($uploads['basedir'])) {
+            return null;
+        }
+
+        $dir = rtrim((string) $uploads['basedir'], '/\\') . '/slashbooking';
+        if (!wp_mkdir_p($dir)) {
+            return null;
+        }
+        $this->hardenDir($dir);
+
         $ics = $this->ics->build(
             uid: $b->publicUid() . '@slashbooking',
             summary: $summary,
@@ -122,10 +140,25 @@ final class MailDispatcher
             startUtc: $b->slot()->start,
             endUtc:   $b->slot()->end,
         );
-        $dir  = function_exists('get_temp_dir') ? get_temp_dir() : sys_get_temp_dir();
-        $path = rtrim($dir, '/\\') . '/' . 'sb-' . $b->publicUid() . '.ics';
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- temp ICS file for transient email attachment; WP_Filesystem is not available in mail dispatch context and not appropriate for ephemeral temp files.
-        file_put_contents($path, $ics);
+        $path = $dir . '/sb-' . $b->publicUid() . '.ics';
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- short-lived .ics attachment in a hardened uploads subfolder, deleted right after wp_mail(); WP_Filesystem is not available in the mail-dispatch context.
+        if (file_put_contents($path, $ics) === false) {
+            return null;
+        }
         return $path;
+    }
+
+    /**
+     * Drops an empty index.html into the uploads subfolder so its contents
+     * cannot be listed by browsing the directory. Written once.
+     */
+    private function hardenDir(string $dir): void
+    {
+        $guard = $dir . '/index.html';
+        if (file_exists($guard)) {
+            return;
+        }
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- one-time empty directory-listing guard.
+        file_put_contents($guard, '');
     }
 }

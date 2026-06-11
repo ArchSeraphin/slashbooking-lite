@@ -47,6 +47,10 @@ cp "${ROOT_DIR}/readme.txt" "${STAGING_DIR}/readme.txt"
 # composer.json must ship alongside vendor/ — wp.org's Plugin Check warns when a
 # vendor/ directory is present without its companion composer.json.
 cp "${ROOT_DIR}/composer.json" "${STAGING_DIR}/composer.json"
+# package.json documents the build tool (@wordpress/scripts) and the `npm run
+# build` step that regenerates assets/dist from src/Admin/react-app/src — so the
+# compiled admin bundle has a public, reproducible source (wp.org guideline 4).
+cp "${ROOT_DIR}/package.json" "${STAGING_DIR}/package.json"
 [ -f "${ROOT_DIR}/uninstall.php" ] && cp "${ROOT_DIR}/uninstall.php" "${STAGING_DIR}/uninstall.php"
 [ -f "${ROOT_DIR}/CHANGELOG.md" ] && cp "${ROOT_DIR}/CHANGELOG.md" "${STAGING_DIR}/CHANGELOG.md"
 cp -R "${ROOT_DIR}/src" "${STAGING_DIR}/src"
@@ -54,8 +58,9 @@ cp -R "${ROOT_DIR}/vendor" "${STAGING_DIR}/vendor"
 cp -R "${ROOT_DIR}/assets" "${STAGING_DIR}/assets"
 [ -d "${ROOT_DIR}/languages" ] && cp -R "${ROOT_DIR}/languages" "${STAGING_DIR}/languages"
 
-# Ship only the compiled bundle (assets/dist), not the JSX/SCSS sources.
-rm -rf "${STAGING_DIR}/src/Admin/react-app"
+# Keep src/Admin/react-app (the JSX/SCSS sources of the admin bundle) in the ZIP
+# so the human-readable, modifiable source of the compiled assets/dist files
+# ships with the plugin — wp.org guideline 4 (no compiled-only / obfuscated code).
 
 # Strip hidden files (.gitkeep, .DS_Store, …) — wp.org's Plugin Check rejects
 # any hidden file in the ZIP.

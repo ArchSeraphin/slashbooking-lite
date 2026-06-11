@@ -166,9 +166,12 @@ final class DecisionController
 
     private function wrapHtml(string $inner): string
     {
+        // Standalone HTTP document served directly by the REST API (text/html),
+        // outside the WordPress theme/wp_head() pipeline — there is no enqueue
+        // target here, so the minimal page styling is set via a style attribute.
         $title = esc_html__('Décision RDV', 'slashbooking');
-        return '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' . $title . '</title>
-<style>body{font-family:system-ui,sans-serif;max-width:560px;margin:80px auto;padding:0 16px;color:#111}</style>
-</head><body>' . $inner . '</body></html>';
+        return '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' . $title . '</title>'
+            . '</head><body style="font-family:system-ui,sans-serif;max-width:560px;margin:80px auto;padding:0 16px;color:#111">'
+            . $inner . '</body></html>';
     }
 }

@@ -7,6 +7,7 @@ use Slash\Booking\Domain\Booking;
 use Slash\Booking\Domain\BookingStatus;
 use Slash\Booking\Persistence\BookingRepository;
 use Slash\Booking\Persistence\ServiceRepository;
+use Slash\Booking\Plugin;
 use DateTimeImmutable;
 use DateTimeZone;
 
@@ -33,6 +34,24 @@ final class DashboardWidget
     public function register(): void
     {
         add_action('wp_dashboard_setup', [$this, 'addWidget']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueAssets']);
+    }
+
+    /**
+     * Enqueue the widget stylesheet on the dashboard screen only. The widget
+     * markup itself ships no inline <style>; all styling lives in this file.
+     */
+    public function enqueueAssets(string $hook): void
+    {
+        if ($hook !== 'index.php' || !current_user_can(Capabilities::VIEW)) {
+            return;
+        }
+        wp_enqueue_style(
+            'slashbooking-dashboard',
+            plugin_dir_url(Plugin::instance()->pluginFile()) . 'assets/dashboard.css',
+            [],
+            Plugin::VERSION,
+        );
     }
 
     public function addWidget(): void
@@ -67,7 +86,6 @@ final class DashboardWidget
         $serviceNames = $this->buildServiceNameMap();
         $manageUrl    = admin_url('admin.php?page=slashbooking#/bookings');
 
-        $this->renderStyles();
         echo '<div class="sb-dash">';
 
         $this->renderSection(
@@ -165,48 +183,5 @@ final class DashboardWidget
             }
         }
         return $map;
-    }
-
-    private function renderStyles(): void
-    {
-        // Inline styles keep the widget self-contained (no extra HTTP request)
-        // and scoped via .sb-dash so they can't bleed into other widgets.
-        ?>
-        <style>
-        .sb-dash__section + .sb-dash__section { margin-top: 16px; }
-        .sb-dash__heading {
-            display: flex; align-items: center; gap: 8px;
-            margin: 0 0 8px; font-size: 13px; font-weight: 600;
-            color: #1d2327; text-transform: uppercase; letter-spacing: 0.02em;
-        }
-        .sb-dash__badge {
-            display: inline-flex; align-items: center; justify-content: center;
-            min-width: 22px; height: 20px; padding: 0 6px;
-            border-radius: 10px; font-size: 11px; font-weight: 600;
-            line-height: 1; color: #fff;
-        }
-        .sb-dash__badge--warn { background: #d97706; }
-        .sb-dash__badge--info { background: #2271b1; }
-        .sb-dash__empty { margin: 0; color: #646970; font-style: italic; font-size: 13px; }
-        .sb-dash__list { margin: 0; padding: 0; list-style: none; }
-        .sb-dash__row {
-            display: grid;
-            grid-template-columns: minmax(110px, auto) 1fr minmax(80px, auto);
-            gap: 8px; align-items: baseline;
-            padding: 6px 0; border-bottom: 1px solid #f0f0f1;
-            font-size: 13px;
-        }
-        .sb-dash__row:last-child { border-bottom: 0; }
-        .sb-dash__when { color: #1d2327; font-variant-numeric: tabular-nums; font-weight: 500; }
-        .sb-dash__who { color: #1d2327; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .sb-dash__svc {
-            color: #646970; font-size: 12px;
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-            text-align: right;
-        }
-        .sb-dash__footer { margin: 12px 0 0; padding-top: 8px; border-top: 1px solid #dcdcde; text-align: right; }
-        .sb-dash__footer a { font-size: 13px; text-decoration: none; }
-        </style>
-        <?php
     }
 }

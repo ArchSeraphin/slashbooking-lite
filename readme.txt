@@ -4,7 +4,7 @@ Tags: booking, appointment, scheduling, reservations, calendar
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,12 +74,40 @@ If — and only if — you enter Cloudflare Turnstile keys in the plugin setting
 - Cloudflare Terms of Service: https://www.cloudflare.com/terms/
 - Cloudflare Privacy Policy: https://www.cloudflare.com/privacypolicy/
 
+== Source code and build ==
+
+The full, human-readable source code is public and maintained at:
+
+https://github.com/ArchSeraphin/slashbooking-lite
+
+The PHP runs unmodified from `src/`. The admin interface bundle
+(`assets/dist/index.jsx.js` and `.css`) is compiled from the React/SCSS sources
+in `src/Admin/react-app/src/`, which ship inside the plugin ZIP as well.
+
+To regenerate the compiled admin assets:
+
+`npm install`
+`npm run build`   (uses @wordpress/scripts — webpack/Babel; outputs to assets/dist/)
+
+The Composer autoloader in `vendor/` is generated with `composer install --no-dev`.
+
 == Changelog ==
+
+= 1.0.1 =
+* Public booking widget and dashboard widget styles are now enqueued (no inline `<style>`).
+* The `.ics` calendar attachment is written to a hardened uploads subfolder instead of the system temp directory, and removed right after sending.
+* Shortcode output uses `esc_url()` for the REST URL attribute.
+* Admin menu moved to a lower position so it no longer sits among core items.
+* Removed the redundant `load_plugin_textdomain()` call (translations load automatically on WordPress.org).
+* Documented the public source repository and admin-bundle build steps; the React/SCSS sources now ship in the plugin.
 
 = 1.0.0 =
 First public release: shortcode booking form with real-time availability, one-click signed email confirmation (Confirm/Decline), `.ics` attachments, per-service opening hours and buffers, GDPR exporters/erasers and retention, honeypot + rate limiting, and optional Cloudflare Turnstile.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Compliance and best-practice fixes for the WordPress.org review.
 
 = 1.0.0 =
 First public release.
