@@ -199,8 +199,8 @@ final class PublicBookingController
 
     public const PER_IP_LIMIT_PER_MINUTE = 5;
     public const GLOBAL_LIMIT_PER_MINUTE = 60;
-    private const RATE_PREFIX            = 'sb_rate_';
-    private const RATE_GLOBAL_KEY        = 'sb_rate_global';
+    private const RATE_PREFIX            = 'slashbooking_rate_';
+    private const RATE_GLOBAL_KEY        = 'slashbooking_rate_global';
 
     /**
      * Pure rate-limit decision. Increments both a per-IP bucket and a global

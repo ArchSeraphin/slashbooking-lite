@@ -11,14 +11,14 @@ final class ActivatorTest extends WP_UnitTestCase
 {
     public function test_activate_seeds_services_and_secret(): void
     {
-        delete_option('sb_decision_secret');
+        delete_option('slashbooking_decision_secret');
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}sb_services");
 
         Activator::activate();
 
-        $secret = get_option('sb_decision_secret');
+        $secret = get_option('slashbooking_decision_secret');
         self::assertIsString($secret);
         self::assertSame(64, strlen($secret));
 
@@ -29,9 +29,9 @@ final class ActivatorTest extends WP_UnitTestCase
 
     public function test_activate_is_idempotent(): void
     {
-        $first = get_option('sb_decision_secret');
+        $first = get_option('slashbooking_decision_secret');
         Activator::activate();
-        $second = get_option('sb_decision_secret');
+        $second = get_option('slashbooking_decision_secret');
         self::assertSame($first, $second);
 
         global $wpdb;

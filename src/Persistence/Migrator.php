@@ -14,7 +14,7 @@ final class Migrator
 
     public function migrate(): void
     {
-        $currentVersion = (int) get_option('sb_db_version', 0);
+        $currentVersion = (int) get_option('slashbooking_db_version', 0);
         if ($currentVersion >= Plugin::DB_VERSION) {
             return;
         }
@@ -89,6 +89,6 @@ final class Migrator
             dbDelta($sql);
         }
 
-        update_option('sb_db_version', Plugin::DB_VERSION, false);
+        update_option('slashbooking_db_version', Plugin::DB_VERSION, false);
     }
 }

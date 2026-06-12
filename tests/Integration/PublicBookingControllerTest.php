@@ -154,7 +154,7 @@ final class PublicBookingControllerTest extends WP_UnitTestCase
 
     private function signCancel(string $uid, int $exp): string
     {
-        $secret = get_option('sb_decision_secret');
+        $secret = get_option('slashbooking_decision_secret');
         return hash_hmac('sha256', 'cancel|' . $uid . '|' . $exp, $secret);
     }
 

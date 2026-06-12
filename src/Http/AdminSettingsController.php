@@ -30,22 +30,22 @@ final class AdminSettingsController
 
     public function read(): WP_REST_Response
     {
-        $legalId = (int) get_option('sb_legal_page_id', 0);
+        $legalId = (int) get_option('slashbooking_legal_page_id', 0);
         $url     = $legalId > 0 ? (string) get_permalink($legalId) : '';
         return new WP_REST_Response([
             'legal_page_id'          => $legalId,
             'legal_url'              => $url,
-            'booking_retention_days' => (int) get_option('sb_booking_retention_days', 1095),
-            'notification_email'     => (string) get_option('sb_notification_email', ''),
+            'booking_retention_days' => (int) get_option('slashbooking_booking_retention_days', 1095),
+            'notification_email'     => (string) get_option('slashbooking_notification_email', ''),
             'admin_email_fallback'   => (string) get_option('admin_email', ''),
-            'company_logo'           => (string) get_option('sb_company_logo', ''),
-            'company_phone'          => (string) get_option('sb_company_phone', ''),
-            'form_disclaimer'        => (string) get_option('sb_form_disclaimer', ''),
-            'form_primary_color'     => (string) get_option('sb_form_primary_color', ''),
-            'form_accent_color'      => (string) get_option('sb_form_accent_color', ''),
-            'turnstile_site_key'     => (string) get_option('sb_turnstile_site_key', ''),
+            'company_logo'           => (string) get_option('slashbooking_company_logo', ''),
+            'company_phone'          => (string) get_option('slashbooking_company_phone', ''),
+            'form_disclaimer'        => (string) get_option('slashbooking_form_disclaimer', ''),
+            'form_primary_color'     => (string) get_option('slashbooking_form_primary_color', ''),
+            'form_accent_color'      => (string) get_option('slashbooking_form_accent_color', ''),
+            'turnstile_site_key'     => (string) get_option('slashbooking_turnstile_site_key', ''),
             // Don't expose the secret in cleartext — caller only needs to know if it's configured.
-            'turnstile_secret_set'   => get_option('sb_turnstile_secret_key', '') !== '',
+            'turnstile_secret_set'   => get_option('slashbooking_turnstile_secret_key', '') !== '',
         ], 200);
     }
 
@@ -54,16 +54,16 @@ final class AdminSettingsController
         $legalId   = (int) $req->get_param('legal_page_id');
         $retention = (int) $req->get_param('booking_retention_days');
 
-        update_option('sb_legal_page_id', max(0, $legalId), false);
+        update_option('slashbooking_legal_page_id', max(0, $legalId), false);
         if ($retention >= 30 && $retention <= 3650) {
-            update_option('sb_booking_retention_days', $retention, false);
+            update_option('slashbooking_booking_retention_days', $retention, false);
         }
 
         // Notification email — empty string clears the override (= fall back to admin_email).
         if ($req->has_param('notification_email')) {
             $email = trim((string) $req->get_param('notification_email'));
             if ($email === '' || filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                update_option('sb_notification_email', $email, false);
+                update_option('slashbooking_notification_email', $email, false);
             }
         }
 
@@ -71,19 +71,19 @@ final class AdminSettingsController
             $logo = trim((string) $req->get_param('company_logo'));
             // Allow empty (clear) or a URL — light validation only.
             if ($logo === '' || filter_var($logo, FILTER_VALIDATE_URL)) {
-                update_option('sb_company_logo', esc_url_raw($logo), false);
+                update_option('slashbooking_company_logo', esc_url_raw($logo), false);
             }
         }
 
         if ($req->has_param('company_phone')) {
             $phone = trim((string) $req->get_param('company_phone'));
-            update_option('sb_company_phone', sanitize_text_field($phone), false);
+            update_option('slashbooking_company_phone', sanitize_text_field($phone), false);
         }
 
         if ($req->has_param('form_disclaimer')) {
             $disclaimer = (string) $req->get_param('form_disclaimer');
             // Allow line breaks + basic punctuation; strip dangerous HTML.
-            update_option('sb_form_disclaimer', wp_kses_post(trim($disclaimer)), false);
+            update_option('slashbooking_form_disclaimer', wp_kses_post(trim($disclaimer)), false);
         }
 
         foreach (['form_primary_color', 'form_accent_color'] as $colorField) {
@@ -91,11 +91,11 @@ final class AdminSettingsController
                 $raw = trim((string) $req->get_param($colorField));
                 // Empty string clears the override and restores the brand default.
                 if ($raw === '') {
-                    delete_option('sb_' . $colorField);
+                    delete_option('slashbooking_' . $colorField);
                 } else {
                     $sanitized = sanitize_hex_color($raw);
                     if ($sanitized !== null && $sanitized !== '') {
-                        update_option('sb_' . $colorField, $sanitized, false);
+                        update_option('slashbooking_' . $colorField, $sanitized, false);
                     }
                 }
             }
@@ -103,7 +103,7 @@ final class AdminSettingsController
 
         if ($req->has_param('turnstile_site_key')) {
             $key = trim((string) $req->get_param('turnstile_site_key'));
-            update_option('sb_turnstile_site_key', sanitize_text_field($key), false);
+            update_option('slashbooking_turnstile_site_key', sanitize_text_field($key), false);
         }
 
         // Secret key is write-only: empty string means "keep current"; non-empty
@@ -111,9 +111,9 @@ final class AdminSettingsController
         if ($req->has_param('turnstile_secret_key')) {
             $secret = trim((string) $req->get_param('turnstile_secret_key'));
             if ($secret === '__CLEAR__') {
-                delete_option('sb_turnstile_secret_key');
+                delete_option('slashbooking_turnstile_secret_key');
             } elseif ($secret !== '') {
-                update_option('sb_turnstile_secret_key', sanitize_text_field($secret), false);
+                update_option('slashbooking_turnstile_secret_key', sanitize_text_field($secret), false);
             }
         }
 

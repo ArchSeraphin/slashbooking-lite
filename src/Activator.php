@@ -19,8 +19,8 @@ final class Activator
 
         // Custom monthly interval (WP doesn't ship one by default).
         add_filter('cron_schedules', static function (array $s): array {
-            if (!isset($s['sb_monthly'])) {
-                $s['sb_monthly'] = [
+            if (!isset($s['slashbooking_monthly'])) {
+                $s['slashbooking_monthly'] = [
                     'interval' => 2_592_000, // 30 days in seconds
                     'display'  => 'Once every 30 days (SlashBooking)',
                 ];
@@ -31,7 +31,7 @@ final class Activator
         if (!wp_next_scheduled(\Slash\Booking\Privacy\BookingRetentionPurger::HOOK)) {
             wp_schedule_event(
                 self::firstDayNextMonthAt0330SiteTz(),
-                'sb_monthly',
+                'slashbooking_monthly',
                 \Slash\Booking\Privacy\BookingRetentionPurger::HOOK
             );
         }
@@ -48,9 +48,9 @@ final class Activator
      */
     public static function ensureDecisionSecret(): void
     {
-        $existing = get_option('sb_decision_secret');
+        $existing = get_option('slashbooking_decision_secret');
         if (!is_string($existing) || strlen($existing) !== 64) {
-            update_option('sb_decision_secret', bin2hex(random_bytes(32)), false);
+            update_option('slashbooking_decision_secret', bin2hex(random_bytes(32)), false);
         }
     }
 

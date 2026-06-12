@@ -97,8 +97,8 @@ final class BookingNotifier
             'site_name'     => (string) get_option('blogname', ''),
             'site_url'      => (string) home_url('/'),
             'admin_email'   => (string) get_option('admin_email', ''),
-            'company_phone' => (string) get_option('sb_company_phone', ''),
-            'company_logo'  => (string) get_option('sb_company_logo', ''),
+            'company_phone' => (string) get_option('slashbooking_company_phone', ''),
+            'company_logo'  => (string) get_option('slashbooking_company_logo', ''),
             'cancel_url'    => $this->urls->cancelUrl($b->publicUid(), $exp),
             'confirm_url'   => $b->id() !== null ? $this->urls->decisionUrl($b->id(), 'confirm', $exp) : '',
             'reject_url'    => $b->id() !== null ? $this->urls->decisionUrl($b->id(), 'reject',  $exp) : '',
@@ -117,7 +117,7 @@ final class BookingNotifier
      */
     private function adminEmail(BookingContext $ctx): string
     {
-        $override = trim((string) get_option('sb_notification_email', ''));
+        $override = trim((string) get_option('slashbooking_notification_email', ''));
         if ($override !== '') {
             return $override;
         }

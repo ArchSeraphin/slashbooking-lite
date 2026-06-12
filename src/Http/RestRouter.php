@@ -101,11 +101,11 @@ final class RestRouter
         );
 
         $turnstile = new \Slash\Booking\PublicFront\TurnstileVerifier(
-            (string) get_option('sb_turnstile_secret_key', ''),
+            (string) get_option('slashbooking_turnstile_secret_key', ''),
         );
         (new PublicBookingController($services, $bookings, $generator, $createBooking, $turnstile))->registerRoutes();
 
-        $signer = new \Slash\Booking\Booking\DecisionTokenSigner((string) get_option('sb_decision_secret'));
+        $signer = new \Slash\Booking\Booking\DecisionTokenSigner((string) get_option('slashbooking_decision_secret'));
         $cancel = new \Slash\Booking\Booking\CancelBooking(
             find: fn (string $uid) => $bookings->findByPublicUid($uid),
             persist: fn (\Slash\Booking\Domain\Booking $b) => $bookings->save($b),

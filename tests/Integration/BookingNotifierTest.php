@@ -39,7 +39,7 @@ final class BookingNotifierTest extends WP_UnitTestCase
             new TextBodyGenerator(),
             new IcsBuilder(),
         );
-        $signer = new DecisionTokenSigner((string) get_option('sb_decision_secret'));
+        $signer = new DecisionTokenSigner((string) get_option('slashbooking_decision_secret'));
         $urls   = new UrlBuilder($signer, rest_url('slashbooking/v1'));
 
         (new BookingNotifier($services, $bookings, $dispatcher, $urls))->register();

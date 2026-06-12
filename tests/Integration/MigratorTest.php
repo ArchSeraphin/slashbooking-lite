@@ -34,6 +34,6 @@ final class MigratorTest extends WP_UnitTestCase
         $migrator = new Migrator($wpdb);
         $migrator->migrate();
         $migrator->migrate(); // doit pas planter
-        self::assertSame(Plugin::DB_VERSION, (int) get_option('sb_db_version'));
+        self::assertSame(Plugin::DB_VERSION, (int) get_option('slashbooking_db_version'));
     }
 }

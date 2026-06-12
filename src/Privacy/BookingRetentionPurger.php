@@ -30,7 +30,7 @@ final class BookingRetentionPurger
 
     public static function fromOptions(): self
     {
-        $days = (int) (function_exists('get_option') ? get_option('sb_booking_retention_days', 1095) : 1095);
+        $days = (int) (function_exists('get_option') ? get_option('slashbooking_booking_retention_days', 1095) : 1095);
         if ($days < 30) {
             $days = 30; // safety floor
         }

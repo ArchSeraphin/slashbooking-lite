@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [1.0.2] — 2026-06-12
+
+Second WordPress.org review compliance pass (naming conventions + remote-file false positive).
+
+### Changed
+
+- Renamed every plugin option from the short `sb_` prefix to the unique `slashbooking_` prefix (`slashbooking_decision_secret`, `slashbooking_legal_page_id`, `slashbooking_booking_retention_days`, `slashbooking_notification_email`, `slashbooking_company_logo`, `slashbooking_company_phone`, `slashbooking_form_disclaimer`, `slashbooking_form_primary_color`, `slashbooking_form_accent_color`, `slashbooking_turnstile_site_key`, `slashbooking_turnstile_secret_key`, `slashbooking_db_version`). The custom cron schedule (`sb_monthly` → `slashbooking_monthly`) and the rate-limit transient keys (`sb_rate_*` → `slashbooking_rate_*`) were renamed the same way. Prefixes are now ≥ 4 characters and distinct to the plugin.
+- Replaced the example logo-URL placeholder (`https://exemple.com/logo.png`) in the email settings with a plain-text hint, so an automated scan no longer reads it as a remotely loaded file. The string was only placeholder text inside a URL `<TextControl>` the admin fills in; the plugin never fetched it. The admin bundle (`assets/dist/`) was rebuilt.
+
 ## [1.0.1] — 2026-06-11
 
 WordPress.org review compliance pass.

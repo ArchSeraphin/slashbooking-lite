@@ -77,8 +77,8 @@ final class Shortcode
      */
     private function colorOverrideCss(): string
     {
-        $primary = (string) get_option('sb_form_primary_color', '');
-        $accent  = (string) get_option('sb_form_accent_color', '');
+        $primary = (string) get_option('slashbooking_form_primary_color', '');
+        $accent  = (string) get_option('slashbooking_form_accent_color', '');
         $rules   = [];
         if ($primary !== '') {
             $primary = sanitize_hex_color($primary) ?? '';
@@ -125,7 +125,7 @@ final class Shortcode
             Plugin::VERSION
         );
 
-        $turnstileKey = (string) get_option('sb_turnstile_site_key', '');
+        $turnstileKey = (string) get_option('slashbooking_turnstile_site_key', '');
         $deps         = [];
 
         if ($turnstileKey !== '') {
@@ -149,7 +149,7 @@ final class Shortcode
             true
         );
 
-        $legalId  = (int) get_option('sb_legal_page_id', 0);
+        $legalId  = (int) get_option('slashbooking_legal_page_id', 0);
         $legalUrl = $legalId > 0 ? (string) get_permalink($legalId) : '';
 
         // NB : pas de nonce REST ici. Les routes publiques du widget sont en
@@ -160,7 +160,7 @@ final class Shortcode
         wp_localize_script('slashbooking-public', 'SlashBooking', [
             'locale'          => get_locale(),
             'legalUrl'        => $legalUrl,
-            'disclaimer'      => (string) get_option('sb_form_disclaimer', ''),
+            'disclaimer'      => (string) get_option('slashbooking_form_disclaimer', ''),
             'turnstileSiteKey'=> $turnstileKey,
         ]);
     }

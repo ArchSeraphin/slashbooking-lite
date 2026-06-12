@@ -9,7 +9,7 @@ namespace Slash\Booking\Admin;
  */
 final class TurnstileNotice
 {
-    public const SECRET_OPTION = 'sb_turnstile_secret_key';
+    public const SECRET_OPTION = 'slashbooking_turnstile_secret_key';
 
     public static function shouldShow(string $secret): bool
     {

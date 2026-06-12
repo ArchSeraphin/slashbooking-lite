@@ -4,7 +4,7 @@ Tags: booking, appointment, scheduling, reservations, calendar
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,10 @@ The Composer autoloader in `vendor/` is generated with `composer install --no-de
 
 == Changelog ==
 
+= 1.0.2 =
+* Renamed all plugin option names, the custom cron schedule and the rate-limit transient keys from the short `sb_` prefix to the unique `slashbooking_` prefix, to prevent collisions with other plugins or themes.
+* Replaced the example logo-URL placeholder in the email settings (it was an `https://…/logo.png` string that a code scan could mistake for a remotely loaded file) with a plain text hint. The plugin never loaded that URL; it was only placeholder text inside a URL input the admin fills in.
+
 = 1.0.1 =
 * Public booking widget and dashboard widget styles are now enqueued (no inline `<style>`).
 * The `.ics` calendar attachment is written to a hardened uploads subfolder instead of the system temp directory, and removed right after sending.
@@ -105,6 +109,9 @@ The Composer autoloader in `vendor/` is generated with `composer install --no-de
 First public release: shortcode booking form with real-time availability, one-click signed email confirmation (Confirm/Decline), `.ics` attachments, per-service opening hours and buffers, GDPR exporters/erasers and retention, honeypot + rate limiting, and optional Cloudflare Turnstile.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Naming-convention compliance for the WordPress.org review (unique `slashbooking_` prefix on all option names).
 
 = 1.0.1 =
 Compliance and best-practice fixes for the WordPress.org review.

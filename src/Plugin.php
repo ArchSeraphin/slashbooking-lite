@@ -5,7 +5,7 @@ namespace Slash\Booking;
 
 final class Plugin
 {
-    public const VERSION = '1.0.1';
+    public const VERSION = '1.0.2';
     public const TEXT_DOMAIN = 'slashbooking';
     public const DB_VERSION = 2;
     public const REST_NAMESPACE = 'slashbooking/v1';
@@ -98,7 +98,7 @@ final class Plugin
         // Run pending schema migrations on every boot, not just on activation:
         // plugin UPDATES do NOT fire the activation hook, so without this a client
         // who updates never gets new columns. Migrator self-gates on the
-        // sb_db_version option, so this is a cheap no-op once the schema is current.
+        // slashbooking_db_version option, so this is a cheap no-op once the schema is current.
         (new Persistence\Migrator($wpdb))->migrate();
 
         $services = new Persistence\ServiceRepository($wpdb);
@@ -139,8 +139,8 @@ final class Plugin
         // Custom monthly cron interval (used by the retention purger). Must also
         // be present at runtime, not just at activation.
         add_filter('cron_schedules', static function (array $s): array {
-            if (!isset($s['sb_monthly'])) {
-                $s['sb_monthly'] = [
+            if (!isset($s['slashbooking_monthly'])) {
+                $s['slashbooking_monthly'] = [
                     'interval' => 2_592_000,
                     'display'  => 'Once every 30 days (SlashBooking)',
                 ];
@@ -150,7 +150,7 @@ final class Plugin
 
         Privacy\BookingRetentionPurger::register();
 
-        $signer = new Booking\DecisionTokenSigner((string) get_option('sb_decision_secret'));
+        $signer = new Booking\DecisionTokenSigner((string) get_option('slashbooking_decision_secret'));
         // Lazy URL resolver — rest_url() requires $wp_rewrite which is not yet
         // initialized at plugin file load time. The closure fires later, when
         // BookingNotifier callbacks actually need to build a URL.

@@ -111,7 +111,10 @@ export default function EmailSettings() {
 							type="url"
 							value={ logo }
 							onChange={ setLogo }
-							placeholder="https://exemple.com/logo.png"
+							placeholder={ __(
+								'URL publique de votre logo (PNG ou JPG)',
+								'slashbooking'
+							) }
 							__nextHasNoMarginBottom
 						/>
 

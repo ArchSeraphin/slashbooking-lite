@@ -23,7 +23,7 @@ final class DecisionControllerTest extends WP_UnitTestCase
         parent::setUp();
         Activator::activate();
         do_action('rest_api_init');
-        $this->signer = new DecisionTokenSigner((string) get_option('sb_decision_secret'));
+        $this->signer = new DecisionTokenSigner((string) get_option('slashbooking_decision_secret'));
     }
 
     public function test_confirm_transitions_pending_to_confirmed(): void
