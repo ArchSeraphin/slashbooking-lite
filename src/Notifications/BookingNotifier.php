@@ -23,11 +23,11 @@ final class BookingNotifier
 
     public function register(): void
     {
-        add_action('slashbooking/booking_created',      [$this, 'onCreated'],      10, 1);
-        add_action('slashbooking/booking_confirmed',    [$this, 'onConfirmed'],    10, 1);
-        add_action('slashbooking/booking_rejected',     [$this, 'onRejected'],     10, 1);
-        add_action('slashbooking/booking_cancelled',    [$this, 'onCancelled'],    10, 1);
-        add_action('slashbooking/booking_reminder_due', [$this, 'onReminderDue'],  10, 1);
+        add_action('slashbooking_booking_created',      [$this, 'onCreated'],      10, 1);
+        add_action('slashbooking_booking_confirmed',    [$this, 'onConfirmed'],    10, 1);
+        add_action('slashbooking_booking_rejected',     [$this, 'onRejected'],     10, 1);
+        add_action('slashbooking_booking_cancelled',    [$this, 'onCancelled'],    10, 1);
+        add_action('slashbooking_booking_reminder_due', [$this, 'onReminderDue'],  10, 1);
     }
 
     public function onCreated(int $bookingId): void

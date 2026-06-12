@@ -29,7 +29,7 @@ final class CancelBooking
         ($this->persist)($booking);
 
         if (function_exists('do_action') && $booking->id() !== null) {
-            do_action('slashbooking/booking_cancelled', $booking->id());
+            do_action('slashbooking_booking_cancelled', $booking->id());
         }
 
         return $booking;

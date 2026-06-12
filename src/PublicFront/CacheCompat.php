@@ -60,6 +60,7 @@ final class CacheCompat
             },
             applyNoCache: static function (): void {
                 if (!defined('DONOTCACHEPAGE')) {
+                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- DONOTCACHEPAGE is a de-facto standard constant honored by page-cache plugins (W3TC, WP Super Cache, etc.); it cannot be prefixed.
                     define('DONOTCACHEPAGE', true);
                 }
                 if (!headers_sent()) {
@@ -67,6 +68,7 @@ final class CacheCompat
                 }
                 // LiteSpeed Cache n'honore pas DONOTCACHEPAGE dans toutes ses
                 // versions — son API dédiée est ce do_action (no-op sans LiteSpeed).
+                // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- this is LiteSpeed Cache's own action name; it must match exactly to disable its cache.
                 do_action('litespeed_control_set_nocache', 'slashbooking: booking widget on page');
             },
         );

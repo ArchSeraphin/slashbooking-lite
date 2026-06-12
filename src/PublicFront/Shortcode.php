@@ -130,15 +130,18 @@ final class Shortcode
 
         if ($turnstileKey !== '') {
             // Cloudflare Turnstile API — explicit render lets us insert the widget
-            // after the booking form is built by booking.js.
+            // after the booking form is built by booking.js. This is the opt-in
+            // anti-bot service documented in readme.txt ("External services"); the
+            // widget script can only be served from Cloudflare's CDN, never bundled.
+            // phpcs:ignore PluginCheck.CodeAnalysis.EnqueuedResourceOffloading.OffloadedContent -- Cloudflare Turnstile (CAPTCHA service) must load its widget from challenges.cloudflare.com; opt-in and disclosed in the readme.
             wp_enqueue_script(
-                'sb-turnstile',
+                'slashbooking-turnstile',
                 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit',
                 [],
                 null,
                 true
             );
-            $deps[] = 'sb-turnstile';
+            $deps[] = 'slashbooking-turnstile';
         }
 
         wp_enqueue_script(

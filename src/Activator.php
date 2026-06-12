@@ -90,9 +90,9 @@ final class Activator
         $table = $wpdb->prefix . 'sb_services';
 
         foreach ($defaults as $row) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $table is built from $wpdb->prefix (trusted); slug is bound via prepare().
             $exists = $wpdb->get_var(
-                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $wpdb->prepare('SELECT id FROM ' . $table . ' WHERE slug = %s', $row['slug'])
             );
             if ($exists) {

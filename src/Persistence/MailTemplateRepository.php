@@ -7,6 +7,8 @@ use Slash\Booking\Notifications\DefaultTemplates;
 use Slash\Booking\Notifications\Events\EventKey;
 use wpdb;
 
+// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Data-access layer: table names come from $wpdb->prefix (trusted, never user input); every user-supplied value is bound through $wpdb->prepare().
+
 /**
  * @phpstan-type Template array{
  *   subject:string,

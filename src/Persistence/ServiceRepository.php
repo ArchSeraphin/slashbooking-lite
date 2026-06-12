@@ -6,6 +6,7 @@ namespace Slash\Booking\Persistence;
 use Slash\Booking\Domain\Service;
 use wpdb;
 
+// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Data-access layer: table names come from $wpdb->prefix (trusted, never user input); every user-supplied value is bound through $wpdb->prepare().
 final class ServiceRepository
 {
     private string $table;

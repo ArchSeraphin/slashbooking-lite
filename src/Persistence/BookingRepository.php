@@ -12,6 +12,7 @@ use DateTimeZone;
 use wpdb;
 use ReflectionClass;
 
+// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Data-access layer: table names come from $wpdb->prefix (trusted, never user input); every user-supplied value is bound through $wpdb->prepare().
 final class BookingRepository
 {
     private string $table;
@@ -169,7 +170,6 @@ final class BookingRepository
         $whereSql = $where !== [] ? ' WHERE ' . implode(' AND ', $where) : '';
         $offset   = ($page - 1) * $perPage;
 
-        // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- table name is internal constant, args are passed via prepare()
         $totalSql = "SELECT COUNT(*) FROM {$this->table}" . $whereSql;
         $total    = (int) $this->wpdb->get_var(
             $args === [] ? $totalSql : $this->wpdb->prepare($totalSql, ...$args)
@@ -181,7 +181,6 @@ final class BookingRepository
             $this->wpdb->prepare($listSql, ...array_merge($args, [$perPage, $offset])),
             ARRAY_A
         );
-        // phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
         if (!is_array($rows)) {
             $rows = [];
         }
@@ -195,7 +194,6 @@ final class BookingRepository
     public function findRemindersDue(DateTimeImmutable $windowStart, DateTimeImmutable $windowEnd): array
     {
         $sql = $this->wpdb->prepare(
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $this->table is internal constant
             "SELECT * FROM {$this->table}
              WHERE status = %s
                AND reminder_sent_at IS NULL

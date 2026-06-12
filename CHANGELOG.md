@@ -6,6 +6,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [1.0.3] — 2026-06-12
+
+Hardening pass against the full WordPress.org Plugin Check ruleset (stricter than the project's own `phpcs.xml.dist`). No functional changes.
+
+### Changed
+
+- Renamed the internal extensibility hooks from a slash-namespaced form to an underscore prefix (`slashbooking/booking_*` → `slashbooking_booking_*`) so the global-prefix sniff recognises them as valid; updated the in-plugin listeners accordingly.
+- Prefixed the loader variable in the main plugin file (`$autoload` → `$slashbooking_autoload`) to avoid polluting the global scope.
+- Renamed the Cloudflare Turnstile script handle (`sb-turnstile` → `slashbooking-turnstile`).
+
+### Documented (annotations, no behaviour change)
+
+- Data-access layer (`*Repository`, `Activator`): added justified `phpcs:ignore`/`disable` for the `WordPress.DB.PreparedSQL*` and `PluginCheck.Security.DirectDB` sniffs — table names come from `$wpdb->prefix` (trusted) and every user value is bound through `$wpdb->prepare()`.
+- Internal domain/application exceptions: annotated `WordPress.Security.EscapeOutput.ExceptionNotEscaped` — the messages are caught and converted to `WP_Error`/logs, never echoed to the browser.
+- `CacheCompat`: annotated the de-facto-standard `DONOTCACHEPAGE` constant and the LiteSpeed `litespeed_control_set_nocache` hook (third-party integration points that cannot be prefixed).
+- `Shortcode`: annotated the opt-in Cloudflare Turnstile widget enqueue — the only permitted external resource (a CAPTCHA service whose script must load from Cloudflare's CDN), already disclosed in the readme "External services" section.
+
 ## [1.0.2] — 2026-06-12
 
 Second WordPress.org review compliance pass (naming conventions + remote-file false positive).

@@ -63,7 +63,7 @@ final class CreateBooking
         ($this->persist)($booking);
 
         if (function_exists('do_action') && $booking->id() !== null) {
-            do_action('slashbooking/booking_created', $booking->id());
+            do_action('slashbooking_booking_created', $booking->id());
         }
 
         return $booking;
@@ -93,6 +93,7 @@ final class CreateBooking
         }
 
         if ($errors !== []) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- $errors is an internal array of validation keys, never rendered to the browser
             throw new InvalidBookingInput($errors);
         }
     }

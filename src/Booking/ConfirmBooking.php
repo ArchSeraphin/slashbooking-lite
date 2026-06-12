@@ -23,13 +23,14 @@ final class ConfirmBooking
     {
         $booking = ($this->find)($bookingId);
         if ($booking === null) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- internal exception message, never rendered to the browser
             throw new BookingNotFound("Booking {$bookingId} not found.");
         }
         $booking->confirm();
         ($this->persist)($booking);
 
         if (function_exists('do_action') && $booking->id() !== null) {
-            do_action('slashbooking/booking_confirmed', $booking->id());
+            do_action('slashbooking_booking_confirmed', $booking->id());
         }
 
         return $booking;

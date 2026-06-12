@@ -54,7 +54,7 @@ final class BookingNotifierTest extends WP_UnitTestCase
     public function test_booking_created_sends_two_emails(): void
     {
         $b = $this->newBooking('jean@test.fr');
-        do_action('slashbooking/booking_created', $b->id());
+        do_action('slashbooking_booking_created', $b->id());
 
         self::assertCount(2, $this->sent);
         $recipients = array_column($this->sent, 'to');
@@ -65,7 +65,7 @@ final class BookingNotifierTest extends WP_UnitTestCase
     public function test_booking_confirmed_sends_one_email_with_ics(): void
     {
         $b = $this->newBooking('jean@test.fr');
-        do_action('slashbooking/booking_confirmed', $b->id());
+        do_action('slashbooking_booking_confirmed', $b->id());
 
         self::assertCount(1, $this->sent);
         self::assertNotEmpty($this->sent[0]['attachments']);
@@ -73,7 +73,7 @@ final class BookingNotifierTest extends WP_UnitTestCase
 
     public function test_unknown_booking_id_is_safe_noop(): void
     {
-        do_action('slashbooking/booking_confirmed', 99999);
+        do_action('slashbooking_booking_confirmed', 99999);
         self::assertCount(0, $this->sent);
     }
 
