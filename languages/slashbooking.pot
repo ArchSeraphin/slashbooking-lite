@@ -13,6 +13,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: slashbooking\n"
 
+#: src/Notifications/TagRegistry.php:68
+msgid ".ics download URL"
+msgstr ""
+
 #: src/Admin/react-app/src/EmailSettings.jsx:166
 msgid "“New request” notifications will go to: "
 msgstr ""
@@ -90,6 +94,18 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
+#: src/Notifications/TagRegistry.php:66
+msgid "Admin confirmation URL"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:67
+msgid "Admin decline URL"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:71
+msgid "Admin email"
+msgstr ""
+
 #: src/Admin/react-app/src/BookingsPage.jsx:121
 msgid "Admin-approved"
 msgstr ""
@@ -124,6 +140,10 @@ msgstr ""
 
 #: src/Privacy/BookingExporter.php:37
 msgid "Appointment date"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:60
+msgid "Appointment date (long, locale)"
 msgstr ""
 
 #: src/Http/DecisionController.php:172
@@ -250,6 +270,10 @@ msgstr ""
 msgid "Company logo URL (used by {company_logo})"
 msgstr ""
 
+#: src/Notifications/TagRegistry.php:73
+msgid "Company phone (plugin option)"
+msgstr ""
+
 #: src/Admin/react-app/src/EmailSettings.jsx:125
 msgid "Company phone (used by {company_phone})"
 msgstr ""
@@ -308,6 +332,30 @@ msgstr ""
 
 #: src/Admin/react-app/src/BookingsPage.jsx:214
 msgid "Customer"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:57
+msgid "Customer address"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:65
+msgid "Customer cancellation URL"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:55
+msgid "Customer email"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:54
+msgid "Customer name"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:64
+msgid "Customer notes"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:56
+msgid "Customer phone"
 msgstr ""
 
 #: src/Admin/react-app/src/FormSettings.jsx:131
@@ -406,6 +454,10 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
+#: src/Notifications/TagRegistry.php:62
+msgid "End time (HH:mm)"
+msgstr ""
+
 #: src/PublicFront/assets/booking.js:459
 msgid "Error loading the slots. Please try again in a moment."
 msgstr ""
@@ -500,6 +552,10 @@ msgstr ""
 
 #: src/PublicFront/assets/booking.js:421
 msgid "Loading slots…"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:72
+msgid "Logo <img> tag (plugin option)"
 msgstr ""
 
 #: src/Admin/react-app/src/ServiceEditor.jsx:268
@@ -688,11 +744,16 @@ msgstr ""
 msgid "Service"
 msgstr ""
 
+#: src/Notifications/TagRegistry.php:59
+msgid "Service duration"
+msgstr ""
+
 #: src/Admin/react-app/src/ServiceEditor.jsx:188
 msgid "Service identity"
 msgstr ""
 
 #: src/Admin/react-app/src/ServicesPage.jsx:311
+#: src/Notifications/TagRegistry.php:58
 msgid "Service name"
 msgstr ""
 
@@ -731,6 +792,14 @@ msgstr ""
 msgid "Shown just above the “Confirm request” button. Leave empty to show nothing."
 msgstr ""
 
+#: src/Notifications/TagRegistry.php:69
+msgid "Site name"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:70
+msgid "Site URL"
+msgstr ""
+
 #: src/Admin/AdminMenu.php:16
 msgid "SlashBooking"
 msgstr ""
@@ -757,6 +826,10 @@ msgstr ""
 
 #: src/PublicFront/assets/booking.js:577
 msgid "Sorry, this slot has just been taken. Please choose another one."
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:61
+msgid "Start time (HH:mm)"
 msgstr ""
 
 #: src/Admin/react-app/src/BookingsPage.jsx:215
@@ -808,6 +881,10 @@ msgstr ""
 #: src/PublicFront/assets/booking.js:137
 #: src/PublicFront/assets/booking.js:138
 msgid "Time"
+msgstr ""
+
+#: src/Notifications/TagRegistry.php:63
+msgid "Time zone"
 msgstr ""
 
 #: src/PublicFront/assets/booking.js:409

@@ -10,12 +10,19 @@ final class TagRegistry
 {
     private const RAW_TAGS = ['cancel_url', 'confirm_url', 'reject_url', 'ics_url', 'company_logo'];
 
-    /** @var array<string, Tag> */
-    private array $tags;
+    /** @var array<string, Tag>|null */
+    private ?array $tags = null;
 
-    public function __construct()
+    /**
+     * Built lazily (not in the constructor) so the __() description strings are
+     * translated at request time — after the textdomain is loaded on `init` —
+     * rather than at plugin boot.
+     *
+     * @return array<string, Tag>
+     */
+    private function tags(): array
     {
-        $this->tags = $this->buildTags();
+        return $this->tags ??= $this->buildTags();
     }
 
     /**
@@ -23,7 +30,7 @@ final class TagRegistry
      */
     public function find(string $name): ?array
     {
-        return $this->tags[$name] ?? null;
+        return $this->tags()[$name] ?? null;
     }
 
     /**
@@ -32,7 +39,7 @@ final class TagRegistry
     public function grouped(): array
     {
         $out = [];
-        foreach ($this->tags as $tag) {
+        foreach ($this->tags() as $tag) {
             $out[$tag['category']][] = $tag;
         }
         return $out;
@@ -44,26 +51,26 @@ final class TagRegistry
     private function buildTags(): array
     {
         $defs = [
-            ['customer', 'customer_name',    'Nom du client'],
-            ['customer', 'customer_email',   'E-mail du client'],
-            ['customer', 'customer_phone',   'Téléphone du client'],
-            ['customer', 'customer_address', 'Adresse du client'],
-            ['appointment', 'service_name',     'Nom du service'],
-            ['appointment', 'service_duration', 'Durée du service'],
-            ['appointment', 'appointment_date', 'Date du RDV (long, locale)'],
-            ['appointment', 'appointment_time', 'Heure de début (HH:mm)'],
-            ['appointment', 'appointment_end',  'Heure de fin (HH:mm)'],
-            ['appointment', 'timezone',         'Fuseau horaire'],
-            ['appointment', 'notes',            'Notes du client'],
-            ['actions', 'cancel_url',  "URL d'annulation client"],
-            ['actions', 'confirm_url', 'URL de confirmation admin'],
-            ['actions', 'reject_url',  'URL de refus admin'],
-            ['actions', 'ics_url',     'URL téléchargement .ics'],
-            ['site', 'site_name',     'Nom du site'],
-            ['site', 'site_url',      'URL du site'],
-            ['site', 'admin_email',   'E-mail admin'],
-            ['site', 'company_logo',  'Balise <img> du logo (option plugin)'],
-            ['site', 'company_phone', 'Téléphone société (option plugin)'],
+            ['customer', 'customer_name',    __('Customer name', 'slashbooking')],
+            ['customer', 'customer_email',   __('Customer email', 'slashbooking')],
+            ['customer', 'customer_phone',   __('Customer phone', 'slashbooking')],
+            ['customer', 'customer_address', __('Customer address', 'slashbooking')],
+            ['appointment', 'service_name',     __('Service name', 'slashbooking')],
+            ['appointment', 'service_duration', __('Service duration', 'slashbooking')],
+            ['appointment', 'appointment_date', __('Appointment date (long, locale)', 'slashbooking')],
+            ['appointment', 'appointment_time', __('Start time (HH:mm)', 'slashbooking')],
+            ['appointment', 'appointment_end',  __('End time (HH:mm)', 'slashbooking')],
+            ['appointment', 'timezone',         __('Time zone', 'slashbooking')],
+            ['appointment', 'notes',            __('Customer notes', 'slashbooking')],
+            ['actions', 'cancel_url',  __('Customer cancellation URL', 'slashbooking')],
+            ['actions', 'confirm_url', __('Admin confirmation URL', 'slashbooking')],
+            ['actions', 'reject_url',  __('Admin decline URL', 'slashbooking')],
+            ['actions', 'ics_url',     __('.ics download URL', 'slashbooking')],
+            ['site', 'site_name',     __('Site name', 'slashbooking')],
+            ['site', 'site_url',      __('Site URL', 'slashbooking')],
+            ['site', 'admin_email',   __('Admin email', 'slashbooking')],
+            ['site', 'company_logo',  __('Logo <img> tag (plugin option)', 'slashbooking')],
+            ['site', 'company_phone', __('Company phone (plugin option)', 'slashbooking')],
         ];
         $out = [];
         foreach ($defs as [$cat, $name, $desc]) {

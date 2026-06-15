@@ -13,6 +13,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: slashbooking\n"
 
+#: src/Notifications/TagRegistry.php:68
+msgid ".ics download URL"
+msgstr "URL téléchargement .ics"
+
 #: src/Admin/react-app/src/EmailSettings.jsx:166
 msgid "“New request” notifications will go to: "
 msgstr "Les notifications \"nouvelle demande\" partiront vers : "
@@ -90,6 +94,18 @@ msgstr "Ajouter une plage"
 msgid "Address"
 msgstr "Adresse"
 
+#: src/Notifications/TagRegistry.php:66
+msgid "Admin confirmation URL"
+msgstr "URL de confirmation admin"
+
+#: src/Notifications/TagRegistry.php:67
+msgid "Admin decline URL"
+msgstr "URL de refus admin"
+
+#: src/Notifications/TagRegistry.php:71
+msgid "Admin email"
+msgstr "E-mail admin"
+
 #: src/Admin/react-app/src/BookingsPage.jsx:121
 msgid "Admin-approved"
 msgstr "Validés par l'admin"
@@ -125,6 +141,10 @@ msgstr "RDV confirmé ✓"
 #: src/Privacy/BookingExporter.php:37
 msgid "Appointment date"
 msgstr "Date du RDV"
+
+#: src/Notifications/TagRegistry.php:60
+msgid "Appointment date (long, locale)"
+msgstr "Date du RDV (long, locale)"
 
 #: src/Http/DecisionController.php:172
 msgid "Appointment decision"
@@ -250,6 +270,10 @@ msgstr "Couleur (hex)"
 msgid "Company logo URL (used by {company_logo})"
 msgstr "URL logo société (utilisé par {company_logo})"
 
+#: src/Notifications/TagRegistry.php:73
+msgid "Company phone (plugin option)"
+msgstr "Téléphone société (option plugin)"
+
 #: src/Admin/react-app/src/EmailSettings.jsx:125
 msgid "Company phone (used by {company_phone})"
 msgstr "Téléphone société (utilisé par {company_phone})"
@@ -309,6 +333,30 @@ msgstr "Échec de la création."
 #: src/Admin/react-app/src/BookingsPage.jsx:214
 msgid "Customer"
 msgstr "Client"
+
+#: src/Notifications/TagRegistry.php:57
+msgid "Customer address"
+msgstr "Adresse du client"
+
+#: src/Notifications/TagRegistry.php:65
+msgid "Customer cancellation URL"
+msgstr "URL d'annulation client"
+
+#: src/Notifications/TagRegistry.php:55
+msgid "Customer email"
+msgstr "E-mail du client"
+
+#: src/Notifications/TagRegistry.php:54
+msgid "Customer name"
+msgstr "Nom du client"
+
+#: src/Notifications/TagRegistry.php:64
+msgid "Customer notes"
+msgstr "Notes du client"
+
+#: src/Notifications/TagRegistry.php:56
+msgid "Customer phone"
+msgstr "Téléphone du client"
 
 #: src/Admin/react-app/src/FormSettings.jsx:131
 msgid "Customize the colors of the confirmation button, selected slots and calendar accents. Leave empty to use the default SlashBooking colors."
@@ -406,6 +454,10 @@ msgstr "Paramètres e-mail"
 msgid "Enable"
 msgstr "Activer"
 
+#: src/Notifications/TagRegistry.php:62
+msgid "End time (HH:mm)"
+msgstr "Heure de fin (HH:mm)"
+
 #: src/PublicFront/assets/booking.js:459
 msgid "Error loading the slots. Please try again in a moment."
 msgstr "Erreur de chargement des créneaux. Réessayez dans un instant."
@@ -501,6 +553,10 @@ msgstr "Mentions légales"
 #: src/PublicFront/assets/booking.js:421
 msgid "Loading slots…"
 msgstr "Chargement des créneaux…"
+
+#: src/Notifications/TagRegistry.php:72
+msgid "Logo <img> tag (plugin option)"
+msgstr "Balise <img> du logo (option plugin)"
 
 #: src/Admin/react-app/src/ServiceEditor.jsx:268
 msgid "Minimum lead time before appointment (hours)"
@@ -688,11 +744,16 @@ msgstr "Envoi en cours…"
 msgid "Service"
 msgstr "Service"
 
+#: src/Notifications/TagRegistry.php:59
+msgid "Service duration"
+msgstr "Durée du service"
+
 #: src/Admin/react-app/src/ServiceEditor.jsx:188
 msgid "Service identity"
 msgstr "Identité du service"
 
 #: src/Admin/react-app/src/ServicesPage.jsx:311
+#: src/Notifications/TagRegistry.php:58
 msgid "Service name"
 msgstr "Nom du service"
 
@@ -731,6 +792,14 @@ msgstr "Shortcodes — à coller dans tes pages WordPress"
 msgid "Shown just above the “Confirm request” button. Leave empty to show nothing."
 msgstr "Affichée juste au-dessus du bouton « Confirmer la demande ». Laissez vide pour ne rien afficher."
 
+#: src/Notifications/TagRegistry.php:69
+msgid "Site name"
+msgstr "Nom du site"
+
+#: src/Notifications/TagRegistry.php:70
+msgid "Site URL"
+msgstr "URL du site"
+
 #: src/Admin/AdminMenu.php:16
 msgid "SlashBooking"
 msgstr "SlashBooking"
@@ -758,6 +827,10 @@ msgstr "Identifiant (slug) — optionnel"
 #: src/PublicFront/assets/booking.js:577
 msgid "Sorry, this slot has just been taken. Please choose another one."
 msgstr "Désolé, ce créneau vient d'être pris. Choisissez-en un autre."
+
+#: src/Notifications/TagRegistry.php:61
+msgid "Start time (HH:mm)"
+msgstr "Heure de début (HH:mm)"
 
 #: src/Admin/react-app/src/BookingsPage.jsx:215
 #: src/Admin/react-app/src/ServicesPage.jsx:186
@@ -809,6 +882,10 @@ msgstr "Jeudi"
 #: src/PublicFront/assets/booking.js:138
 msgid "Time"
 msgstr "Heure"
+
+#: src/Notifications/TagRegistry.php:63
+msgid "Time zone"
+msgstr "Fuseau horaire"
 
 #: src/PublicFront/assets/booking.js:409
 msgid "Times are shown in local time."
