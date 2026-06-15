@@ -44,7 +44,7 @@ final class Shortcode
         if (count($slugs) === 1) {
             $svc = $this->services->findBySlug($slugs[0]);
             if ($svc === null || !$svc->isActive()) {
-                return '<div class="sb-error">' . esc_html__('Service inconnu', 'slashbooking') . '</div>';
+                return '<div class="sb-error">' . esc_html__('Unknown service', 'slashbooking') . '</div>';
             }
             $serviceAttr = $svc->slug;
         } else {

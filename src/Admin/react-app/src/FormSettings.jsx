@@ -54,7 +54,7 @@ export default function FormSettings() {
 				formAccentColor: accentColor,
 			};
 			await saveSettings( payload );
-			setSavedMsg( __( 'Paramètres enregistrés.', 'slashbooking' ) );
+			setSavedMsg( __( 'Settings saved.', 'slashbooking' ) );
 			await load();
 		} catch ( e ) {
 			setError( e.message ?? String( e ) );
@@ -68,7 +68,7 @@ export default function FormSettings() {
 		<Card>
 			<CardHeader>
 				<h2>
-					{ __( 'Paramètres du formulaire public', 'slashbooking' ) }
+					{ __( 'Public form settings', 'slashbooking' ) }
 				</h2>
 			</CardHeader>
 			<CardBody>
@@ -83,18 +83,18 @@ export default function FormSettings() {
 					<>
 						<TextareaControl
 							label={ __(
-								'Mention en bas du formulaire',
+								'Notice at the bottom of the form',
 								'slashbooking'
 							) }
 							help={ __(
-								'Affichée juste au-dessus du bouton « Confirmer la demande ». Laissez vide pour ne rien afficher.',
+								'Shown just above the “Confirm request” button. Leave empty to show nothing.',
 								'slashbooking'
 							) }
 							value={ disclaimer }
 							onChange={ setDisclaimer }
 							rows={ 3 }
 							placeholder={ __(
-								"Ex : Notre équipe devra approuver la date et l'heure proposées afin de confirmer votre rendez-vous.",
+								"e.g. Our team will need to approve the proposed date and time to confirm your appointment.",
 								'slashbooking'
 							) }
 							__nextHasNoMarginBottom
@@ -116,7 +116,7 @@ export default function FormSettings() {
 							} }
 						>
 							{ __(
-								"Couleurs d'accent du formulaire",
+								"Form accent colors",
 								'slashbooking'
 							) }
 						</h3>
@@ -128,14 +128,14 @@ export default function FormSettings() {
 							} }
 						>
 							{ __(
-								'Personnalisez les couleurs du bouton de confirmation, des créneaux sélectionnés et des accents de calendrier. Laissez vide pour utiliser les couleurs par défaut SlashBooking.',
+								'Customize the colors of the confirmation button, selected slots and calendar accents. Leave empty to use the default SlashBooking colors.',
 								'slashbooking'
 							) }
 						</p>
 
 						<ColorRow
 							label={ __(
-								'Couleur principale (boutons, sélection)',
+								'Primary color (buttons, selection)',
 								'slashbooking'
 							) }
 							value={ primaryColor }
@@ -147,7 +147,7 @@ export default function FormSettings() {
 
 						<ColorRow
 							label={ __(
-								"Couleur d'accent (états disponibles, indicateurs)",
+								"Accent color (available states, indicators)",
 								'slashbooking'
 							) }
 							value={ accentColor }
@@ -169,7 +169,7 @@ export default function FormSettings() {
 								onClick={ save }
 								disabled={ saving }
 							>
-								{ __( 'Enregistrer', 'slashbooking' ) }
+								{ __( 'Save', 'slashbooking' ) }
 							</Button>
 							{ savedMsg && (
 								<span
@@ -265,7 +265,7 @@ function ColorRow( { label, value, onChange, placeholder } ) {
 							textDecoration: 'underline',
 						} }
 					>
-						{ __( 'Réinitialiser', 'slashbooking' ) }
+						{ __( 'Reset', 'slashbooking' ) }
 					</button>
 				) }
 			</div>

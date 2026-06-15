@@ -61,7 +61,7 @@ final class DashboardWidget
         }
         wp_add_dashboard_widget(
             self::WIDGET_ID,
-            __('SlashBooking — Réservations', 'slashbooking'),
+            __('SlashBooking — Bookings', 'slashbooking'),
             [$this, 'render'],
         );
     }
@@ -89,10 +89,10 @@ final class DashboardWidget
         echo '<div class="sb-dash">';
 
         $this->renderSection(
-            heading: __('À valider', 'slashbooking'),
+            heading: __('To confirm', 'slashbooking'),
             badge:   $pending['total'],
             badgeTone: 'warn',
-            emptyText: __('Aucune demande en attente.', 'slashbooking'),
+            emptyText: __('No pending requests.', 'slashbooking'),
             items:   $pending['items'],
             services: $serviceNames,
             tz:      $tz,
@@ -101,19 +101,19 @@ final class DashboardWidget
         $this->renderSection(
             heading: sprintf(
                 /* translators: %d: number of days */
-                __('À venir (%d jours)', 'slashbooking'),
+                __('Upcoming (%d days)', 'slashbooking'),
                 self::UPCOMING_DAYS
             ),
             badge:   $upcoming['total'],
             badgeTone: 'info',
-            emptyText: __('Pas de rendez-vous prévu cette semaine.', 'slashbooking'),
+            emptyText: __('No appointments scheduled this week.', 'slashbooking'),
             items:   $upcoming['items'],
             services: $serviceNames,
             tz:      $tz,
         );
 
         echo '<p class="sb-dash__footer"><a href="' . esc_url($manageUrl) . '">'
-            . esc_html__('Voir toutes les réservations →', 'slashbooking')
+            . esc_html__('View all bookings →', 'slashbooking')
             . '</a></p>';
         echo '</div>';
     }
@@ -149,7 +149,7 @@ final class DashboardWidget
             $startLocal = $b->slot()->start->setTimezone($tz);
             $when = wp_date(
                 /* translators: WP date+time format for compact booking display */
-                _x('D j M, H\hi', 'compact dashboard datetime', 'slashbooking'),
+                _x('D, M j · H:i', 'compact dashboard datetime', 'slashbooking'),
                 $startLocal->getTimestamp(),
                 $tz,
             );

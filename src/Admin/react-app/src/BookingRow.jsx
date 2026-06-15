@@ -14,11 +14,11 @@ function fmt( iso, tz ) {
 }
 
 const STATUS_LABELS = {
-	pending: __( 'En attente', 'slashbooking' ),
-	confirmed: __( 'Confirmé', 'slashbooking' ),
-	rejected: __( 'Refusé', 'slashbooking' ),
-	cancelled: __( 'Annulé', 'slashbooking' ),
-	completed: __( 'Passé', 'slashbooking' ),
+	pending: __( 'Pending', 'slashbooking' ),
+	confirmed: __( 'Confirmed', 'slashbooking' ),
+	rejected: __( 'Declined', 'slashbooking' ),
+	cancelled: __( 'Cancelled', 'slashbooking' ),
+	completed: __( 'Past', 'slashbooking' ),
 };
 
 export default function BookingRow( { booking, onAct } ) {
@@ -51,14 +51,14 @@ export default function BookingRow( { booking, onAct } ) {
 								size="small"
 								onClick={ () => onAct( booking.id, 'confirm' ) }
 							>
-								{ __( 'Confirmer', 'slashbooking' ) }
+								{ __( 'Confirm', 'slashbooking' ) }
 							</Button>
 							<Button
 								variant="secondary"
 								size="small"
 								onClick={ () => onAct( booking.id, 'reject' ) }
 							>
-								{ __( 'Refuser', 'slashbooking' ) }
+								{ __( 'Decline', 'slashbooking' ) }
 							</Button>
 						</>
 					) }
@@ -69,7 +69,7 @@ export default function BookingRow( { booking, onAct } ) {
 							size="small"
 							onClick={ () => onAct( booking.id, 'cancel' ) }
 						>
-							{ __( 'Annuler', 'slashbooking' ) }
+							{ __( 'Cancel', 'slashbooking' ) }
 						</Button>
 					) }
 				</div>

@@ -27,8 +27,8 @@ final class BookingExporterTest extends TestCase
         $this->assertSame('slashbooking', $result['data'][0]['group_id']);
         $this->assertSame((string) $booking->id(), $result['data'][0]['item_id']);
         $fields = array_column($result['data'][0]['data'], 'value', 'name');
-        $this->assertSame('Alice Martin', $fields['Nom']);
-        $this->assertSame('alice@example.com', $fields['E-mail']);
+        $this->assertSame('Alice Martin', $fields['Name']);
+        $this->assertSame('alice@example.com', $fields['Email']);
     }
 
     public function test_returns_empty_when_no_match(): void

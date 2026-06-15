@@ -68,25 +68,25 @@ final class DecisionController
         $sig    = (string) $request['sig'];
 
         if (!in_array($action, ['confirm', 'reject'], true)) {
-            return $this->htmlResponse(400, '<h1>' . esc_html__('Action invalide', 'slashbooking') . '</h1>');
+            return $this->htmlResponse(400, '<h1>' . esc_html__('Invalid action', 'slashbooking') . '</h1>');
         }
 
         $payload = 'decide|' . $id . '|' . $action;
         if (!$this->signer->verify($payload, $exp, $sig)) {
             return $this->htmlResponse(
                 403,
-                '<h1>' . esc_html__('Lien invalide ou expiré', 'slashbooking') . '</h1>'
-                . '<p>' . esc_html__('Demandez un nouveau lien.', 'slashbooking') . '</p>',
+                '<h1>' . esc_html__('Invalid or expired link', 'slashbooking') . '</h1>'
+                . '<p>' . esc_html__('Please request a new link.', 'slashbooking') . '</p>',
             );
         }
 
         $endpoint = esc_url(rest_url(Plugin::REST_NAMESPACE . '/decide'));
         $label = $action === 'confirm'
-            ? esc_html__('Confirmer le RDV', 'slashbooking')
-            : esc_html__('Refuser le RDV', 'slashbooking');
+            ? esc_html__('Confirm the appointment', 'slashbooking')
+            : esc_html__('Decline the appointment', 'slashbooking');
         $heading = $action === 'confirm'
-            ? esc_html__('Confirmer cette réservation ?', 'slashbooking')
-            : esc_html__('Refuser cette réservation ?', 'slashbooking');
+            ? esc_html__('Confirm this booking?', 'slashbooking')
+            : esc_html__('Decline this booking?', 'slashbooking');
 
         $form = '<h1>' . $heading . '</h1>'
             . '<form method="post" action="' . $endpoint . '">'
@@ -112,30 +112,30 @@ final class DecisionController
         $sig    = (string) $request['sig'];
 
         if (!in_array($action, ['confirm', 'reject'], true)) {
-            return $this->htmlResponse(400, '<h1>' . esc_html__('Action invalide', 'slashbooking') . '</h1>');
+            return $this->htmlResponse(400, '<h1>' . esc_html__('Invalid action', 'slashbooking') . '</h1>');
         }
 
         $payload = 'decide|' . $id . '|' . $action;
         if (!$this->signer->verify($payload, $exp, $sig)) {
             return $this->htmlResponse(
                 403,
-                '<h1>' . esc_html__('Lien invalide ou expiré', 'slashbooking') . '</h1>'
-                . '<p>' . esc_html__('Demandez un nouveau lien.', 'slashbooking') . '</p>',
+                '<h1>' . esc_html__('Invalid or expired link', 'slashbooking') . '</h1>'
+                . '<p>' . esc_html__('Please request a new link.', 'slashbooking') . '</p>',
             );
         }
 
         try {
             if ($action === 'confirm') {
                 $this->confirm->execute($id);
-                $message = '<h1>' . esc_html__('RDV confirmé ✓', 'slashbooking') . '</h1>'
-                    . '<p>' . esc_html__('Le client a été notifié.', 'slashbooking') . '</p>';
+                $message = '<h1>' . esc_html__('Appointment confirmed ✓', 'slashbooking') . '</h1>'
+                    . '<p>' . esc_html__('The customer has been notified.', 'slashbooking') . '</p>';
             } else {
                 $this->reject->execute($id);
-                $message = '<h1>' . esc_html__('RDV refusé', 'slashbooking') . '</h1>'
-                    . '<p>' . esc_html__('Le client a été notifié.', 'slashbooking') . '</p>';
+                $message = '<h1>' . esc_html__('Appointment declined', 'slashbooking') . '</h1>'
+                    . '<p>' . esc_html__('The customer has been notified.', 'slashbooking') . '</p>';
             }
         } catch (BookingNotFound $e) {
-            return $this->htmlResponse(404, '<h1>' . esc_html__('Réservation introuvable', 'slashbooking') . '</h1>');
+            return $this->htmlResponse(404, '<h1>' . esc_html__('Booking not found', 'slashbooking') . '</h1>');
         } catch (\DomainException $e) {
             if ($this->log !== null) {
                 ($this->log)([
@@ -147,8 +147,8 @@ final class DecisionController
             }
             return $this->htmlResponse(
                 409,
-                '<h1>' . esc_html__('Impossible', 'slashbooking') . '</h1>'
-                . '<p>' . esc_html__('Cette demande a déjà été traitée ou n’est plus valide.', 'slashbooking') . '</p>',
+                '<h1>' . esc_html__('Unable', 'slashbooking') . '</h1>'
+                . '<p>' . esc_html__('This request has already been handled or is no longer valid.', 'slashbooking') . '</p>',
             );
         }
 
@@ -169,7 +169,7 @@ final class DecisionController
         // Standalone HTTP document served directly by the REST API (text/html),
         // outside the WordPress theme/wp_head() pipeline — there is no enqueue
         // target here, so the minimal page styling is set via a style attribute.
-        $title = esc_html__('Décision RDV', 'slashbooking');
+        $title = esc_html__('Appointment decision', 'slashbooking');
         return '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' . $title . '</title>'
             . '</head><body style="font-family:system-ui,sans-serif;max-width:560px;margin:80px auto;padding:0 16px;color:#111">'
             . $inner . '</body></html>';

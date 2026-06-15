@@ -51,7 +51,7 @@ export default function EmailSettings() {
 				companyLogo: logo,
 				companyPhone: phone,
 			} );
-			setSavedMsg( __( 'Paramètres enregistrés.', 'slashbooking' ) );
+			setSavedMsg( __( 'Settings saved.', 'slashbooking' ) );
 			await load();
 		} catch ( e ) {
 			setError( e.message ?? String( e ) );
@@ -65,7 +65,7 @@ export default function EmailSettings() {
 	return (
 		<Card>
 			<CardHeader>
-				<h2>{ __( 'Paramètres e-mail', 'slashbooking' ) }</h2>
+				<h2>{ __( 'Email settings', 'slashbooking' ) }</h2>
 			</CardHeader>
 			<CardBody>
 				{ loading && <Spinner /> }
@@ -78,19 +78,19 @@ export default function EmailSettings() {
 					<>
 						<TextControl
 							label={ __(
-								'Adresse de réception des notifications',
+								'Notification recipient address',
 								'slashbooking'
 							) }
 							help={
 								notifEmail.trim() === ''
 									? __(
-											"Laissé vide : les notifications vont à l'e-mail admin WP (",
+											"If left empty, notifications go to the WP admin email (",
 											'slashbooking'
 									  ) +
 									  fallback +
 									  ').'
 									: __(
-											"Les notifications de nouvelles demandes iront ici, indépendamment de l'e-mail admin WP.",
+											"New-request notifications will go here, regardless of the WP admin email.",
 											'slashbooking'
 									  )
 							}
@@ -105,14 +105,14 @@ export default function EmailSettings() {
 
 						<TextControl
 							label={ __(
-								'URL logo société (utilisé par {company_logo})',
+								'Company logo URL (used by {company_logo})',
 								'slashbooking'
 							) }
 							type="url"
 							value={ logo }
 							onChange={ setLogo }
 							placeholder={ __(
-								'URL publique de votre logo (PNG ou JPG)',
+								'Public URL of your logo (PNG or JPG)',
 								'slashbooking'
 							) }
 							__nextHasNoMarginBottom
@@ -122,7 +122,7 @@ export default function EmailSettings() {
 
 						<TextControl
 							label={ __(
-								'Téléphone société (utilisé par {company_phone})',
+								'Company phone (used by {company_phone})',
 								'slashbooking'
 							) }
 							value={ phone }
@@ -144,7 +144,7 @@ export default function EmailSettings() {
 								onClick={ save }
 								disabled={ saving }
 							>
-								{ __( 'Enregistrer', 'slashbooking' ) }
+								{ __( 'Save', 'slashbooking' ) }
 							</Button>
 							{ savedMsg && (
 								<span
@@ -163,13 +163,13 @@ export default function EmailSettings() {
 							} }
 						>
 							{ __(
-								'Les notifications "nouvelle demande" partiront vers : ',
+								'“New request” notifications will go to: ',
 								'slashbooking'
 							) }
 							<strong>
 								{ effectiveTarget ||
 									__(
-										'(aucune adresse définie)',
+										'(no address set)',
 										'slashbooking'
 									) }
 							</strong>

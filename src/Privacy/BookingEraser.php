@@ -25,7 +25,7 @@ final class BookingEraser
             ? [
                 sprintf(
                     /* translators: %d: number of bookings anonymized */
-                    __('SlashBooking : %d réservation(s) anonymisée(s) (les agrégats sont conservés).', 'slashbooking'),
+                    __('SlashBooking: %d booking(s) anonymized (aggregates are kept).', 'slashbooking'),
                     $count
                 ),
             ]

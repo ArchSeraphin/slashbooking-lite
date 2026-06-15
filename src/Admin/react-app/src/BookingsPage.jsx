@@ -15,11 +15,11 @@ import ShortcodeMemo from './ShortcodeMemo';
 setupApi();
 
 const STATUSES = [
-	{ value: '', label: __( 'Tous statuts', 'slashbooking' ) },
-	{ value: 'pending', label: __( 'En attente', 'slashbooking' ) },
-	{ value: 'confirmed', label: __( 'Confirmés', 'slashbooking' ) },
-	{ value: 'rejected', label: __( 'Refusés', 'slashbooking' ) },
-	{ value: 'cancelled', label: __( 'Annulés', 'slashbooking' ) },
+	{ value: '', label: __( 'All statuses', 'slashbooking' ) },
+	{ value: 'pending', label: __( 'Pending', 'slashbooking' ) },
+	{ value: 'confirmed', label: __( 'Confirmed', 'slashbooking' ) },
+	{ value: 'rejected', label: __( 'Declined', 'slashbooking' ) },
+	{ value: 'cancelled', label: __( 'Cancelled', 'slashbooking' ) },
 ];
 
 const PER_PAGE = 20;
@@ -103,28 +103,28 @@ export default function BookingsPage() {
 	const kpiCards = useMemo(
 		() => [
 			{
-				label: __( 'Total RDV', 'slashbooking' ),
+				label: __( 'Total appointments', 'slashbooking' ),
 				value: kpi.total,
 				variant: 'primary',
-				hint: __( 'Toutes périodes', 'slashbooking' ),
+				hint: __( 'All periods', 'slashbooking' ),
 			},
 			{
-				label: __( 'À valider', 'slashbooking' ),
+				label: __( 'To confirm', 'slashbooking' ),
 				value: kpi.pending,
 				variant: 'warning',
-				hint: __( 'En attente de confirmation', 'slashbooking' ),
+				hint: __( 'Awaiting confirmation', 'slashbooking' ),
 			},
 			{
-				label: __( 'Confirmés', 'slashbooking' ),
+				label: __( 'Confirmed', 'slashbooking' ),
 				value: kpi.confirmed,
 				variant: 'accent',
-				hint: __( "Validés par l'admin", 'slashbooking' ),
+				hint: __( "Admin-approved", 'slashbooking' ),
 			},
 			{
-				label: __( 'À venir', 'slashbooking' ),
+				label: __( 'Upcoming', 'slashbooking' ),
 				value: kpi.upcoming,
 				variant: 'primary',
-				hint: __( 'Confirmés futurs', 'slashbooking' ),
+				hint: __( 'Upcoming confirmed', 'slashbooking' ),
 			},
 		],
 		[ kpi ]
@@ -149,7 +149,7 @@ export default function BookingsPage() {
 				<CardBody>
 					<div className="sb-bookings__toolbar">
 						<SelectControl
-							label={ __( 'Filtrer par statut', 'slashbooking' ) }
+							label={ __( 'Filter by status', 'slashbooking' ) }
 							value={ status }
 							options={ STATUSES }
 							onChange={ ( v ) => {
@@ -194,11 +194,11 @@ export default function BookingsPage() {
 								<path d="M16 2v4M8 2v4M3 10h18" />
 							</svg>
 							<p className="sb-empty__title">
-								{ __( 'Aucune réservation', 'slashbooking' ) }
+								{ __( 'No bookings', 'slashbooking' ) }
 							</p>
 							<p className="sb-empty__hint">
 								{ __(
-									'Les RDV apparaîtront ici dès la première prise via le formulaire public.',
+									'Appointments will appear here as soon as the first one is booked via the public form.',
 									'slashbooking'
 								) }
 							</p>
@@ -211,8 +211,8 @@ export default function BookingsPage() {
 								<tr>
 									<th>{ __( 'Date', 'slashbooking' ) }</th>
 									<th>{ __( 'Service', 'slashbooking' ) }</th>
-									<th>{ __( 'Client', 'slashbooking' ) }</th>
-									<th>{ __( 'Statut', 'slashbooking' ) }</th>
+									<th>{ __( 'Customer', 'slashbooking' ) }</th>
+									<th>{ __( 'Status', 'slashbooking' ) }</th>
 									<th style={ { textAlign: 'right' } }>
 										{ __( 'Actions', 'slashbooking' ) }
 									</th>
@@ -236,7 +236,7 @@ export default function BookingsPage() {
 								disabled={ page <= 1 }
 								onClick={ () => setPage( page - 1 ) }
 							>
-								{ __( '← Précédent', 'slashbooking' ) }
+								{ __( '← Previous', 'slashbooking' ) }
 							</Button>
 							<span>
 								{ __( 'Page', 'slashbooking' ) } { page } /{ ' ' }
@@ -246,7 +246,7 @@ export default function BookingsPage() {
 								disabled={ page >= lastPage }
 								onClick={ () => setPage( page + 1 ) }
 							>
-								{ __( 'Suivant →', 'slashbooking' ) }
+								{ __( 'Next →', 'slashbooking' ) }
 							</Button>
 						</div>
 					) }

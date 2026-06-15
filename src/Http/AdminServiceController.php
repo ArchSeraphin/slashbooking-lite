@@ -49,7 +49,7 @@ final class AdminServiceController
         $slug = (string) $req->get_param('slug');
         $svc = $this->repo->findBySlug($slug);
         if ($svc === null) {
-            return new WP_Error('sb_service_not_found', __('Service introuvable', 'slashbooking'), ['status' => 404]);
+            return new WP_Error('sb_service_not_found', __('Service not found', 'slashbooking'), ['status' => 404]);
         }
         return new WP_REST_Response($this->serialize($svc), 200);
     }
@@ -58,13 +58,13 @@ final class AdminServiceController
     {
         $name = trim((string) $req->get_param('name'));
         if ($name === '') {
-            return new WP_Error('sb_invalid_name', __('Le nom du service est requis.', 'slashbooking'), ['status' => 400]);
+            return new WP_Error('sb_invalid_name', __('The service name is required.', 'slashbooking'), ['status' => 400]);
         }
 
         $rawSlug = trim((string) $req->get_param('slug'));
         $slug = $rawSlug !== '' ? $this->slugify($rawSlug) : $this->slugify($name);
         if ($slug === '') {
-            return new WP_Error('sb_invalid_slug', __('Slug invalide.', 'slashbooking'), ['status' => 400]);
+            return new WP_Error('sb_invalid_slug', __('Invalid slug.', 'slashbooking'), ['status' => 400]);
         }
 
         // Ensure uniqueness by appending -2, -3, ... if needed.
@@ -74,7 +74,7 @@ final class AdminServiceController
             $finalSlug = $slug . '-' . $attempt;
             $attempt++;
             if ($attempt > 50) {
-                return new WP_Error('sb_slug_collision', __('Impossible de générer un slug unique.', 'slashbooking'), ['status' => 409]);
+                return new WP_Error('sb_slug_collision', __('Unable to generate a unique slug.', 'slashbooking'), ['status' => 409]);
             }
         }
 
@@ -107,7 +107,7 @@ final class AdminServiceController
 
         $id = $this->repo->create($svc);
         if ($id === null) {
-            return new WP_Error('sb_create_failed', __('Échec de la création.', 'slashbooking'), ['status' => 500]);
+            return new WP_Error('sb_create_failed', __('Creation failed.', 'slashbooking'), ['status' => 500]);
         }
 
         // Fetch by id (not slug) — PHPStan's flow analysis remembers the prior
@@ -115,7 +115,7 @@ final class AdminServiceController
         // believe this lookup also returns null.
         $created = $this->repo->findById($id);
         if ($created === null) {
-            return new WP_Error('sb_create_failed', __('Service créé introuvable.', 'slashbooking'), ['status' => 500]);
+            return new WP_Error('sb_create_failed', __('Created service not found.', 'slashbooking'), ['status' => 500]);
         }
         return new WP_REST_Response($this->serialize($created), 201);
     }
@@ -125,7 +125,7 @@ final class AdminServiceController
         $slug = (string) $req->get_param('slug');
         $svc = $this->repo->findBySlug($slug);
         if ($svc === null) {
-            return new WP_Error('sb_service_not_found', __('Service introuvable', 'slashbooking'), ['status' => 404]);
+            return new WP_Error('sb_service_not_found', __('Service not found', 'slashbooking'), ['status' => 404]);
         }
 
         if ($this->bookings !== null && $svc->id !== null) {
@@ -135,7 +135,7 @@ final class AdminServiceController
                     'sb_service_has_bookings',
                     sprintf(
                         /* translators: %d = number of bookings linked to the service */
-                        __('Ce service compte %d réservation(s) liée(s). Désactivez-le plutôt que de le supprimer pour préserver l\'historique.', 'slashbooking'),
+                        __('This service has %d linked booking(s). Deactivate it instead of deleting it to preserve history.', 'slashbooking'),
                         $count
                     ),
                     ['status' => 409]
@@ -144,7 +144,7 @@ final class AdminServiceController
         }
 
         if ($svc->id === null || !$this->repo->delete($svc->id)) {
-            return new WP_Error('sb_delete_failed', __('Échec de la suppression.', 'slashbooking'), ['status' => 500]);
+            return new WP_Error('sb_delete_failed', __('Deletion failed.', 'slashbooking'), ['status' => 500]);
         }
 
         return new WP_REST_Response(['deleted' => true, 'slug' => $slug], 200);
@@ -163,7 +163,7 @@ final class AdminServiceController
         $slug = (string) $req->get_param('slug');
         $current = $this->repo->findBySlug($slug);
         if ($current === null) {
-            return new WP_Error('sb_service_not_found', __('Service introuvable', 'slashbooking'), ['status' => 404]);
+            return new WP_Error('sb_service_not_found', __('Service not found', 'slashbooking'), ['status' => 404]);
         }
 
         $name             = $this->str($req->get_param('name'), $current->name);
@@ -197,7 +197,7 @@ final class AdminServiceController
         }
 
         if (!$this->repo->update($updated)) {
-            return new WP_Error('sb_save_failed', __('Échec de la sauvegarde.', 'slashbooking'), ['status' => 500]);
+            return new WP_Error('sb_save_failed', __('Save failed.', 'slashbooking'), ['status' => 500]);
         }
 
         return new WP_REST_Response($this->serialize($updated), 200);

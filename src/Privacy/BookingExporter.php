@@ -25,17 +25,17 @@ final class BookingExporter
         foreach ($bookings as $b) {
             $data[] = [
                 'group_id'    => 'slashbooking',
-                'group_label' => __('Réservations SlashBooking', 'slashbooking'),
+                'group_label' => __('SlashBooking bookings', 'slashbooking'),
                 'item_id'     => (string) ($b->id() ?? 0),
                 'data'        => [
-                    ['name' => __('Nom', 'slashbooking'),     'value' => $b->customerName()],
-                    ['name' => __('E-mail', 'slashbooking'),  'value' => $b->customerEmail()],
-                    ['name' => __('Téléphone', 'slashbooking'), 'value' => $b->customerPhone()],
-                    ['name' => __('Adresse', 'slashbooking'), 'value' => $b->customerAddress()],
+                    ['name' => __('Name', 'slashbooking'),     'value' => $b->customerName()],
+                    ['name' => __('Email', 'slashbooking'),  'value' => $b->customerEmail()],
+                    ['name' => __('Phone', 'slashbooking'), 'value' => $b->customerPhone()],
+                    ['name' => __('Address', 'slashbooking'), 'value' => $b->customerAddress()],
                     ['name' => __('Notes', 'slashbooking'),   'value' => $b->notes()],
-                    ['name' => __('Statut', 'slashbooking'),  'value' => $b->status()->value],
-                    ['name' => __('Date du RDV', 'slashbooking'), 'value' => $b->slot()->start->format('Y-m-d H:i')],
-                    ['name' => __('Fuseau', 'slashbooking'),  'value' => $b->timezone()],
+                    ['name' => __('Status', 'slashbooking'),  'value' => $b->status()->value],
+                    ['name' => __('Appointment date', 'slashbooking'), 'value' => $b->slot()->start->format('Y-m-d H:i')],
+                    ['name' => __('Timezone', 'slashbooking'),  'value' => $b->timezone()],
                 ],
             ];
         }

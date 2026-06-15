@@ -4,7 +4,7 @@ Tags: booking, appointment, scheduling, reservations, calendar
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,10 @@ The Composer autoloader in `vendor/` is generated with `composer install --no-de
 
 == Changelog ==
 
+= 1.0.5 =
+* **Internationalization.** The plugin's source strings are now in English (`en_US`) — the standard base locale for WordPress.org — and a complete **French (`fr_FR`)** translation ships with the plugin, covering the admin, the transactional emails, the public booking form and the settings app. The plugin can now be translated into any language via translate.wordpress.org.
+* Updated the bundled plugin logo to the current SlashBooking calendar mark.
+
 = 1.0.4 =
 * Removed the optional Cloudflare Turnstile integration from the free edition. The plugin now makes **no external requests** and connects to **no third-party service** — it is fully self-contained. The built-in honeypot and per-IP rate limiting continue to protect the booking form.
 
@@ -108,6 +112,9 @@ The Composer autoloader in `vendor/` is generated with `composer install --no-de
 First public release: shortcode booking form with real-time availability, one-click signed email confirmation (Confirm/Decline), `.ics` attachments, per-service opening hours and buffers, GDPR exporters/erasers and retention, honeypot + rate limiting, and optional Cloudflare Turnstile.
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+Adds a full French translation and switches the source language to English (en_US) so the plugin can be translated into any language on WordPress.org.
 
 = 1.0.4 =
 The free edition no longer bundles Cloudflare Turnstile and is now fully self-contained (no external services). Honeypot + rate limiting still protect the form.

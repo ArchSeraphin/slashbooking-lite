@@ -5,7 +5,7 @@ namespace Slash\Booking;
 
 final class Plugin
 {
-    public const VERSION = '1.0.4';
+    public const VERSION = '1.0.5';
     public const TEXT_DOMAIN = 'slashbooking';
     public const DB_VERSION = 2;
     public const REST_NAMESPACE = 'slashbooking/v1';
@@ -85,6 +85,17 @@ final class Plugin
         // register_activation_hook fires. Without this idempotent seed, a fresh
         // install fatals on `new DecisionTokenSigner('')` further down.
         Activator::ensureDecisionSecret();
+
+        // Load the bundled translations. The plugin's source strings are English;
+        // a complete French catalog ships in /languages. Hooked on `init` (not
+        // earlier) per WP 6.7 just-in-time-loading guidance.
+        add_action('init', function (): void {
+            load_plugin_textdomain(
+                'slashbooking',
+                false,
+                \dirname(plugin_basename($this->pluginFile)) . '/languages',
+            );
+        });
 
         // Propagate capability changes to existing installs that were activated
         // under an older revision (e.g. before editor role got plugin access).
@@ -175,9 +186,5 @@ final class Plugin
         (new Admin\AdminMenu())->register();
         (new Admin\Assets($this))->register();
         (new Admin\DashboardWidget($bookings, $services))->register();
-
-        // Translations are loaded automatically by WordPress for plugins hosted
-        // on WordPress.org (since WP 4.6), so no load_plugin_textdomain() call is
-        // needed here — the plugin requires WP 6.5+.
     }
 }

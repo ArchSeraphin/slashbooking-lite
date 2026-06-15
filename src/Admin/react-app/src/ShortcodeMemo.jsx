@@ -38,7 +38,7 @@ export default function ShortcodeMemo() {
 		lines.push( {
 			code: '[slashbooking]',
 			label: __(
-				'Sélecteur de projet (tous services actifs)',
+				'Project selector (all active services)',
 				'slashbooking'
 			),
 		} );
@@ -57,7 +57,7 @@ export default function ShortcodeMemo() {
 			<CardHeader>
 				<h2>
 					{ __(
-						'Shortcodes — à coller dans tes pages WordPress',
+						'Shortcodes — paste into your WordPress pages',
 						'slashbooking'
 					) }
 				</h2>
@@ -68,7 +68,7 @@ export default function ShortcodeMemo() {
 				{ services !== null && lines.length === 0 && (
 					<p>
 						{ __(
-							"Aucun service actif. Ajoute un service dans l'onglet Services pour générer un shortcode.",
+							"No active service. Add a service in the Services tab to generate a shortcode.",
 							'slashbooking'
 						) }
 					</p>
@@ -92,11 +92,11 @@ export default function ShortcodeMemo() {
 										>
 											{ copied === code
 												? __(
-														'✓ Copié',
+														'✓ Copied',
 														'slashbooking'
 												  )
 												: __(
-														'Copier',
+														'Copy',
 														'slashbooking'
 												  ) }
 										</Button>

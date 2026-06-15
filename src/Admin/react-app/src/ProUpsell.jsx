@@ -17,11 +17,11 @@ export default function ProUpsell() {
 			<CardBody>
 				<h2 style={ { marginTop: 0 } }>
 					{ '✨ ' }
-					{ __( 'Passer à SlashBooking Pro', 'slashbooking' ) }
+					{ __( 'Upgrade to SlashBooking Pro', 'slashbooking' ) }
 				</h2>
 				<p style={ { marginTop: 0, color: '#475569' } }>
 					{ __(
-						'La version Pro débloque les fonctionnalités avancées :',
+						'The Pro version unlocks advanced features:',
 						'slashbooking'
 					) }
 				</p>
@@ -34,18 +34,18 @@ export default function ProUpsell() {
 				>
 					<li>
 						{ __(
-							'Synchronisation Google Agenda bidirectionnelle',
+							'Two-way Google Calendar sync',
 							'slashbooking'
 						) }
 					</li>
 					<li>
 						{ __(
-							'E-mails entièrement personnalisables',
+							'Fully customizable emails',
 							'slashbooking'
 						) }
 					</li>
 					<li>
-						{ __( 'Rappels automatiques J-1', 'slashbooking' ) }
+						{ __( 'Automatic day-before reminders', 'slashbooking' ) }
 					</li>
 				</ul>
 				<Button
@@ -54,7 +54,7 @@ export default function ProUpsell() {
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					{ __( 'Découvrir la version Pro', 'slashbooking' ) }
+					{ __( 'Discover the Pro version', 'slashbooking' ) }
 				</Button>
 			</CardBody>
 		</Card>

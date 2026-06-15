@@ -35,11 +35,11 @@ final class AdminMenu
     private function addQuickLinks(): void
     {
         $tabs = [
-            'bookings'  => __('Réservations', 'slashbooking'),
+            'bookings'  => __('Bookings', 'slashbooking'),
             'services'  => __('Services', 'slashbooking'),
             'google'    => __('Google', 'slashbooking'),
             'templates' => __('Templates', 'slashbooking'),
-            'settings'  => __('Réglages', 'slashbooking'),
+            'settings'  => __('Settings', 'slashbooking'),
         ];
 
         global $submenu;

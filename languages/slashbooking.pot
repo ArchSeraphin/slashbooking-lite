@@ -1,416 +1,738 @@
-# Copyright (C) 2026 Trinity
-# This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SlashBooking 1.0.0\n"
-"Report-Msgid-Bugs-To: https://github.com/trinity/booking/issues\n"
-"Last-Translator: Trinity <nicolas@voilavoila.tv>\n"
-"Language-Team: French <nicolas@voilavoila.tv>\n"
+"Project-Id-Version: SlashBooking 1.0.5\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/slashbooking\n"
+"POT-Creation-Date: 2026-06-15T00:00:00+00:00\n"
+"PO-Revision-Date: 2026-06-15 00:00+0000\n"
+"Last-Translator: SlashBooking <nicolas@voilavoila.tv>\n"
+"Language-Team: LANGUAGE <nicolas@voilavoila.tv>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-20T18:02:16+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: slashbooking\n"
 
-#. Plugin Name of the plugin
-#: slashbooking.php
-#: src/Admin/AdminMenu.php:16
-#: src/Admin/AdminMenu.php:17
-#: src/Admin/AdminMenu.php:28
-msgid "SlashBooking"
+#: src/Admin/react-app/src/EmailSettings.jsx:166
+msgid "“New request” notifications will go to: "
 msgstr ""
 
-#. Plugin URI of the plugin
-#: slashbooking.php
-msgid "https://trinity.example/"
+#: src/Admin/react-app/src/EmailSettings.jsx:172
+msgid "(no address set)"
 msgstr ""
 
-#. Description of the plugin
-#: slashbooking.php
-msgid "Online appointment booking with Google Calendar sync."
+#: src/Admin/react-app/src/BookingsPage.jsx:239
+msgid "← Previous"
 msgstr ""
 
-#. Author of the plugin
-#: slashbooking.php
-msgid "Trinity"
+#: src/Notifications/DefaultTemplates.php:96
+msgid "<p>Hi {{customer_name}},</p>\n<p>Just a reminder: your appointment <strong>{{service_name}}</strong> is scheduled for <strong>tomorrow</strong> at {{appointment_time}} ({{timezone}}).</p>\n<p>Address: {{customer_address}}</p>\n<p>Need to cancel? <a href=\"{{cancel_url}}\">Click here</a>.</p>\n<p>— {{site_name}}</p>"
 msgstr ""
 
-#: src/Http/AdminBookingController.php:61
-msgid "Forbidden"
+#: src/Notifications/DefaultTemplates.php:81
+msgid "<p>Hi {{customer_name}},</p>\n<p>Sorry, your appointment request for {{appointment_date}} at {{appointment_time}} could not be confirmed.</p>\n<p>Feel free to <a href=\"{{site_url}}\">pick another slot</a>.</p>\n<p>— {{site_name}}</p>"
+msgstr ""
+
+#: src/Notifications/DefaultTemplates.php:45
+msgid "<p>Hi {{customer_name}},</p>\n<p>We have received your appointment request for <strong>{{service_name}}</strong> on <strong>{{appointment_date}}</strong> at <strong>{{appointment_time}}</strong>.</p>\n<p>Our team will get back to you shortly to confirm it.</p>\n<p>You can cancel at any time: <a href=\"{{cancel_url}}\">cancel this appointment</a>.</p>\n<p>— {{site_name}}</p>"
+msgstr ""
+
+#: src/Notifications/DefaultTemplates.php:89
+msgid "<p>Hi {{customer_name}},</p>\n<p>We have registered the cancellation of your appointment {{service_name}} on {{appointment_date}} at {{appointment_time}}.</p>\n<p>See you soon! <a href=\"{{site_url}}\">Book another appointment</a>.</p>"
+msgstr ""
+
+#: src/Notifications/DefaultTemplates.php:72
+msgid "<p>Hi {{customer_name}},</p>\n<p>Your appointment <strong>{{service_name}}</strong> is confirmed for <strong>{{appointment_date}}</strong> from {{appointment_time}} to {{appointment_end}} ({{timezone}}).</p>\n<p>Address provided: {{customer_address}}</p>\n<p>You can add it to your calendar via the attached .ics file, or <a href=\"{{cancel_url}}\">cancel this appointment</a>.</p>\n<p>See you soon!<br>{{site_name}}</p>"
+msgstr ""
+
+#: src/Notifications/DefaultTemplates.php:54
+msgid "<p>New appointment request to review:</p>\n<ul>\n  <li><strong>Service:</strong> {{service_name}} ({{service_duration}})</li>\n  <li><strong>When:</strong> {{appointment_date}} from {{appointment_time}} to {{appointment_end}}</li>\n  <li><strong>Customer:</strong> {{customer_name}} — {{customer_email}} — {{customer_phone}}</li>\n  <li><strong>Address:</strong> {{customer_address}}</li>\n  <li><strong>Notes:</strong> {{notes}}</li>\n</ul>\n<p>\n  <a href=\"{{confirm_url}}\" style=\"background:#16a34a;color:#fff;padding:10px 16px;text-decoration:none;border-radius:4px;\">Confirm</a>\n  &nbsp;\n  <a href=\"{{reject_url}}\" style=\"background:#dc2626;color:#fff;padding:10px 16px;text-decoration:none;border-radius:4px;\">Decline</a>\n</p>\n<p style=\"font-size:12px;color:#666\">The links expire in 72 h.</p>"
+msgstr ""
+
+#: src/Admin/react-app/src/ShortcodeMemo.jsx:95
+msgid "✓ Copied"
+msgstr ""
+
+#: src/Admin/react-app/src/FormSettings.jsx:150
+msgid "Accent color (available states, indicators)"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:217
+msgid "Actions"
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:219
+msgid "Active"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:204
+msgid "Active service (visible on the public form)"
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:162
+#: src/Admin/react-app/src/ServicesPage.jsx:289
+msgid "Add a service"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:399
+msgid "Add a time range"
+msgstr ""
+
+#: src/Privacy/BookingExporter.php:34
+msgid "Address"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:121
+msgid "Admin-approved"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:109
+msgid "All periods"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:18
+msgid "All statuses"
+msgstr ""
+
+#: src/Http/PublicCancelController.php:102
+msgid "Appointment cancellation"
+msgstr ""
+
+#: src/Notifications/DefaultTemplates.php:25
+msgid "Appointment confirmed — {{appointment_date}} at {{appointment_time}}"
+msgstr ""
+
+#: src/Http/DecisionController.php:130
+msgid "Appointment confirmed ✓"
+msgstr ""
+
+#: src/Privacy/BookingExporter.php:37
+msgid "Appointment date"
+msgstr ""
+
+#: src/Http/DecisionController.php:172
+msgid "Appointment decision"
+msgstr ""
+
+#: src/Http/DecisionController.php:134
+msgid "Appointment declined"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:221
+msgid "Appointment duration (minutes)"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:201
+msgid "Appointments will appear here as soon as the first one is booked via the public form."
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:332
+msgid "auto"
+msgstr ""
+
+#: src/Admin/react-app/src/ProUpsell.jsx:48
+msgid "Automatic day-before reminders"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:115
+msgid "Awaiting confirmation"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:164
+msgid "Back to services"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:284
+msgid "Booking horizon (days)"
+msgstr ""
+
+#: src/Http/DecisionController.php:138
+msgid "Booking not found"
 msgstr ""
 
 #: src/Http/AdminBookingController.php:109
 msgid "Booking not found."
 msgstr ""
 
-#: src/Http/AdminGoogleController.php:95
-msgid "Not logged in"
+#: src/Admin/AdminMenu.php:38
+#: src/Admin/react-app/src/App.jsx:62
+msgid "Bookings"
 msgstr ""
 
-#: src/Http/AdminGoogleController.php:108
-msgid "Invalid or expired OAuth state."
+#: src/Admin/react-app/src/ServicesPage.jsx:182
+msgid "Buffer"
 msgstr ""
 
-#: src/Http/AdminGoogleController.php:120
-msgid "Google did not return a refresh token. Revoke access at myaccount.google.com and retry with prompt=consent."
+#: src/Admin/react-app/src/ServiceEditor.jsx:252
+msgid "Buffer after / travel (minutes)"
 msgstr ""
 
-#: src/Http/DecisionController.php:51
-msgid "Action invalide"
+#: src/Admin/react-app/src/ServiceEditor.jsx:236
+msgid "Buffer before (minutes)"
 msgstr ""
 
-#: src/Http/DecisionController.php:58
-msgid "Lien invalide ou expiré"
+#: src/Admin/react-app/src/BookingRow.jsx:72
+#: src/Admin/react-app/src/ServiceEditor.jsx:431
+#: src/Admin/react-app/src/ServicesPage.jsx:352
+msgid "Cancel"
 msgstr ""
 
-#: src/Http/DecisionController.php:59
-msgid "Demandez un nouveau lien."
+#: src/Http/PublicCancelController.php:72
+msgid "Cancel the appointment"
 msgstr ""
 
-#: src/Http/DecisionController.php:66
-msgid "RDV confirmé ✓"
+#: src/Http/PublicCancelController.php:66
+msgid "Cancel this booking?"
 msgstr ""
 
-#: src/Http/DecisionController.php:67
-#: src/Http/DecisionController.php:71
-msgid "Le client a été notifié."
+#: src/Admin/react-app/src/BookingRow.jsx:20
+#: src/Admin/react-app/src/BookingsPage.jsx:22
+msgid "Cancelled"
 msgstr ""
 
-#: src/Http/DecisionController.php:70
-msgid "RDV refusé"
+#: src/Admin/react-app/src/ServiceEditor.jsx:311
+msgid "Check the working days and set the time ranges. You can add several ranges per day (morning / afternoon)."
 msgstr ""
 
-#: src/Http/DecisionController.php:74
-msgid "Réservation introuvable"
+#: src/Admin/react-app/src/ServicesPage.jsx:299
+msgid "Choose a name (and optionally a slug). You can set the duration and hours right after."
 msgstr ""
 
-#: src/Http/DecisionController.php:78
-msgid "Impossible"
+#: src/Admin/react-app/src/ServiceEditor.jsx:197
+msgid "Color (hex)"
 msgstr ""
 
-#: src/Http/DecisionController.php:97
-msgid "Décision RDV"
+#: src/Admin/react-app/src/EmailSettings.jsx:108
+msgid "Company logo URL (used by {company_logo})"
 msgstr ""
 
-#: src/Http/PublicBookingController.php:91
-#: src/Http/PublicBookingController.php:152
-msgid "Service introuvable"
+#: src/Admin/react-app/src/EmailSettings.jsx:125
+msgid "Company phone (used by {company_phone})"
 msgstr ""
 
-#: src/Http/PublicBookingController.php:99
-msgid "Date invalide"
+#: src/Admin/react-app/src/BookingRow.jsx:54
+msgid "Confirm"
 msgstr ""
 
-#: src/Http/PublicBookingController.php:102
-msgid "from doit précéder to"
+#: src/Http/DecisionController.php:85
+msgid "Confirm the appointment"
 msgstr ""
 
-#: src/Http/PublicBookingController.php:147
-msgid "Trop de requêtes"
-msgstr ""
-
-#: src/Http/PublicBookingController.php:159
-msgid "start invalide"
-msgstr ""
-
-#: src/Http/PublicBookingController.php:180
-msgid "Champs invalides"
-msgstr ""
-
-#: src/Http/PublicBookingController.php:182
-msgid "Créneau indisponible"
-msgstr ""
-
-#: src/Http/PublicCancelController.php:49
-msgid "Lien invalide ou expiré."
-msgstr ""
-
-#: src/Http/PublicCancelController.php:55
-msgid "Réservation introuvable."
-msgstr ""
-
-#: src/Notifications/DefaultTemplates.php:17
-msgid "Votre demande de RDV — en attente de validation"
-msgstr ""
-
-#: src/Notifications/DefaultTemplates.php:21
-msgid "Nouvelle demande de RDV : {{service_name}} — {{customer_name}}"
-msgstr ""
-
-#: src/Notifications/DefaultTemplates.php:25
-msgid "RDV confirmé — {{appointment_date}} à {{appointment_time}}"
-msgstr ""
-
-#: src/Notifications/DefaultTemplates.php:29
-msgid "Votre demande de RDV n'a pas pu être confirmée"
-msgstr ""
-
-#: src/Notifications/DefaultTemplates.php:33
-msgid "Annulation de votre RDV confirmée"
-msgstr ""
-
-#: src/Notifications/DefaultTemplates.php:37
-msgid "Rappel : RDV demain à {{appointment_time}}"
-msgstr ""
-
-#: src/PublicFront/Shortcode.php:30
-msgid "Service inconnu"
-msgstr ""
-
-#: src/Admin/react-app/src/App.jsx:16
-msgid "Réservations"
-msgstr ""
-
-#: src/Admin/react-app/src/App.jsx:20
-msgid "Google"
-msgstr ""
-
-#: src/Admin/react-app/src/App.jsx:22
-msgid "Journal"
-msgstr ""
-
-#: src/Admin/react-app/src/BookingRow.jsx:15
-#: src/Admin/react-app/src/BookingsPage.jsx:11
-msgid "En attente"
-msgstr ""
-
-#: src/Admin/react-app/src/BookingRow.jsx:16
-msgid "Confirmé"
-msgstr ""
-
-#: src/Admin/react-app/src/BookingRow.jsx:17
-msgid "Refusé"
+#: src/Http/DecisionController.php:88
+msgid "Confirm this booking?"
 msgstr ""
 
 #: src/Admin/react-app/src/BookingRow.jsx:18
-msgid "Annulé"
+#: src/Admin/react-app/src/BookingsPage.jsx:118
+#: src/Admin/react-app/src/BookingsPage.jsx:20
+msgid "Confirmed"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingRow.jsx:19
-msgid "Passé"
+#: src/Admin/react-app/src/ShortcodeMemo.jsx:99
+msgid "Copy"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingRow.jsx:41
-msgid "Confirmer"
+#: src/Admin/react-app/src/ServicesPage.jsx:361
+msgid "Create and configure"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingRow.jsx:44
-msgid "Refuser"
+#: src/Http/AdminServiceController.php:118
+msgid "Created service not found."
 msgstr ""
 
-#: src/Admin/react-app/src/BookingRow.jsx:50
-msgid "Annuler"
+#: src/Admin/react-app/src/ServicesPage.jsx:360
+msgid "Creating…"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:10
-msgid "Tous statuts"
+#: src/Http/AdminServiceController.php:110
+msgid "Creation failed."
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:12
-msgid "Confirmés"
+#: src/Admin/react-app/src/BookingsPage.jsx:214
+msgid "Customer"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:13
-msgid "Refusés"
+#: src/Admin/react-app/src/FormSettings.jsx:131
+msgid "Customize the colors of the confirmation button, selected slots and calendar accents. Leave empty to use the default SlashBooking colors."
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:14
-msgid "Annulés"
+#: src/Admin/DashboardWidget.php:152
+msgid "D, M j · H:i"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:62
-#: src/Admin/react-app/src/BookingsPage.jsx:82
-#: src/Admin/react-app/src/SyncLogPage.jsx:66
-#: src/Admin/react-app/src/SyncLogPage.jsx:81
-msgid "Statut"
-msgstr ""
-
-#: src/Admin/react-app/src/BookingsPage.jsx:79
-#: src/Admin/react-app/src/SyncLogPage.jsx:77
+#: src/Admin/react-app/src/BookingsPage.jsx:212
 msgid "Date"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:80
-msgid "Service"
+#: src/Admin/react-app/src/BookingRow.jsx:61
+msgid "Decline"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:81
-msgid "Client"
+#: src/Http/DecisionController.php:86
+msgid "Decline the appointment"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:83
-msgid "Actions"
+#: src/Http/DecisionController.php:89
+msgid "Decline this booking?"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:88
-msgid "Aucun RDV."
+#: src/Admin/react-app/src/BookingRow.jsx:19
+#: src/Admin/react-app/src/BookingsPage.jsx:21
+msgid "Declined"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:99
-msgid "Précédent"
+#: src/Admin/react-app/src/ServicesPage.jsx:274
+msgid "Delete"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:102
+#: src/Http/AdminServiceController.php:147
+msgid "Deletion failed."
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:258
+msgid "Disable"
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:221
+msgid "Disabled"
+msgstr ""
+
+#: src/Admin/react-app/src/ProUpsell.jsx:57
+msgid "Discover the Pro version"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:192
+msgid "Display name"
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:181
+msgid "Duration"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:216
+msgid "Duration & rules"
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:315
+msgid "e.g. Energy audit"
+msgstr ""
+
+#: src/Admin/react-app/src/FormSettings.jsx:97
+msgid "e.g. Our team will need to approve the proposed date and time to confirm your appointment."
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:244
+msgid "Edit"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:158
+msgid "Editing: "
+msgstr ""
+
+#: src/Privacy/BookingExporter.php:32
+msgid "Email"
+msgstr ""
+
+#: src/Admin/react-app/src/EmailSettings.jsx:68
+msgid "Email settings"
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:262
+msgid "Enable"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:152
+msgid "Filter by status"
+msgstr ""
+
+#: src/Http/AdminBookingController.php:61
+msgid "Forbidden"
+msgstr ""
+
+#: src/Admin/react-app/src/FormSettings.jsx:119
+msgid "Form accent colors"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:22
+msgid "Friday"
+msgstr ""
+
+#: src/Http/PublicBookingController.php:101
+msgid "from must come before to"
+msgstr ""
+
+#: src/Admin/react-app/src/ProUpsell.jsx:43
+msgid "Fully customizable emails"
+msgstr ""
+
+#: src/Admin/AdminMenu.php:40
+msgid "Google"
+msgstr ""
+
+#: src/Admin/react-app/src/EmailSettings.jsx:87
+msgid "If left empty, notifications go to the WP admin email ("
+msgstr ""
+
+#: src/Http/DecisionController.php:71
+msgid "Invalid action"
+msgstr ""
+
+#: src/Http/PublicBookingController.php:98
+msgid "Invalid date"
+msgstr ""
+
+#: src/Http/PublicBookingController.php:173
+msgid "Invalid fields"
+msgstr ""
+
+#: src/Http/DecisionController.php:78
+msgid "Invalid or expired link"
+msgstr ""
+
+#: src/Http/PublicCancelController.php:85
+msgid "Invalid or expired link."
+msgstr ""
+
+#: src/Http/AdminServiceController.php:67
+msgid "Invalid slug."
+msgstr ""
+
+#: src/Http/PublicBookingController.php:152
+msgid "invalid start"
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:327
+msgid "Leave empty to generate automatically from the name. Allowed characters: a-z, 0-9, hyphens."
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:268
+msgid "Minimum lead time before appointment (hours)"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:18
+msgid "Monday"
+msgstr ""
+
+#: src/Privacy/BookingExporter.php:31
+msgid "Name"
+msgstr ""
+
+#: src/Notifications/DefaultTemplates.php:21
+msgid "New appointment request: {{service_name}} — {{customer_name}}"
+msgstr ""
+
+#: src/Admin/react-app/src/EmailSettings.jsx:93
+msgid "New-request notifications will go here, regardless of the WP admin email."
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:249
+msgid "Next →"
+msgstr ""
+
+#: src/Admin/react-app/src/ShortcodeMemo.jsx:71
+msgid "No active service. Add a service in the Services tab to generate a shortcode."
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:109
+msgid "No appointments scheduled this week."
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:197
+msgid "No bookings"
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:38
+msgid "No day"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:95
+msgid "No pending requests."
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:174
+msgid "No service."
+msgstr ""
+
+#: src/Privacy/BookingExporter.php:35
+msgid "Notes"
+msgstr ""
+
+#: src/Admin/react-app/src/FormSettings.jsx:86
+msgid "Notice at the bottom of the form"
+msgstr ""
+
+#: src/Admin/react-app/src/EmailSettings.jsx:81
+msgid "Notification recipient address"
+msgstr ""
+
+#: src/Admin/react-app/src/App.jsx:33
+msgid "Online bookings for WordPress"
+msgstr ""
+
+#: src/Admin/react-app/src/ServicesPage.jsx:184
+msgid "Open days"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:242
 msgid "Page"
 msgstr ""
 
-#: src/Admin/react-app/src/BookingsPage.jsx:105
-msgid "Suivant"
+#: src/Admin/react-app/src/BookingRow.jsx:21
+msgid "Past"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:56
-msgid "Erreur diagnostics : "
+#: src/Admin/react-app/src/BookingRow.jsx:17
+#: src/Admin/react-app/src/BookingsPage.jsx:19
+msgid "Pending"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:80
-msgid "Vraiment déconnecter ce compte ?"
+#: src/Admin/react-app/src/ServicesPage.jsx:88
+msgid "Permanently delete this service? This action cannot be undone."
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:112
-msgid "Watch activé. Channel : "
+#: src/Privacy/BookingExporter.php:33
+msgid "Phone"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:115
-#: src/Admin/react-app/src/GooglePage.jsx:316
-msgid "expire"
+#: src/Http/DecisionController.php:79
+msgid "Please request a new link."
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:123
-#: src/Admin/react-app/src/GooglePage.jsx:146
-#: src/Admin/react-app/src/GooglePage.jsx:167
-msgid "Erreur : "
+#: src/Admin/react-app/src/FormSettings.jsx:138
+msgid "Primary color (buttons, selection)"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:134
-msgid "Arrêter le watch ?"
+#: src/Admin/react-app/src/ShortcodeMemo.jsx:41
+msgid "Project selector (all active services)"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:142
-msgid "Watch arrêté."
+#: src/Admin/react-app/src/FormSettings.jsx:71
+msgid "Public form settings"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:160
-msgid "Pull enfilé. Vérifie le Journal dans quelques secondes."
+#: src/Admin/react-app/src/EmailSettings.jsx:115
+msgid "Public URL of your logo (PNG or JPG)"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:191
-msgid "Configuration OAuth"
+#: src/Notifications/DefaultTemplates.php:37
+msgid "Reminder: appointment tomorrow at {{appointment_time}}"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:197
-msgid "URI de redirection à saisir dans Google Cloud Console :"
+#: src/Admin/react-app/src/FormSettings.jsx:268
+msgid "Reset"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:206
-msgid "Client ID"
+#: src/Admin/react-app/src/ServiceEditor.jsx:23
+msgid "Saturday"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:215
-msgid "Client Secret (déjà défini — saisir pour remplacer)"
+#: src/Admin/react-app/src/EmailSettings.jsx:147
+#: src/Admin/react-app/src/FormSettings.jsx:172
+#: src/Admin/react-app/src/ServiceEditor.jsx:426
+msgid "Save"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:219
-msgid "Client Secret"
+#: src/Http/AdminServiceController.php:200
+msgid "Save failed."
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:226
-msgid "Enregistrer"
+#: src/Admin/DashboardWidget.php:161
+#: src/Admin/react-app/src/BookingsPage.jsx:213
+#: src/Admin/react-app/src/ServicesPage.jsx:180
+msgid "Service"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:234
-msgid "Google Calendar"
+#: src/Admin/react-app/src/ServiceEditor.jsx:188
+msgid "Service identity"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:241
-msgid "Connecté"
+#: src/Admin/react-app/src/ServicesPage.jsx:311
+msgid "Service name"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:244
-msgid "Calendrier :"
+#: src/Http/AdminServiceController.php:52
+msgid "Service not found"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:250
-msgid "Token expire :"
+#: src/Admin/react-app/src/ServiceEditor.jsx:112
+msgid "Service saved."
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:263
-msgid "Déconnecter"
+#: src/Admin/AdminMenu.php:39
+#: src/Admin/react-app/src/App.jsx:66
+msgid "Services"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:269
-msgid "Aucun calendrier Google connecté."
+#: src/Admin/react-app/src/ServicesPage.jsx:156
+msgid "Services & hours"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:275
-msgid "Connecter mon Google Calendar"
+#: src/Admin/AdminMenu.php:42
+#: src/Admin/react-app/src/App.jsx:70
+msgid "Settings"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:288
-msgid "Synchronisation entrante (Google → WP)"
+#: src/Admin/react-app/src/EmailSettings.jsx:54
+#: src/Admin/react-app/src/FormSettings.jsx:57
+msgid "Settings saved."
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:298
-msgid "Connectez d'abord un compte Google ci-dessus."
+#: src/Admin/react-app/src/ShortcodeMemo.jsx:60
+msgid "Shortcodes — paste into your WordPress pages"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:308
-msgid "Watch channel :"
+#: src/Admin/react-app/src/FormSettings.jsx:90
+msgid "Shown just above the “Confirm request” button. Leave empty to show nothing."
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:320
-msgid "aucun"
+#: src/Admin/AdminMenu.php:16
+msgid "SlashBooking"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:324
-msgid "Dernier full sync :"
+#: src/Admin/DashboardWidget.php:64
+msgid "SlashBooking — Bookings"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:330
-msgid "jamais"
+#: src/Privacy/BookingExporter.php:28
+msgid "SlashBooking bookings"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:334
-msgid "Sync token :"
+#: src/Privacy/BookingEraser.php:28
+msgid "SlashBooking: %d booking(s) anonymized (aggregates are kept)."
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:337
-msgid "présent (sync incrémental actif)"
+#: src/Http/PublicBookingController.php:175
+msgid "Slot unavailable"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:341
-msgid "absent (prochain pull = full sync)"
+#: src/Admin/react-app/src/ServicesPage.jsx:323
+msgid "Slug — optional"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:359
-msgid "Démarrer le watch"
+#: src/Admin/react-app/src/BookingsPage.jsx:215
+#: src/Admin/react-app/src/ServicesPage.jsx:186
+#: src/Privacy/BookingExporter.php:36
+msgid "Status"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:372
-msgid "Arrêter le watch"
+#: src/Admin/react-app/src/ServiceEditor.jsx:24
+msgid "Sunday"
 msgstr ""
 
-#: src/Admin/react-app/src/GooglePage.jsx:383
-msgid "Forcer un pull maintenant"
+#: src/Admin/AdminMenu.php:41
+msgid "Templates"
 msgstr ""
 
-#: src/Admin/react-app/src/SyncLogPage.jsx:59
-msgid "Journal de synchronisation"
+#: src/Http/DecisionController.php:131
+msgid "The customer has been notified."
 msgstr ""
 
-#: src/Admin/react-app/src/SyncLogPage.jsx:78
-msgid "Direction"
+#: src/Admin/react-app/src/ServicesPage.jsx:109
+msgid "The name is required."
 msgstr ""
 
-#: src/Admin/react-app/src/SyncLogPage.jsx:79
-msgid "Entité"
+#: src/Admin/react-app/src/ProUpsell.jsx:24
+msgid "The Pro version unlocks advanced features:"
 msgstr ""
 
-#: src/Admin/react-app/src/SyncLogPage.jsx:80
-msgid "Action"
+#: src/Http/AdminServiceController.php:61
+msgid "The service name is required."
 msgstr ""
 
-#: src/Admin/react-app/src/SyncLogPage.jsx:82
-msgid "Erreur"
+#: src/Http/DecisionController.php:151
+msgid "This request has already been handled or is no longer valid."
 msgstr ""
+
+#: src/Http/AdminServiceController.php:138
+msgid "This service has %d linked booking(s). Deactivate it instead of deleting it to preserve history."
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:21
+msgid "Thursday"
+msgstr ""
+
+#: src/Privacy/BookingExporter.php:38
+msgid "Timezone"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:92
+#: src/Admin/react-app/src/BookingsPage.jsx:112
+msgid "To confirm"
+msgstr ""
+
+#: src/Http/PublicBookingController.php:140
+msgid "Too many requests"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:106
+msgid "Total appointments"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:19
+msgid "Tuesday"
+msgstr ""
+
+#: src/Admin/react-app/src/ProUpsell.jsx:37
+msgid "Two-way Google Calendar sync"
+msgstr ""
+
+#: src/Http/DecisionController.php:150
+msgid "Unable"
+msgstr ""
+
+#: src/Http/AdminServiceController.php:77
+msgid "Unable to generate a unique slug."
+msgstr ""
+
+#: src/PublicFront/Shortcode.php:47
+msgid "Unknown service"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:125
+msgid "Unsaved changes, leave?"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:124
+msgid "Upcoming"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:104
+msgid "Upcoming (%d days)"
+msgstr ""
+
+#: src/Admin/react-app/src/BookingsPage.jsx:127
+msgid "Upcoming confirmed"
+msgstr ""
+
+#: src/Admin/react-app/src/App.jsx:46
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: src/Admin/react-app/src/ProUpsell.jsx:20
+msgid "Upgrade to SlashBooking Pro"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:116
+msgid "View all bookings →"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:20
+msgid "Wednesday"
+msgstr ""
+
+#: src/Admin/react-app/src/ServiceEditor.jsx:305
+msgid "Working days & hours"
+msgstr ""
+
+#: src/Notifications/DefaultTemplates.php:33
+msgid "Your appointment cancellation is confirmed"
+msgstr ""
+
+#: src/Notifications/DefaultTemplates.php:17
+msgid "Your appointment request — awaiting approval"
+msgstr ""
+
+#: src/Notifications/DefaultTemplates.php:29
+msgid "Your appointment request could not be confirmed"
+msgstr ""
+

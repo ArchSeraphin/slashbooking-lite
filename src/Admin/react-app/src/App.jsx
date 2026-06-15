@@ -30,7 +30,7 @@ export default function App() {
 						<h1 className="sb-app-header__title">SlashBooking</h1>
 						<p className="sb-app-header__subtitle">
 							{ __(
-								'Réservations en ligne pour WordPress',
+								'Online bookings for WordPress',
 								'slashbooking'
 							) }
 						</p>
@@ -43,7 +43,7 @@ export default function App() {
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						{ __( 'Passer à Pro', 'slashbooking' ) }
+						{ __( 'Upgrade to Pro', 'slashbooking' ) }
 					</Button>
 					{ version && (
 						<span className="sb-app-header__version">
@@ -59,7 +59,7 @@ export default function App() {
 				tabs={ [
 					{
 						name: 'bookings',
-						title: __( 'Réservations', 'slashbooking' ),
+						title: __( 'Bookings', 'slashbooking' ),
 					},
 					{
 						name: 'services',
@@ -67,7 +67,7 @@ export default function App() {
 					},
 					{
 						name: 'settings',
-						title: __( 'Réglages', 'slashbooking' ),
+						title: __( 'Settings', 'slashbooking' ),
 					},
 				] }
 				initialTabName={ active }

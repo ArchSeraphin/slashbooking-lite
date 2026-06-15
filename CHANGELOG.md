@@ -6,6 +6,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [1.0.5] — 2026-06-15
+
+### Added
+
+- Complete **French (`fr_FR`)** translation bundled in `/languages` (`.po`/`.mo` plus a JS catalog for the admin app), covering the admin screens, the transactional emails, the public booking form and the settings SPA.
+
+### Changed
+
+- **The source language is now English (`en_US`).** Every user-facing string — PHP and the React admin app — was converted from French to English so that `en_US` is the canonical base locale (the WordPress.org standard), making the plugin translatable into any language via translate.wordpress.org. French is shipped as the first translation.
+- Translations are loaded with `load_plugin_textdomain()` on `init` (PHP) and `wp_set_script_translations()` plus an injected locale catalog (admin app).
+- Replaced the bundled plugin logo assets (`assets/logo/*`) with the current SlashBooking calendar mark.
+
 ## [1.0.4] — 2026-06-12
 
 ### Removed

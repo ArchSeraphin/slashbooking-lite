@@ -35,7 +35,7 @@ function daysSummary( weekly ) {
 		}
 	}
 	return open.length === 0
-		? __( 'Aucun jour', 'slashbooking' )
+		? __( 'No day', 'slashbooking' )
 		: open.join( ' · ' );
 }
 
@@ -85,7 +85,7 @@ export default function ServicesPage() {
 		// eslint-disable-next-line no-alert -- confirmation destructive volontaire (admin WP)
 		const ok = window.confirm(
 			__(
-				'Supprimer définitivement ce service ? Cette action est irréversible.',
+				'Permanently delete this service? This action cannot be undone.',
 				'slashbooking'
 			)
 		);
@@ -106,7 +106,7 @@ export default function ServicesPage() {
 
 	const submitAdd = async () => {
 		if ( newName.trim() === '' ) {
-			setAddErr( __( 'Le nom est requis.', 'slashbooking' ) );
+			setAddErr( __( 'The name is required.', 'slashbooking' ) );
 			return;
 		}
 		setAddBusy( true );
@@ -153,13 +153,13 @@ export default function ServicesPage() {
 					} }
 				>
 					<h2 style={ { margin: 0, fontSize: 16, fontWeight: 600 } }>
-						{ __( 'Services & horaires', 'slashbooking' ) }
+						{ __( 'Services & hours', 'slashbooking' ) }
 					</h2>
 					<Button
 						variant="primary"
 						onClick={ () => setShowAdd( true ) }
 					>
-						+ { __( 'Ajouter un service', 'slashbooking' ) }
+						+ { __( 'Add a service', 'slashbooking' ) }
 					</Button>
 				</div>
 			</CardHeader>
@@ -171,19 +171,19 @@ export default function ServicesPage() {
 					</Notice>
 				) }
 				{ items && items.length === 0 && (
-					<p>{ __( 'Aucun service.', 'slashbooking' ) }</p>
+					<p>{ __( 'No service.', 'slashbooking' ) }</p>
 				) }
 				{ items && items.length > 0 && (
 					<table className="sb-table">
 						<thead>
 							<tr>
 								<th>{ __( 'Service', 'slashbooking' ) }</th>
-								<th>{ __( 'Durée', 'slashbooking' ) }</th>
+								<th>{ __( 'Duration', 'slashbooking' ) }</th>
 								<th>{ __( 'Buffer', 'slashbooking' ) }</th>
 								<th>
-									{ __( 'Jours ouverts', 'slashbooking' ) }
+									{ __( 'Open days', 'slashbooking' ) }
 								</th>
-								<th>{ __( 'Statut', 'slashbooking' ) }</th>
+								<th>{ __( 'Status', 'slashbooking' ) }</th>
 								<th style={ { textAlign: 'right' } }></th>
 							</tr>
 						</thead>
@@ -216,9 +216,9 @@ export default function ServicesPage() {
 											}` }
 										>
 											{ s.active
-												? __( 'Actif', 'slashbooking' )
+												? __( 'Active', 'slashbooking' )
 												: __(
-														'Désactivé',
+														'Disabled',
 														'slashbooking'
 												  ) }
 										</span>
@@ -241,7 +241,7 @@ export default function ServicesPage() {
 												disabled={ busySlug === s.slug }
 											>
 												{ __(
-													'Modifier',
+													'Edit',
 													'slashbooking'
 												) }
 											</Button>
@@ -255,11 +255,11 @@ export default function ServicesPage() {
 											>
 												{ s.active
 													? __(
-															'Désactiver',
+															'Disable',
 															'slashbooking'
 													  )
 													: __(
-															'Activer',
+															'Enable',
 															'slashbooking'
 													  ) }
 											</Button>
@@ -271,7 +271,7 @@ export default function ServicesPage() {
 												disabled={ busySlug === s.slug }
 											>
 												{ __(
-													'Supprimer',
+													'Delete',
 													'slashbooking'
 												) }
 											</Button>
@@ -286,7 +286,7 @@ export default function ServicesPage() {
 
 			{ showAdd && (
 				<Modal
-					title={ __( 'Ajouter un service', 'slashbooking' ) }
+					title={ __( 'Add a service', 'slashbooking' ) }
 					onRequestClose={ () => {
 						if ( ! addBusy ) {
 							setShowAdd( false );
@@ -296,7 +296,7 @@ export default function ServicesPage() {
 				>
 					<p style={ { marginTop: 0, color: '#475569' } }>
 						{ __(
-							'Choisis un nom (et éventuellement un identifiant). Tu pourras configurer la durée et les horaires juste après.',
+							'Choose a name (and optionally a slug). You can set the duration and hours right after.',
 							'slashbooking'
 						) }
 					</p>
@@ -308,11 +308,11 @@ export default function ServicesPage() {
 					) }
 
 					<TextControl
-						label={ __( 'Nom du service', 'slashbooking' ) }
+						label={ __( 'Service name', 'slashbooking' ) }
 						value={ newName }
 						onChange={ setNewName }
 						placeholder={ __(
-							'Ex : Audit énergétique',
+							'e.g. Energy audit',
 							'slashbooking'
 						) }
 						__nextHasNoMarginBottom
@@ -320,11 +320,11 @@ export default function ServicesPage() {
 					<div style={ { height: 12 } } />
 					<TextControl
 						label={ __(
-							'Identifiant (slug) — optionnel',
+							'Slug — optional',
 							'slashbooking'
 						) }
 						help={ __(
-							'Laisse vide pour générer automatiquement depuis le nom. Caractères autorisés : a-z, 0-9, tirets.',
+							'Leave empty to generate automatically from the name. Allowed characters: a-z, 0-9, hyphens.',
 							'slashbooking'
 						) }
 						value={ newSlug }
@@ -349,7 +349,7 @@ export default function ServicesPage() {
 							} }
 							disabled={ addBusy }
 						>
-							{ __( 'Annuler', 'slashbooking' ) }
+							{ __( 'Cancel', 'slashbooking' ) }
 						</Button>
 						<Button
 							variant="primary"
@@ -357,8 +357,8 @@ export default function ServicesPage() {
 							disabled={ addBusy || newName.trim() === '' }
 						>
 							{ addBusy
-								? __( 'Création…', 'slashbooking' )
-								: __( 'Créer et configurer', 'slashbooking' ) }
+								? __( 'Creating…', 'slashbooking' )
+								: __( 'Create and configure', 'slashbooking' ) }
 						</Button>
 					</div>
 				</Modal>

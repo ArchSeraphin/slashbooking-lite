@@ -15,13 +15,13 @@ import { __ } from '@wordpress/i18n';
 import { fetchService, saveService } from './api';
 
 const DAYS = [
-	{ key: '1', label: __( 'Lundi', 'slashbooking' ) },
-	{ key: '2', label: __( 'Mardi', 'slashbooking' ) },
-	{ key: '3', label: __( 'Mercredi', 'slashbooking' ) },
-	{ key: '4', label: __( 'Jeudi', 'slashbooking' ) },
-	{ key: '5', label: __( 'Vendredi', 'slashbooking' ) },
-	{ key: '6', label: __( 'Samedi', 'slashbooking' ) },
-	{ key: '7', label: __( 'Dimanche', 'slashbooking' ) },
+	{ key: '1', label: __( 'Monday', 'slashbooking' ) },
+	{ key: '2', label: __( 'Tuesday', 'slashbooking' ) },
+	{ key: '3', label: __( 'Wednesday', 'slashbooking' ) },
+	{ key: '4', label: __( 'Thursday', 'slashbooking' ) },
+	{ key: '5', label: __( 'Friday', 'slashbooking' ) },
+	{ key: '6', label: __( 'Saturday', 'slashbooking' ) },
+	{ key: '7', label: __( 'Sunday', 'slashbooking' ) },
 ];
 
 export default function ServiceEditor( { slug, onClose } ) {
@@ -109,7 +109,7 @@ export default function ServiceEditor( { slug, onClose } ) {
 			const updated = await saveService( slug, payload );
 			setService( updated );
 			setIsDirty( false );
-			setMessage( __( 'Service enregistré.', 'slashbooking' ) );
+			setMessage( __( 'Service saved.', 'slashbooking' ) );
 		} catch ( e ) {
 			setError( e.message ?? String( e ) );
 		} finally {
@@ -122,7 +122,7 @@ export default function ServiceEditor( { slug, onClose } ) {
 			// eslint-disable-next-line no-alert -- confirmation volontaire (perte de modifs)
 			const ok = window.confirm(
 				__(
-					'Modifications non sauvegardées, quitter ?',
+					'Unsaved changes, leave?',
 					'slashbooking'
 				)
 			);
@@ -155,13 +155,13 @@ export default function ServiceEditor( { slug, onClose } ) {
 								fontWeight: 600,
 							} }
 						>
-							{ __( 'Édition : ', 'slashbooking' ) }
+							{ __( 'Editing: ', 'slashbooking' ) }
 							<code>{ slug }</code>
 						</h2>
 					</FlexItem>
 					<FlexItem>
 						<Button variant="tertiary" onClick={ close }>
-							← { __( 'Retour aux services', 'slashbooking' ) }
+							← { __( 'Back to services', 'slashbooking' ) }
 						</Button>
 					</FlexItem>
 				</Flex>
@@ -185,23 +185,23 @@ export default function ServiceEditor( { slug, onClose } ) {
 					{ /* Bloc identité */ }
 					<section className="sb-form-section">
 						<h3 className="sb-form-section__title">
-							{ __( 'Identité du service', 'slashbooking' ) }
+							{ __( 'Service identity', 'slashbooking' ) }
 						</h3>
 						<div className="sb-form-grid">
 							<TextControl
-								label={ __( 'Nom affiché', 'slashbooking' ) }
+								label={ __( 'Display name', 'slashbooking' ) }
 								value={ service.name }
 								onChange={ ( v ) => patch( { name: v } ) }
 							/>
 							<TextControl
-								label={ __( 'Couleur (hex)', 'slashbooking' ) }
+								label={ __( 'Color (hex)', 'slashbooking' ) }
 								value={ service.color }
 								onChange={ ( v ) => patch( { color: v } ) }
 								type="text"
 							/>
 							<ToggleControl
 								label={ __(
-									'Service actif (visible sur le formulaire public)',
+									'Active service (visible on the public form)',
 									'slashbooking'
 								) }
 								checked={ !! service.active }
@@ -213,12 +213,12 @@ export default function ServiceEditor( { slug, onClose } ) {
 					{ /* Bloc durée + buffers */ }
 					<section className="sb-form-section">
 						<h3 className="sb-form-section__title">
-							{ __( 'Durée & règles', 'slashbooking' ) }
+							{ __( 'Duration & rules', 'slashbooking' ) }
 						</h3>
 						<div className="sb-form-grid">
 							<TextControl
 								label={ __(
-									'Durée du RDV (minutes)',
+									'Appointment duration (minutes)',
 									'slashbooking'
 								) }
 								type="number"
@@ -233,7 +233,7 @@ export default function ServiceEditor( { slug, onClose } ) {
 							/>
 							<TextControl
 								label={ __(
-									'Buffer avant (minutes)',
+									'Buffer before (minutes)',
 									'slashbooking'
 								) }
 								type="number"
@@ -249,7 +249,7 @@ export default function ServiceEditor( { slug, onClose } ) {
 							/>
 							<TextControl
 								label={ __(
-									'Buffer après / trajet (minutes)',
+									'Buffer after / travel (minutes)',
 									'slashbooking'
 								) }
 								type="number"
@@ -265,7 +265,7 @@ export default function ServiceEditor( { slug, onClose } ) {
 							/>
 							<TextControl
 								label={ __(
-									'Délai minimum avant RDV (heures)',
+									'Minimum lead time before appointment (hours)',
 									'slashbooking'
 								) }
 								type="number"
@@ -281,7 +281,7 @@ export default function ServiceEditor( { slug, onClose } ) {
 							/>
 							<TextControl
 								label={ __(
-									'Horizon de réservation (jours)',
+									'Booking horizon (days)',
 									'slashbooking'
 								) }
 								type="number"
@@ -302,13 +302,13 @@ export default function ServiceEditor( { slug, onClose } ) {
 					<section className="sb-form-section">
 						<h3 className="sb-form-section__title">
 							{ __(
-								'Jours & horaires de travail',
+								'Working days & hours',
 								'slashbooking'
 							) }
 						</h3>
 						<p className="sb-form-section__hint">
 							{ __(
-								'Cochez les jours travaillés et définissez les plages horaires. Vous pouvez ajouter plusieurs plages par jour (matin / après-midi).',
+								'Check the working days and set the time ranges. You can add several ranges per day (morning / afternoon).',
 								'slashbooking'
 							) }
 						</p>
@@ -396,7 +396,7 @@ export default function ServiceEditor( { slug, onClose } ) {
 												>
 													+{ ' ' }
 													{ __(
-														'Ajouter une plage',
+														'Add a time range',
 														'slashbooking'
 													) }
 												</Button>
@@ -423,12 +423,12 @@ export default function ServiceEditor( { slug, onClose } ) {
 								isBusy={ saving }
 								disabled={ ! isDirty || saving }
 							>
-								{ __( 'Enregistrer', 'slashbooking' ) }
+								{ __( 'Save', 'slashbooking' ) }
 							</Button>
 						</FlexItem>
 						<FlexItem>
 							<Button variant="tertiary" onClick={ close }>
-								{ __( 'Annuler', 'slashbooking' ) }
+								{ __( 'Cancel', 'slashbooking' ) }
 							</Button>
 						</FlexItem>
 					</Flex>
