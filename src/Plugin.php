@@ -86,15 +86,18 @@ final class Plugin
         // install fatals on `new DecisionTokenSigner('')` further down.
         Activator::ensureDecisionSecret();
 
-        // Load the bundled translations. The plugin's source strings are English;
-        // a complete French catalog ships in /languages. Hooked on `init` (not
-        // earlier) per WP 6.7 just-in-time-loading guidance.
+        // Load the bundled translation for the current locale. The plugin's
+        // source strings are English; a complete French catalog ships in
+        // /languages. We load the .mo directly with load_textdomain() — rather
+        // than load_plugin_textdomain() — so the bundled catalog is available
+        // immediately, even before a translate.wordpress.org language pack
+        // exists. Hooked on `init` per WP 6.7 just-in-time-loading guidance.
         add_action('init', function (): void {
-            load_plugin_textdomain(
-                'slashbooking',
-                false,
-                \dirname(plugin_basename($this->pluginFile)) . '/languages',
-            );
+            $locale = determine_locale();
+            $mofile = $this->pluginDir() . '/languages/slashbooking-' . $locale . '.mo';
+            if (is_readable($mofile)) {
+                load_textdomain('slashbooking', $mofile);
+            }
         });
 
         // Propagate capability changes to existing installs that were activated
