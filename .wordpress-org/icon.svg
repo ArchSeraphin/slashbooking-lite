@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256" role="img" aria-label="SlashBooking">
+  
+  <rect x="17" y="6" width="5" height="13" rx="2.5" fill="#059669"></rect>
+  <rect x="38" y="6" width="5" height="13" rx="2.5" fill="#059669"></rect>
+  
+  <rect x="6" y="12" width="46" height="46" rx="10" fill="#ffffff" stroke="#059669" stroke-width="4"></rect>
+  
+  <path d="M6 26 H52" stroke="#059669" stroke-width="4"></path>
+  
+  <g fill="#059669" opacity="0.4">
+    <circle cx="18" cy="33" r="3"></circle>
+    <circle cx="29" cy="33" r="3"></circle>
+    <circle cx="40" cy="33" r="3"></circle>
+    <circle cx="18" cy="42" r="3"></circle>
+    <circle cx="18" cy="51" r="3"></circle>
+    <circle cx="29" cy="51" r="3"></circle>
+  </g>
+  
+  <circle cx="29" cy="42" r="3.6" fill="#f59e0b"></circle>
+  
+  <circle cx="52" cy="52" r="10" fill="#059669" stroke="#ffffff" stroke-width="3"></circle>
+  <path d="M47 52.3 L50.6 56 L57.8 48.3" fill="none" stroke="#ffffff" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>

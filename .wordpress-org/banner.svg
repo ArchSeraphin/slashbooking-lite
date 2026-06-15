@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1544 500" width="1544" height="500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset="0.55" stop-color="#059669"/>
+      <stop offset="1" stop-color="#047857"/>
+    </linearGradient>
+    <filter id="tileShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="12" stdDeviation="22" flood-color="#022c22" flood-opacity="0.30"/>
+    </filter>
+    <style>
+      .title { font-family: -apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; font-weight: 800; }
+      .tag   { font-family: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; font-weight: 500; }
+      .feat  { font-family: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; font-weight: 600; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1544" height="500" fill="url(#bg)"/>
+
+  <!-- faint calendar-dot motif, corners -->
+  <g fill="#ffffff">
+    <circle cx="1245" cy="92"  r="40" opacity="0.07"/>
+    <circle cx="1372" cy="150" r="26" opacity="0.06"/>
+    <circle cx="1470" cy="86"  r="32" opacity="0.06"/>
+    <circle cx="1500" cy="430" r="48" opacity="0.05"/>
+    <circle cx="1380" cy="452" r="30" opacity="0.06"/>
+  </g>
+
+  <!-- big translucent check, bottom-right corner -->
+  <g transform="translate(1452,372)" opacity="0.10">
+    <circle r="132" fill="none" stroke="#ffffff" stroke-width="13"/>
+    <path d="M-54 6 L-15 46 L66 -50" fill="none" stroke="#ffffff" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- white app tile -->
+  <rect x="96" y="110" width="280" height="280" rx="62" fill="#ffffff" filter="url(#tileShadow)"/>
+
+  <!-- calendar + check logo -->
+  <svg x="131" y="145" width="210" height="210" viewBox="0 0 64 64">
+    <rect x="17" y="6" width="5" height="13" rx="2.5" fill="#059669"/>
+    <rect x="38" y="6" width="5" height="13" rx="2.5" fill="#059669"/>
+    <rect x="6" y="12" width="46" height="46" rx="10" fill="#ffffff" stroke="#059669" stroke-width="4"/>
+    <path d="M6 26 H52" stroke="#059669" stroke-width="4"/>
+    <g fill="#059669" opacity="0.4">
+      <circle cx="18" cy="33" r="3"/><circle cx="29" cy="33" r="3"/><circle cx="40" cy="33" r="3"/>
+      <circle cx="18" cy="42" r="3"/><circle cx="18" cy="51" r="3"/><circle cx="29" cy="51" r="3"/>
+    </g>
+    <circle cx="29" cy="42" r="3.6" fill="#f59e0b"/>
+    <circle cx="52" cy="52" r="10" fill="#059669" stroke="#ffffff" stroke-width="3"/>
+    <path d="M47 52.3 L50.6 56 L57.8 48.3" fill="none" stroke="#ffffff" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <!-- wordmark -->
+  <text class="title" x="446" y="228" font-size="104" fill="#ffffff" letter-spacing="-1">SlashBooking</text>
+  <rect x="452" y="252" width="128" height="9" rx="4.5" fill="#f59e0b"/>
+
+  <!-- tagline -->
+  <text class="tag" x="450" y="316" font-size="41" fill="#ecfdf5" opacity="0.96">Online appointment booking for WordPress</text>
+
+  <!-- feature line -->
+  <text class="feat" x="450" y="386" font-size="30" fill="#d1fae5" opacity="0.92">Real-time slots&#8195;·&#8195;1-click confirm&#8195;·&#8195;GDPR-friendly&#8195;·&#8195;Self-hosted</text>
+</svg>
