@@ -53,6 +53,14 @@ msgstr "<p>Nouvelle demande de RDV à valider :</p>\n<ul>\n  <li><strong>Service
 msgid "✓ Copied"
 msgstr "✓ Copié"
 
+#: src/PublicFront/assets/booking.js:474
+msgid "06 12 34 56 78"
+msgstr "06 12 34 56 78"
+
+#: src/PublicFront/assets/booking.js:475
+msgid "123 Main St, New York, NY"
+msgstr "15 rue de la République, 75011 Paris"
+
 #: src/Admin/react-app/src/FormSettings.jsx:150
 msgid "Accent color (available states, indicators)"
 msgstr "Couleur d'accent (états disponibles, indicateurs)"
@@ -94,6 +102,14 @@ msgstr "Toutes périodes"
 msgid "All statuses"
 msgstr "Tous statuts"
 
+#: src/PublicFront/assets/booking.js:583
+msgid "Anti-bot check failed. Please try again."
+msgstr "Vérification anti-robot échouée. Merci de la refaire."
+
+#: src/PublicFront/assets/booking.js:475
+msgid "Appointment address"
+msgstr "Adresse du rendez-vous"
+
 #: src/Http/PublicCancelController.php:102
 msgid "Appointment cancellation"
 msgstr "Annulation RDV"
@@ -133,6 +149,10 @@ msgstr "auto"
 #: src/Admin/react-app/src/ProUpsell.jsx:48
 msgid "Automatic day-before reminders"
 msgstr "Rappels automatiques J-1"
+
+#: src/PublicFront/assets/booking.js:264
+msgid "Available"
+msgstr "Disponible"
 
 #: src/Admin/react-app/src/BookingsPage.jsx:115
 msgid "Awaiting confirmation"
@@ -194,9 +214,33 @@ msgstr "Annulé"
 msgid "Check the working days and set the time ranges. You can add several ranges per day (morning / afternoon)."
 msgstr "Cochez les jours travaillés et définissez les plages horaires. Vous pouvez ajouter plusieurs plages par jour (matin / après-midi)."
 
+#: src/PublicFront/assets/booking.js:219
+msgid "Choose a date"
+msgstr "Choisissez une date"
+
 #: src/Admin/react-app/src/ServicesPage.jsx:299
 msgid "Choose a name (and optionally a slug). You can set the duration and hours right after."
 msgstr "Choisis un nom (et éventuellement un identifiant). Tu pourras configurer la durée et les horaires juste après."
+
+#: src/PublicFront/assets/booking.js:408
+msgid "Choose a slot"
+msgstr "Choisissez un créneau"
+
+#: src/PublicFront/assets/booking.js:538
+msgid "Choose a slot."
+msgstr "Choisissez un créneau."
+
+#: src/PublicFront/assets/booking.js:178
+msgid "Choose your project"
+msgstr "Choix du projet"
+
+#: src/PublicFront/assets/booking.js:220
+msgid "Click an available day (green) to see the slots."
+msgstr "Cliquez sur un jour disponible (vert) pour voir les créneaux."
+
+#: src/PublicFront/assets/booking.js:267
+msgid "Closed"
+msgstr "Fermé"
 
 #: src/Admin/react-app/src/ServiceEditor.jsx:197
 msgid "Color (hex)"
@@ -214,6 +258,11 @@ msgstr "Téléphone société (utilisé par {company_phone})"
 msgid "Confirm"
 msgstr "Confirmer"
 
+#: src/PublicFront/assets/booking.js:522
+#: src/PublicFront/assets/booking.js:598
+msgid "Confirm request"
+msgstr "Confirmer la demande"
+
 #: src/Http/DecisionController.php:85
 msgid "Confirm the appointment"
 msgstr "Confirmer le RDV"
@@ -228,9 +277,18 @@ msgstr "Confirmer cette réservation ?"
 msgid "Confirmed"
 msgstr "Confirmé"
 
+#: src/PublicFront/assets/booking.js:137
+#: src/PublicFront/assets/booking.js:138
+msgid "Contact details"
+msgstr "Coordonnées"
+
 #: src/Admin/react-app/src/ShortcodeMemo.jsx:99
 msgid "Copy"
 msgstr "Copier"
+
+#: src/PublicFront/assets/booking.js:592
+msgid "Could not send the request. Please check your connection."
+msgstr "Impossible d'envoyer la demande. Vérifiez votre connexion."
 
 #: src/Admin/react-app/src/ServicesPage.jsx:361
 msgid "Create and configure"
@@ -261,6 +319,8 @@ msgid "D, M j · H:i"
 msgstr "D j M, H\\hi"
 
 #: src/Admin/react-app/src/BookingsPage.jsx:212
+#: src/PublicFront/assets/booking.js:137
+#: src/PublicFront/assets/booking.js:138
 msgid "Date"
 msgstr "Date"
 
@@ -288,6 +348,10 @@ msgstr "Supprimer"
 #: src/Http/AdminServiceController.php:147
 msgid "Deletion failed."
 msgstr "Échec de la suppression."
+
+#: src/PublicFront/assets/booking.js:476
+msgid "Details about your project…"
+msgstr "Précisions sur votre projet…"
 
 #: src/Admin/react-app/src/ServicesPage.jsx:258
 msgid "Disable"
@@ -330,6 +394,7 @@ msgid "Editing: "
 msgstr "Édition : "
 
 #: src/Privacy/BookingExporter.php:32
+#: src/PublicFront/assets/booking.js:473
 msgid "Email"
 msgstr "E-mail"
 
@@ -340,6 +405,10 @@ msgstr "Paramètres e-mail"
 #: src/Admin/react-app/src/ServicesPage.jsx:262
 msgid "Enable"
 msgstr "Activer"
+
+#: src/PublicFront/assets/booking.js:459
+msgid "Error loading the slots. Please try again in a moment."
+msgstr "Erreur de chargement des créneaux. Réessayez dans un instant."
 
 #: src/Admin/react-app/src/BookingsPage.jsx:152
 msgid "Filter by status"
@@ -361,6 +430,14 @@ msgstr "Vendredi"
 msgid "from must come before to"
 msgstr "from doit précéder to"
 
+#: src/PublicFront/assets/booking.js:266
+msgid "Full"
+msgstr "Complet"
+
+#: src/PublicFront/assets/booking.js:472
+msgid "Full name"
+msgstr "Nom complet"
+
 #: src/Admin/react-app/src/ProUpsell.jsx:43
 msgid "Fully customizable emails"
 msgstr "E-mails entièrement personnalisables"
@@ -368,6 +445,10 @@ msgstr "E-mails entièrement personnalisables"
 #: src/Admin/AdminMenu.php:40
 msgid "Google"
 msgstr "Google"
+
+#: src/PublicFront/assets/booking.js:495
+msgid "I agree that my data may be used to contact me regarding my appointment request."
+msgstr "J'accepte que mes données soient utilisées pour me recontacter dans le cadre de ma demande de rendez-vous."
 
 #: src/Admin/react-app/src/EmailSettings.jsx:87
 msgid "If left empty, notifications go to the WP admin email ("
@@ -401,9 +482,25 @@ msgstr "Slug invalide."
 msgid "invalid start"
 msgstr "start invalide"
 
+#: src/PublicFront/assets/booking.js:472
+msgid "John Doe"
+msgstr "Jean Dupont"
+
+#: src/PublicFront/assets/booking.js:473
+msgid "john.doe@example.com"
+msgstr "jean.dupont@exemple.fr"
+
 #: src/Admin/react-app/src/ServicesPage.jsx:327
 msgid "Leave empty to generate automatically from the name. Allowed characters: a-z, 0-9, hyphens."
 msgstr "Laisse vide pour générer automatiquement depuis le nom. Caractères autorisés : a-z, 0-9, tirets."
+
+#: src/PublicFront/assets/booking.js:504
+msgid "Legal notice"
+msgstr "Mentions légales"
+
+#: src/PublicFront/assets/booking.js:421
+msgid "Loading slots…"
+msgstr "Chargement des créneaux…"
 
 #: src/Admin/react-app/src/ServiceEditor.jsx:268
 msgid "Minimum lead time before appointment (hours)"
@@ -429,6 +526,10 @@ msgstr "Les notifications de nouvelles demandes iront ici, indépendamment de l'
 msgid "Next →"
 msgstr "Suivant →"
 
+#: src/PublicFront/assets/booking.js:239
+msgid "Next month"
+msgstr "Mois suivant"
+
 #: src/Admin/react-app/src/ShortcodeMemo.jsx:71
 msgid "No active service. Add a service in the Services tab to generate a shortcode."
 msgstr "Aucun service actif. Ajoute un service dans l'onglet Services pour générer un shortcode."
@@ -453,9 +554,17 @@ msgstr "Aucune demande en attente."
 msgid "No service."
 msgstr "Aucun service."
 
+#: src/PublicFront/assets/booking.js:434
+msgid "No slots available on that day. Try another date."
+msgstr "Aucun créneau disponible ce jour-là. Essayez une autre date."
+
 #: src/Privacy/BookingExporter.php:35
 msgid "Notes"
 msgstr "Notes"
+
+#: src/PublicFront/assets/booking.js:476
+msgid "Notes (optional)"
+msgstr "Notes (optionnel)"
 
 #: src/Admin/react-app/src/FormSettings.jsx:86
 msgid "Notice at the bottom of the form"
@@ -477,6 +586,10 @@ msgstr "Jours ouverts"
 msgid "Page"
 msgstr "Page"
 
+#: src/PublicFront/assets/booking.js:265
+msgid "Partial"
+msgstr "Partiel"
+
 #: src/Admin/react-app/src/BookingRow.jsx:21
 msgid "Past"
 msgstr "Passé"
@@ -491,16 +604,29 @@ msgid "Permanently delete this service? This action cannot be undone."
 msgstr "Supprimer définitivement ce service ? Cette action est irréversible."
 
 #: src/Privacy/BookingExporter.php:33
+#: src/PublicFront/assets/booking.js:474
 msgid "Phone"
 msgstr "Téléphone"
+
+#: src/PublicFront/assets/booking.js:573
+msgid "Please check the form fields."
+msgstr "Veuillez vérifier les champs du formulaire."
 
 #: src/Http/DecisionController.php:79
 msgid "Please request a new link."
 msgstr "Demandez un nouveau lien."
 
+#: src/PublicFront/assets/booking.js:229
+msgid "Previous month"
+msgstr "Mois précédent"
+
 #: src/Admin/react-app/src/FormSettings.jsx:138
 msgid "Primary color (buttons, selection)"
 msgstr "Couleur principale (boutons, sélection)"
+
+#: src/PublicFront/assets/booking.js:137
+msgid "Project"
+msgstr "Projet"
 
 #: src/Admin/react-app/src/ShortcodeMemo.jsx:41
 msgid "Project selector (all active services)"
@@ -517,6 +643,14 @@ msgstr "URL publique de votre logo (PNG ou JPG)"
 #: src/Notifications/DefaultTemplates.php:37
 msgid "Reminder: appointment tomorrow at {{appointment_time}}"
 msgstr "Rappel : RDV demain à {{appointment_time}}"
+
+#: src/PublicFront/assets/booking.js:121
+msgid "Reply within 24 h"
+msgstr "Réponse sous 24 h"
+
+#: src/PublicFront/assets/booking.js:607
+msgid "Request sent!"
+msgstr "Demande envoyée !"
 
 #: src/Admin/react-app/src/FormSettings.jsx:268
 msgid "Reset"
@@ -535,6 +669,18 @@ msgstr "Enregistrer"
 #: src/Http/AdminServiceController.php:200
 msgid "Save failed."
 msgstr "Échec de la sauvegarde."
+
+#: src/PublicFront/assets/booking.js:120
+msgid "Secure data"
+msgstr "Données sécurisées"
+
+#: src/PublicFront/assets/booking.js:179
+msgid "Select the type of appointment — the duration adjusts automatically."
+msgstr "Sélectionnez la nature du rendez-vous — la durée s'adapte automatiquement."
+
+#: src/PublicFront/assets/booking.js:554
+msgid "Sending…"
+msgstr "Envoi en cours…"
 
 #: src/Admin/DashboardWidget.php:161
 #: src/Admin/react-app/src/BookingsPage.jsx:213
@@ -609,6 +755,10 @@ msgstr "Créneau indisponible"
 msgid "Slug — optional"
 msgstr "Identifiant (slug) — optionnel"
 
+#: src/PublicFront/assets/booking.js:577
+msgid "Sorry, this slot has just been taken. Please choose another one."
+msgstr "Désolé, ce créneau vient d'être pris. Choisissez-en un autre."
+
 #: src/Admin/react-app/src/BookingsPage.jsx:215
 #: src/Admin/react-app/src/ServicesPage.jsx:186
 #: src/Privacy/BookingExporter.php:36
@@ -622,6 +772,10 @@ msgstr "Dimanche"
 #: src/Admin/AdminMenu.php:41
 msgid "Templates"
 msgstr "Templates"
+
+#: src/PublicFront/assets/booking.js:608
+msgid "Thank you, we will get back to you very soon to confirm the appointment. A summary email has been sent to you."
+msgstr "Merci, nous reviendrons vers vous très vite pour confirmer le rendez-vous. Un e-mail récapitulatif vous a été envoyé."
 
 #: src/Http/DecisionController.php:131
 msgid "The customer has been notified."
@@ -650,6 +804,15 @@ msgstr "Ce service compte %d réservation(s) liée(s). Désactivez-le plutôt qu
 #: src/Admin/react-app/src/ServiceEditor.jsx:21
 msgid "Thursday"
 msgstr "Jeudi"
+
+#: src/PublicFront/assets/booking.js:137
+#: src/PublicFront/assets/booking.js:138
+msgid "Time"
+msgstr "Heure"
+
+#: src/PublicFront/assets/booking.js:409
+msgid "Times are shown in local time."
+msgstr "Les horaires sont affichés en heure locale."
 
 #: src/Privacy/BookingExporter.php:38
 msgid "Timezone"
@@ -684,6 +847,10 @@ msgstr "Impossible"
 msgid "Unable to generate a unique slug."
 msgstr "Impossible de générer un slug unique."
 
+#: src/PublicFront/assets/booking.js:586
+msgid "Unexpected error. Please try again."
+msgstr "Erreur inattendue. Réessayez."
+
 #: src/PublicFront/Shortcode.php:47
 msgid "Unknown service"
 msgstr "Service inconnu"
@@ -716,6 +883,10 @@ msgstr "Passer à SlashBooking Pro"
 msgid "View all bookings →"
 msgstr "Voir toutes les réservations →"
 
+#: src/PublicFront/assets/booking.js:469
+msgid "We will contact you to confirm the appointment."
+msgstr "Nous vous contacterons pour confirmer le rendez-vous."
+
 #: src/Admin/react-app/src/ServiceEditor.jsx:20
 msgid "Wednesday"
 msgstr "Mercredi"
@@ -735,4 +906,8 @@ msgstr "Votre demande de RDV — en attente de validation"
 #: src/Notifications/DefaultTemplates.php:29
 msgid "Your appointment request could not be confirmed"
 msgstr "Votre demande de RDV n'a pas pu être confirmée"
+
+#: src/PublicFront/assets/booking.js:468
+msgid "Your contact details"
+msgstr "Vos coordonnées"
 

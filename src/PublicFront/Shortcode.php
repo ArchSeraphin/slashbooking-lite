@@ -128,10 +128,33 @@ final class Shortcode
         wp_enqueue_script(
             'slashbooking-public',
             $pluginUrl . 'src/PublicFront/assets/booking.js',
-            [],
+            ['wp-i18n'],
             Plugin::VERSION,
             true
         );
+
+        // Public form translations. Source strings are English; the bundled
+        // catalog is injected for the current locale so the form renders in the
+        // visitor's language (the booking.js strings call wp.i18n.__).
+        $dir = Plugin::instance()->pluginDir();
+        wp_set_script_translations('slashbooking-public', 'slashbooking', $dir . '/languages');
+
+        $locale = determine_locale();
+        foreach ([$locale, substr($locale, 0, 2)] as $lc) {
+            $jsonFile = $dir . '/languages/slashbooking-' . $lc . '.json';
+            if (!is_file($jsonFile)) {
+                continue;
+            }
+            $data = wp_json_file_decode($jsonFile, ['associative' => true]);
+            if (is_array($data)) {
+                wp_add_inline_script(
+                    'slashbooking-public',
+                    'wp.i18n.setLocaleData(' . wp_json_encode($data) . ', "slashbooking");',
+                    'before',
+                );
+            }
+            break;
+        }
 
         $legalId  = (int) get_option('slashbooking_legal_page_id', 0);
         $legalUrl = $legalId > 0 ? (string) get_permalink($legalId) : '';

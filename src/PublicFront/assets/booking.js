@@ -1,6 +1,14 @@
 (function () {
 	'use strict';
 
+	// Translate a UI string against the 'slashbooking' text domain. Falls back
+	// to the source (English) string when wp.i18n is unavailable. The locale
+	// catalog is injected by Shortcode::enqueueAssets() via wp.i18n.setLocaleData.
+	function __(text, domain) {
+		var i18n = window.wp && window.wp.i18n;
+		return i18n && i18n.__ ? i18n.__(text, domain) : text;
+	}
+
 	// Inline SVG icons (no external requests).
 	var ICON_SHIELD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>';
 	var ICON_CLOCK  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
@@ -8,9 +16,6 @@
 	var ICON_ALERT  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
 	var ICON_CHEV_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
 	var ICON_CHEV_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
-
-	var WEEKDAYS = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
-	var MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 	function init(root) {
 		var rest = root.dataset.sbRest;
@@ -112,8 +117,8 @@
 		function headerEl() {
 			var h = el('div', 'sb-widget__header');
 			h.append(
-				trustItem(ICON_SHIELD, 'Données sécurisées'),
-				trustItem(ICON_CLOCK,  'Réponse sous 24 h')
+				trustItem(ICON_SHIELD, __('Secure data', 'slashbooking')),
+				trustItem(ICON_CLOCK,  __('Reply within 24 h', 'slashbooking'))
 			);
 			return h;
 		}
@@ -129,8 +134,8 @@
 			els.steps = el('div', 'sb-steps');
 			els.steps.setAttribute('role', 'progressbar');
 			var labels = needsProjectStep()
-				? ['Projet', 'Date', 'Heure', 'Coordonnées']
-				: ['Date', 'Heure', 'Coordonnées'];
+				? [__('Project', 'slashbooking'), __('Date', 'slashbooking'), __('Time', 'slashbooking'), __('Contact details', 'slashbooking')]
+				: [__('Date', 'slashbooking'), __('Time', 'slashbooking'), __('Contact details', 'slashbooking')];
 			els.steps.setAttribute('aria-valuemin', '1');
 			els.steps.setAttribute('aria-valuemax', String(labels.length));
 			labels.forEach(function (lbl, i) {
@@ -170,8 +175,8 @@
 
 		function projectStepEl() {
 			els.projectStep = el('div', 'sb-step');
-			els.projectStep.append(h3('Choix du projet'));
-			els.projectStep.append(hint('Sélectionnez la nature du rendez-vous — la durée s\'adapte automatiquement.'));
+			els.projectStep.append(h3(__('Choose your project', 'slashbooking')));
+			els.projectStep.append(hint(__('Select the type of appointment — the duration adjusts automatically.', 'slashbooking')));
 
 			var grid = el('div', 'sb-services');
 			state.services.forEach(function (svc) {
@@ -211,8 +216,8 @@
 
 		function dateStepEl() {
 			els.dateStep = el('div', 'sb-step');
-			els.dateStep.append(h3('Choisissez une date'));
-			els.dateStep.append(hint('Cliquez sur un jour disponible (vert) pour voir les créneaux.'));
+			els.dateStep.append(h3(__('Choose a date', 'slashbooking')));
+			els.dateStep.append(hint(__('Click an available day (green) to see the slots.', 'slashbooking')));
 
 			els.cal = el('div', 'sb-cal');
 
@@ -221,7 +226,7 @@
 			els.prevBtn = el('button', 'sb-cal__nav');
 			els.prevBtn.type = 'button';
 			els.prevBtn.innerHTML = ICON_CHEV_L;
-			els.prevBtn.setAttribute('aria-label', 'Mois précédent');
+			els.prevBtn.setAttribute('aria-label', __('Previous month', 'slashbooking'));
 			els.prevBtn.addEventListener('click', function () {
 				state.month = addMonths(state.month, -1);
 				renderCalendarGrid();
@@ -231,7 +236,7 @@
 			els.nextBtn = el('button', 'sb-cal__nav');
 			els.nextBtn.type = 'button';
 			els.nextBtn.innerHTML = ICON_CHEV_R;
-			els.nextBtn.setAttribute('aria-label', 'Mois suivant');
+			els.nextBtn.setAttribute('aria-label', __('Next month', 'slashbooking'));
 			els.nextBtn.addEventListener('click', function () {
 				state.month = addMonths(state.month, 1);
 				renderCalendarGrid();
@@ -242,13 +247,13 @@
 
 			header.append(els.prevBtn, els.monthLabel, els.nextBtn);
 
-			// Weekday row
+			// Weekday row (localized, Monday-first)
 			var dows = el('div', 'sb-cal__dows');
-			WEEKDAYS.forEach(function (w) {
+			for (var wi = 0; wi < 7; wi++) {
 				var d = el('div', 'sb-cal__dow');
-				d.textContent = w;
+				d.textContent = weekdayShort(wi);
 				dows.append(d);
-			});
+			}
 
 			// Grid
 			els.grid = el('div', 'sb-cal__grid');
@@ -256,10 +261,10 @@
 			// Legend
 			var legend = el('div', 'sb-cal__legend');
 			legend.append(
-				legendItem('available',  'Disponible'),
-				legendItem('partial',    'Partiel'),
-				legendItem('full',       'Complet'),
-				legendItem('closed',     'Fermé')
+				legendItem('available',  __('Available', 'slashbooking')),
+				legendItem('partial',    __('Partial', 'slashbooking')),
+				legendItem('full',       __('Full', 'slashbooking')),
+				legendItem('closed',     __('Closed', 'slashbooking'))
 			);
 
 			els.cal.append(header, dows, els.grid, legend);
@@ -279,7 +284,7 @@
 
 		function renderCalendarGrid() {
 			if (!els.grid) return;
-			els.monthLabel.textContent = MONTHS[state.month.getMonth()] + ' ' + state.month.getFullYear();
+			els.monthLabel.textContent = monthLabelText(state.month);
 			els.grid.textContent = '';
 
 			var firstDay = new Date(state.month);
@@ -400,8 +405,8 @@
 		function slotsStepEl() {
 			els.slotsStep = el('div', 'sb-step');
 			els.slotsStep.style.display = 'none';
-			els.slotsStep.append(h3('Choisissez un créneau'));
-			els.slotsStep.append(hint('Les horaires sont affichés en heure locale.'));
+			els.slotsStep.append(h3(__('Choose a slot', 'slashbooking')));
+			els.slotsStep.append(hint(__('Times are shown in local time.', 'slashbooking')));
 			els.slotList = el('div', 'sb-slot-list');
 			els.slotList.setAttribute('role', 'list');
 			els.slotsStep.append(els.slotList);
@@ -413,7 +418,7 @@
 			els.formStep.style.display = 'none';
 			els.slotList.textContent = '';
 			var loading = el('div', 'sb-slot-empty');
-			loading.textContent = 'Chargement des créneaux…';
+			loading.textContent = __('Loading slots…', 'slashbooking');
 			els.slotList.append(loading);
 
 			var from = state.date;
@@ -426,7 +431,7 @@
 					els.slotList.textContent = '';
 					if (!data.slots || data.slots.length === 0) {
 						var empty = el('div', 'sb-slot-empty');
-						empty.textContent = 'Aucun créneau disponible ce jour-là. Essayez une autre date.';
+						empty.textContent = __('No slots available on that day. Try another date.', 'slashbooking');
 						els.slotList.append(empty);
 						return;
 					}
@@ -451,7 +456,7 @@
 				.catch(function () {
 					root.classList.remove('sb-loading');
 					els.slotList.textContent = '';
-					showError('Erreur de chargement des créneaux. Réessayez dans un instant.');
+					showError(__('Error loading the slots. Please try again in a moment.', 'slashbooking'));
 				});
 		}
 
@@ -460,15 +465,15 @@
 		function formStepEl() {
 			els.formStep = el('div', 'sb-step');
 			els.formStep.style.display = 'none';
-			els.formStep.append(h3('Vos coordonnées'));
-			els.formStep.append(hint('Nous vous contacterons pour confirmer le rendez-vous.'));
+			els.formStep.append(h3(__('Your contact details', 'slashbooking')));
+			els.formStep.append(hint(__('We will contact you to confirm the appointment.', 'slashbooking')));
 
 			els.formStep.append(
-				field('customer_name',    'Nom complet',           'text',     true,  'Jean Dupont'),
-				field('customer_email',   'E-mail',                'email',    true,  'jean.dupont@exemple.fr'),
-				field('customer_phone',   'Téléphone',             'tel',      true,  '06 12 34 56 78'),
-				field('customer_address', 'Adresse du rendez-vous','textarea', true,  '15 rue de la République, 75011 Paris'),
-				field('notes',            'Notes (optionnel)',     'textarea', false, 'Précisions sur votre projet…')
+				field('customer_name',    __('Full name', 'slashbooking'),           'text',     true,  __('John Doe', 'slashbooking')),
+				field('customer_email',   __('Email', 'slashbooking'),                'email',    true,  __('john.doe@example.com', 'slashbooking')),
+				field('customer_phone',   __('Phone', 'slashbooking'),                'tel',      true,  __('06 12 34 56 78', 'slashbooking')),
+				field('customer_address', __('Appointment address', 'slashbooking'),  'textarea', true,  __('123 Main St, New York, NY', 'slashbooking')),
+				field('notes',            __('Notes (optional)', 'slashbooking'),     'textarea', false, __('Details about your project…', 'slashbooking'))
 			);
 
 			var hp = field('website', 'Website', 'text', false, '');
@@ -487,7 +492,7 @@
 			var consentLabel = el('label');
 			consentLabel.htmlFor = 'sb-consent';
 			consentLabel.append(document.createTextNode(
-				"J'accepte que mes données soient utilisées pour me recontacter dans le cadre de ma demande de rendez-vous."
+				__('I agree that my data may be used to contact me regarding my appointment request.', 'slashbooking')
 			));
 
 			var legalUrl = (window.SlashBooking && window.SlashBooking.legalUrl) || '';
@@ -496,7 +501,7 @@
 				link.href = legalUrl;
 				link.target = '_blank';
 				link.rel = 'noopener';
-				link.textContent = 'Mentions légales';
+				link.textContent = __('Legal notice', 'slashbooking');
 				link.className = 'sb-legal-link';
 				consentLabel.append(document.createTextNode(' — '));
 				consentLabel.append(link);
@@ -514,7 +519,7 @@
 
 			els.submitBtn = el('button', 'sb-button');
 			els.submitBtn.type = 'button';
-			els.submitBtn.textContent = 'Confirmer la demande';
+			els.submitBtn.textContent = __('Confirm request', 'slashbooking');
 			els.submitBtn.addEventListener('click', submit);
 			els.formStep.append(els.submitBtn);
 
@@ -530,7 +535,7 @@
 
 		function submit() {
 			if (state.submitting) return;
-			if (!state.start) { showError('Choisissez un créneau.'); return; }
+			if (!state.start) { showError(__('Choose a slot.', 'slashbooking')); return; }
 
 			var data = {
 				service: state.service,
@@ -546,7 +551,7 @@
 			state.submitting = true;
 			els.submitBtn.disabled = true;
 			els.submitBtn.innerHTML = '';
-			els.submitBtn.append(el('span', 'sb-button__spinner'), document.createTextNode('Envoi en cours…'));
+			els.submitBtn.append(el('span', 'sb-button__spinner'), document.createTextNode(__('Sending…', 'slashbooking')));
 			root.classList.add('sb-loading');
 
 			fetch(rest + 'bookings', {
@@ -565,32 +570,32 @@
 					resetSubmit();
 					if (res.status === 422) {
 						var errs = (res.body && res.body.data && res.body.data.errors) || {};
-						showError(Object.values(errs).join(' ') || 'Veuillez vérifier les champs du formulaire.');
+						showError(Object.values(errs).join(' ') || __('Please check the form fields.', 'slashbooking'));
 						return;
 					}
 					if (res.status === 409) {
-						showError("Désolé, ce créneau vient d'être pris. Choisissez-en un autre.");
+						showError(__('Sorry, this slot has just been taken. Please choose another one.', 'slashbooking'));
 						loadSlots();
 						loadMonth();
 						return;
 					}
 					if (res.body && res.body.code === 'sb_captcha_failed') {
-						showError('Vérification anti-robot échouée. Merci de la refaire.');
+						showError(__('Anti-bot check failed. Please try again.', 'slashbooking'));
 						return;
 					}
-					showError(res.body && res.body.message ? res.body.message : 'Erreur inattendue. Réessayez.');
+					showError(res.body && res.body.message ? res.body.message : __('Unexpected error. Please try again.', 'slashbooking'));
 				})
 				.catch(function () {
 					state.submitting = false;
 					root.classList.remove('sb-loading');
 					resetSubmit();
-					showError("Impossible d'envoyer la demande. Vérifiez votre connexion.");
+					showError(__('Could not send the request. Please check your connection.', 'slashbooking'));
 				});
 		}
 
 		function resetSubmit() {
 			els.submitBtn.disabled = false;
-			els.submitBtn.textContent = 'Confirmer la demande';
+			els.submitBtn.textContent = __('Confirm request', 'slashbooking');
 		}
 
 		function renderSuccess() {
@@ -599,8 +604,8 @@
 			var ok = el('div', 'sb-success');
 			var iconWrap = el('span'); iconWrap.innerHTML = ICON_CHECK;
 			var msgWrap = el('div');
-			var title = el('strong'); title.textContent = 'Demande envoyée !';
-			var body = el('div'); body.textContent = 'Merci, nous reviendrons vers vous très vite pour confirmer le rendez-vous. Un e-mail récapitulatif vous a été envoyé.';
+			var title = el('strong'); title.textContent = __('Request sent!', 'slashbooking');
+			var body = el('div'); body.textContent = __('Thank you, we will get back to you very soon to confirm the appointment. A summary email has been sent to you.', 'slashbooking');
 			msgWrap.append(title, body);
 			ok.append(iconWrap.firstChild, msgWrap);
 			root.append(ok);
@@ -679,6 +684,17 @@
 		function monthStart(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
 		function addMonths(d, n) { return new Date(d.getFullYear(), d.getMonth() + n, 1); }
 		function toIso(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+		// Localized "June 2026" month label for the calendar header.
+		function monthLabelText(d) {
+			try { return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(d); }
+			catch (e) { return (d.getMonth() + 1) + '/' + d.getFullYear(); }
+		}
+		// Localized short weekday name, Monday-first (i: 0=Mon .. 6=Sun).
+		// 2024-01-01 is a Monday, used as the reference week.
+		function weekdayShort(i) {
+			try { return new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 1 + i))); }
+			catch (e) { return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i]; }
+		}
 		function formatTime(iso) {
 			try { return new Date(iso).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }); }
 			catch (e) { return iso; }

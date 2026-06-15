@@ -53,6 +53,14 @@ msgstr ""
 msgid "✓ Copied"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:474
+msgid "06 12 34 56 78"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:475
+msgid "123 Main St, New York, NY"
+msgstr ""
+
 #: src/Admin/react-app/src/FormSettings.jsx:150
 msgid "Accent color (available states, indicators)"
 msgstr ""
@@ -94,6 +102,14 @@ msgstr ""
 msgid "All statuses"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:583
+msgid "Anti-bot check failed. Please try again."
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:475
+msgid "Appointment address"
+msgstr ""
+
 #: src/Http/PublicCancelController.php:102
 msgid "Appointment cancellation"
 msgstr ""
@@ -132,6 +148,10 @@ msgstr ""
 
 #: src/Admin/react-app/src/ProUpsell.jsx:48
 msgid "Automatic day-before reminders"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:264
+msgid "Available"
 msgstr ""
 
 #: src/Admin/react-app/src/BookingsPage.jsx:115
@@ -194,8 +214,32 @@ msgstr ""
 msgid "Check the working days and set the time ranges. You can add several ranges per day (morning / afternoon)."
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:219
+msgid "Choose a date"
+msgstr ""
+
 #: src/Admin/react-app/src/ServicesPage.jsx:299
 msgid "Choose a name (and optionally a slug). You can set the duration and hours right after."
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:408
+msgid "Choose a slot"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:538
+msgid "Choose a slot."
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:178
+msgid "Choose your project"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:220
+msgid "Click an available day (green) to see the slots."
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:267
+msgid "Closed"
 msgstr ""
 
 #: src/Admin/react-app/src/ServiceEditor.jsx:197
@@ -214,6 +258,11 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:522
+#: src/PublicFront/assets/booking.js:598
+msgid "Confirm request"
+msgstr ""
+
 #: src/Http/DecisionController.php:85
 msgid "Confirm the appointment"
 msgstr ""
@@ -228,8 +277,17 @@ msgstr ""
 msgid "Confirmed"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:137
+#: src/PublicFront/assets/booking.js:138
+msgid "Contact details"
+msgstr ""
+
 #: src/Admin/react-app/src/ShortcodeMemo.jsx:99
 msgid "Copy"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:592
+msgid "Could not send the request. Please check your connection."
 msgstr ""
 
 #: src/Admin/react-app/src/ServicesPage.jsx:361
@@ -261,6 +319,8 @@ msgid "D, M j · H:i"
 msgstr ""
 
 #: src/Admin/react-app/src/BookingsPage.jsx:212
+#: src/PublicFront/assets/booking.js:137
+#: src/PublicFront/assets/booking.js:138
 msgid "Date"
 msgstr ""
 
@@ -287,6 +347,10 @@ msgstr ""
 
 #: src/Http/AdminServiceController.php:147
 msgid "Deletion failed."
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:476
+msgid "Details about your project…"
 msgstr ""
 
 #: src/Admin/react-app/src/ServicesPage.jsx:258
@@ -330,6 +394,7 @@ msgid "Editing: "
 msgstr ""
 
 #: src/Privacy/BookingExporter.php:32
+#: src/PublicFront/assets/booking.js:473
 msgid "Email"
 msgstr ""
 
@@ -339,6 +404,10 @@ msgstr ""
 
 #: src/Admin/react-app/src/ServicesPage.jsx:262
 msgid "Enable"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:459
+msgid "Error loading the slots. Please try again in a moment."
 msgstr ""
 
 #: src/Admin/react-app/src/BookingsPage.jsx:152
@@ -361,12 +430,24 @@ msgstr ""
 msgid "from must come before to"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:266
+msgid "Full"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:472
+msgid "Full name"
+msgstr ""
+
 #: src/Admin/react-app/src/ProUpsell.jsx:43
 msgid "Fully customizable emails"
 msgstr ""
 
 #: src/Admin/AdminMenu.php:40
 msgid "Google"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:495
+msgid "I agree that my data may be used to contact me regarding my appointment request."
 msgstr ""
 
 #: src/Admin/react-app/src/EmailSettings.jsx:87
@@ -401,8 +482,24 @@ msgstr ""
 msgid "invalid start"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:472
+msgid "John Doe"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:473
+msgid "john.doe@example.com"
+msgstr ""
+
 #: src/Admin/react-app/src/ServicesPage.jsx:327
 msgid "Leave empty to generate automatically from the name. Allowed characters: a-z, 0-9, hyphens."
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:504
+msgid "Legal notice"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:421
+msgid "Loading slots…"
 msgstr ""
 
 #: src/Admin/react-app/src/ServiceEditor.jsx:268
@@ -429,6 +526,10 @@ msgstr ""
 msgid "Next →"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:239
+msgid "Next month"
+msgstr ""
+
 #: src/Admin/react-app/src/ShortcodeMemo.jsx:71
 msgid "No active service. Add a service in the Services tab to generate a shortcode."
 msgstr ""
@@ -453,8 +554,16 @@ msgstr ""
 msgid "No service."
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:434
+msgid "No slots available on that day. Try another date."
+msgstr ""
+
 #: src/Privacy/BookingExporter.php:35
 msgid "Notes"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:476
+msgid "Notes (optional)"
 msgstr ""
 
 #: src/Admin/react-app/src/FormSettings.jsx:86
@@ -477,6 +586,10 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:265
+msgid "Partial"
+msgstr ""
+
 #: src/Admin/react-app/src/BookingRow.jsx:21
 msgid "Past"
 msgstr ""
@@ -491,15 +604,28 @@ msgid "Permanently delete this service? This action cannot be undone."
 msgstr ""
 
 #: src/Privacy/BookingExporter.php:33
+#: src/PublicFront/assets/booking.js:474
 msgid "Phone"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:573
+msgid "Please check the form fields."
 msgstr ""
 
 #: src/Http/DecisionController.php:79
 msgid "Please request a new link."
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:229
+msgid "Previous month"
+msgstr ""
+
 #: src/Admin/react-app/src/FormSettings.jsx:138
 msgid "Primary color (buttons, selection)"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:137
+msgid "Project"
 msgstr ""
 
 #: src/Admin/react-app/src/ShortcodeMemo.jsx:41
@@ -518,6 +644,14 @@ msgstr ""
 msgid "Reminder: appointment tomorrow at {{appointment_time}}"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:121
+msgid "Reply within 24 h"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:607
+msgid "Request sent!"
+msgstr ""
+
 #: src/Admin/react-app/src/FormSettings.jsx:268
 msgid "Reset"
 msgstr ""
@@ -534,6 +668,18 @@ msgstr ""
 
 #: src/Http/AdminServiceController.php:200
 msgid "Save failed."
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:120
+msgid "Secure data"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:179
+msgid "Select the type of appointment — the duration adjusts automatically."
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:554
+msgid "Sending…"
 msgstr ""
 
 #: src/Admin/DashboardWidget.php:161
@@ -609,6 +755,10 @@ msgstr ""
 msgid "Slug — optional"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:577
+msgid "Sorry, this slot has just been taken. Please choose another one."
+msgstr ""
+
 #: src/Admin/react-app/src/BookingsPage.jsx:215
 #: src/Admin/react-app/src/ServicesPage.jsx:186
 #: src/Privacy/BookingExporter.php:36
@@ -621,6 +771,10 @@ msgstr ""
 
 #: src/Admin/AdminMenu.php:41
 msgid "Templates"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:608
+msgid "Thank you, we will get back to you very soon to confirm the appointment. A summary email has been sent to you."
 msgstr ""
 
 #: src/Http/DecisionController.php:131
@@ -649,6 +803,15 @@ msgstr ""
 
 #: src/Admin/react-app/src/ServiceEditor.jsx:21
 msgid "Thursday"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:137
+#: src/PublicFront/assets/booking.js:138
+msgid "Time"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:409
+msgid "Times are shown in local time."
 msgstr ""
 
 #: src/Privacy/BookingExporter.php:38
@@ -684,6 +847,10 @@ msgstr ""
 msgid "Unable to generate a unique slug."
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:586
+msgid "Unexpected error. Please try again."
+msgstr ""
+
 #: src/PublicFront/Shortcode.php:47
 msgid "Unknown service"
 msgstr ""
@@ -716,6 +883,10 @@ msgstr ""
 msgid "View all bookings →"
 msgstr ""
 
+#: src/PublicFront/assets/booking.js:469
+msgid "We will contact you to confirm the appointment."
+msgstr ""
+
 #: src/Admin/react-app/src/ServiceEditor.jsx:20
 msgid "Wednesday"
 msgstr ""
@@ -734,5 +905,9 @@ msgstr ""
 
 #: src/Notifications/DefaultTemplates.php:29
 msgid "Your appointment request could not be confirmed"
+msgstr ""
+
+#: src/PublicFront/assets/booking.js:468
+msgid "Your contact details"
 msgstr ""
 
