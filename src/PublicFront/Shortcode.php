@@ -125,29 +125,10 @@ final class Shortcode
             Plugin::VERSION
         );
 
-        $turnstileKey = (string) get_option('slashbooking_turnstile_site_key', '');
-        $deps         = [];
-
-        if ($turnstileKey !== '') {
-            // Cloudflare Turnstile API — explicit render lets us insert the widget
-            // after the booking form is built by booking.js. This is the opt-in
-            // anti-bot service documented in readme.txt ("External services"); the
-            // widget script can only be served from Cloudflare's CDN, never bundled.
-            // phpcs:ignore PluginCheck.CodeAnalysis.EnqueuedResourceOffloading.OffloadedContent -- Cloudflare Turnstile (CAPTCHA service) must load its widget from challenges.cloudflare.com; opt-in and disclosed in the readme.
-            wp_enqueue_script(
-                'slashbooking-turnstile',
-                'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit',
-                [],
-                null,
-                true
-            );
-            $deps[] = 'slashbooking-turnstile';
-        }
-
         wp_enqueue_script(
             'slashbooking-public',
             $pluginUrl . 'src/PublicFront/assets/booking.js',
-            $deps,
+            [],
             Plugin::VERSION,
             true
         );
@@ -156,15 +137,14 @@ final class Shortcode
         $legalUrl = $legalId > 0 ? (string) get_permalink($legalId) : '';
 
         // NB : pas de nonce REST ici. Les routes publiques du widget sont en
-        // permission_callback __return_true (protection réelle = Turnstile +
-        // honeypot + rate-limiting) et un nonce figé par un cache de page
-        // expirait au bout de 12-24 h → le core WP renvoyait 403
-        // rest_cookie_invalid_nonce sur tous les appels → plus de services.
+        // permission_callback __return_true (protection réelle = honeypot +
+        // rate-limiting) et un nonce figé par un cache de page expirait au bout
+        // de 12-24 h → le core WP renvoyait 403 rest_cookie_invalid_nonce sur
+        // tous les appels → plus de services.
         wp_localize_script('slashbooking-public', 'SlashBooking', [
             'locale'          => get_locale(),
             'legalUrl'        => $legalUrl,
             'disclaimer'      => (string) get_option('slashbooking_form_disclaimer', ''),
-            'turnstileSiteKey'=> $turnstileKey,
         ]);
     }
 }

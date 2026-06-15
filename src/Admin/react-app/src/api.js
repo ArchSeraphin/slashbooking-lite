@@ -48,8 +48,6 @@ export async function saveSettings( {
 	formDisclaimer,
 	formPrimaryColor,
 	formAccentColor,
-	turnstileSiteKey,
-	turnstileSecretKey,
 } = {} ) {
 	const data = {};
 	if ( legalPageId !== undefined ) {
@@ -75,12 +73,6 @@ export async function saveSettings( {
 	}
 	if ( formAccentColor !== undefined ) {
 		data.form_accent_color = formAccentColor;
-	}
-	if ( turnstileSiteKey !== undefined ) {
-		data.turnstile_site_key = turnstileSiteKey;
-	}
-	if ( turnstileSecretKey !== undefined ) {
-		data.turnstile_secret_key = turnstileSecretKey;
 	}
 	return apiFetch( {
 		path: 'admin/settings',

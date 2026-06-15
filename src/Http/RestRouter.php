@@ -12,8 +12,8 @@ final class RestRouter
 {
     /**
      * Routes intentionally exposed to unauthenticated visitors. Validated
-     * separately via signed tokens (cancel/decide), Turnstile + honeypot +
-     * rate-limiting (bookings), or open by design (services, availability).
+     * separately via signed tokens (cancel/decide), honeypot + rate-limiting
+     * (bookings), or open by design (services, availability).
      */
     private const PUBLIC_ROUTES = [
         'services',
@@ -100,10 +100,7 @@ final class RestRouter
             },
         );
 
-        $turnstile = new \Slash\Booking\PublicFront\TurnstileVerifier(
-            (string) get_option('slashbooking_turnstile_secret_key', ''),
-        );
-        (new PublicBookingController($services, $bookings, $generator, $createBooking, $turnstile))->registerRoutes();
+        (new PublicBookingController($services, $bookings, $generator, $createBooking))->registerRoutes();
 
         $signer = new \Slash\Booking\Booking\DecisionTokenSigner((string) get_option('slashbooking_decision_secret'));
         $cancel = new \Slash\Booking\Booking\CancelBooking(

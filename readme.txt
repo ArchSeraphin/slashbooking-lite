@@ -4,7 +4,7 @@ Tags: booking, appointment, scheduling, reservations, calendar
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ It is a self-hosted scheduling tool: your data stays in your WordPress database.
 * **Multi-slot opening hours** — Monday 9–12 + 14–18, Tuesday morning only, Wednesday off… Each day and each service is configured independently.
 * **Transactional emails with .ics** — Confirmation, decline and acknowledgement emails, each with an automatic `.ics` attachment so the customer adds the appointment to their calendar in one click.
 * **Built-in GDPR compliance** — Explicit consent before submission, WP_Privacy exporters/erasers, configurable retention, automatic anonymisation.
-* **Optional anti-spam** — Built-in honeypot, per-IP rate limiting, and optional Cloudflare Turnstile (you provide your own keys).
+* **Built-in anti-spam** — Honeypot and per-IP rate limiting, with no third-party service and no external request.
 
 = Who it is for =
 
@@ -38,7 +38,7 @@ It is a self-hosted scheduling tool: your data stays in your WordPress database.
 2. Activate **SlashBooking** in the plugins list.
 3. Configure it from the **SlashBooking** admin menu:
    * **Services** — appointment duration, before/after buffers, days and opening hours, display colour
-   * **Settings** — booking form colours, consent message, GDPR retention, notification email, optional Cloudflare Turnstile keys
+   * **Settings** — booking form colours, consent message, GDPR retention, notification email
 4. Paste `[slashbooking]` into any public page to display the booking form.
 
 == Frequently Asked Questions ==
@@ -65,14 +65,7 @@ Yes. Database schemas are versioned and migrated automatically, and options are 
 
 == External services ==
 
-This plugin can optionally connect to one third-party service. It is **disabled by default** and only used if you choose to enable it.
-
-**Cloudflare Turnstile (optional anti-bot check)**
-
-If — and only if — you enter Cloudflare Turnstile keys in the plugin settings, the public booking form loads the Turnstile widget from Cloudflare, and when a visitor submits the form the plugin sends the Turnstile response token together with the visitor's IP address to Cloudflare's verification endpoint (`https://challenges.cloudflare.com/turnstile/v0/siteverify`) to confirm the request is not a bot. No data is sent to Cloudflare when Turnstile is not configured.
-
-- Cloudflare Terms of Service: https://www.cloudflare.com/terms/
-- Cloudflare Privacy Policy: https://www.cloudflare.com/privacypolicy/
+This plugin is fully self-contained. It makes no calls to any external or third-party service and sends no data off your site — every request is handled on your own WordPress installation.
 
 == Source code and build ==
 
@@ -93,6 +86,9 @@ The Composer autoloader in `vendor/` is generated with `composer install --no-de
 
 == Changelog ==
 
+= 1.0.4 =
+* Removed the optional Cloudflare Turnstile integration from the free edition. The plugin now makes **no external requests** and connects to **no third-party service** — it is fully self-contained. The built-in honeypot and per-IP rate limiting continue to protect the booking form.
+
 = 1.0.3 =
 * Hardened the code against the full WordPress.org Plugin Check ruleset: documented the trusted, prepared database queries in the data-access layer; annotated internal exception messages (caught/converted, never displayed); renamed the internal action hooks to an underscore prefix (`slashbooking_booking_*`); prefixed the loader variable in the main file; and documented the standard cache constant/hook and the opt-in Cloudflare Turnstile widget script (the one permitted external service).
 
@@ -112,6 +108,9 @@ The Composer autoloader in `vendor/` is generated with `composer install --no-de
 First public release: shortcode booking form with real-time availability, one-click signed email confirmation (Confirm/Decline), `.ics` attachments, per-service opening hours and buffers, GDPR exporters/erasers and retention, honeypot + rate limiting, and optional Cloudflare Turnstile.
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+The free edition no longer bundles Cloudflare Turnstile and is now fully self-contained (no external services). Honeypot + rate limiting still protect the form.
 
 = 1.0.3 =
 Code-quality hardening to pass the full WordPress.org Plugin Check ruleset. No functional changes.

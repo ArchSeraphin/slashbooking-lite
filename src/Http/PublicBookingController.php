@@ -10,7 +10,6 @@ use Slash\Booking\Domain\TimeSlot;
 use Slash\Booking\Persistence\BookingRepository;
 use Slash\Booking\Persistence\ServiceRepository;
 use Slash\Booking\Plugin;
-use Slash\Booking\PublicFront\TurnstileVerifier;
 use Slash\Booking\Support\ClientIp;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -26,7 +25,6 @@ final class PublicBookingController
         private readonly BookingRepository $bookings,
         private readonly SlotGenerator $slotGenerator,
         private readonly CreateBooking $createBooking,
-        private readonly ?TurnstileVerifier $turnstile = null,
     ) {
     }
 
@@ -136,20 +134,6 @@ final class PublicBookingController
         // Honeypot
         if (!empty($params['website'])) {
             return new WP_REST_Response(['public_uid' => 'honeypot'], 201);
-        }
-
-        // Cloudflare Turnstile — only enforced if secret key is configured.
-        if ($this->turnstile !== null && $this->turnstile->isConfigured()) {
-            $token = (string) ($params['cf_turnstile_response'] ?? '');
-            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated,WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-            $ip = ClientIp::fromServer($_SERVER);
-            if (!$this->turnstile->verify($token, $ip)) {
-                return new WP_Error(
-                    'sb_captcha_failed',
-                    __('Vérification anti-robot échouée. Merci de rééssayer.', 'slashbooking'),
-                    ['status' => 400]
-                );
-            }
         }
 
         if ($this->isRateLimited()) {

@@ -6,6 +6,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [1.0.4] — 2026-06-12
+
+### Removed
+
+- The optional Cloudflare Turnstile anti-bot integration is removed from the free edition. The plugin now makes **no external requests** and connects to **no third-party service** — it is fully self-contained. The built-in honeypot and per-IP rate limiting continue to protect the booking form.
+- Deleted `TurnstileVerifier`, `TurnstileNotice` and their tests; removed the Turnstile admin settings (site/secret keys), the public widget enqueue + front-end JS, and the `.sb-turnstile` styles. The "External services" readme section now states the plugin makes no external calls.
+
 ## [1.0.3] — 2026-06-12
 
 Hardening pass against the full WordPress.org Plugin Check ruleset (stricter than the project's own `phpcs.xml.dist`). No functional changes.

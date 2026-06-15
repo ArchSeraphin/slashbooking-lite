@@ -43,9 +43,6 @@ final class AdminSettingsController
             'form_disclaimer'        => (string) get_option('slashbooking_form_disclaimer', ''),
             'form_primary_color'     => (string) get_option('slashbooking_form_primary_color', ''),
             'form_accent_color'      => (string) get_option('slashbooking_form_accent_color', ''),
-            'turnstile_site_key'     => (string) get_option('slashbooking_turnstile_site_key', ''),
-            // Don't expose the secret in cleartext — caller only needs to know if it's configured.
-            'turnstile_secret_set'   => get_option('slashbooking_turnstile_secret_key', '') !== '',
         ], 200);
     }
 
@@ -98,22 +95,6 @@ final class AdminSettingsController
                         update_option('slashbooking_' . $colorField, $sanitized, false);
                     }
                 }
-            }
-        }
-
-        if ($req->has_param('turnstile_site_key')) {
-            $key = trim((string) $req->get_param('turnstile_site_key'));
-            update_option('slashbooking_turnstile_site_key', sanitize_text_field($key), false);
-        }
-
-        // Secret key is write-only: empty string means "keep current"; non-empty
-        // overwrites. The explicit sentinel "__CLEAR__" wipes the stored secret.
-        if ($req->has_param('turnstile_secret_key')) {
-            $secret = trim((string) $req->get_param('turnstile_secret_key'));
-            if ($secret === '__CLEAR__') {
-                delete_option('slashbooking_turnstile_secret_key');
-            } elseif ($secret !== '') {
-                update_option('slashbooking_turnstile_secret_key', sanitize_text_field($secret), false);
             }
         }
 
