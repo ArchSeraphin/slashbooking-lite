@@ -88,10 +88,10 @@ final class Plugin
 
         // Load the bundled translation for the current locale. The plugin's
         // source strings are English; a complete French catalog ships in
-        // /languages. We load the .mo directly with load_textdomain() — rather
-        // than load_plugin_textdomain() — so the bundled catalog is available
-        // immediately, even before a translate.wordpress.org language pack
-        // exists. Hooked on `init` per WP 6.7 just-in-time-loading guidance.
+        // /languages. We load the .mo directly with load_textdomain() (not the
+        // discouraged plugin-textdomain wrapper) so the bundled catalog is
+        // available immediately, even before a translate.wordpress.org language
+        // pack exists. Hooked on `init` per WP 6.7 just-in-time-loading guidance.
         add_action('init', function (): void {
             $locale = determine_locale();
             $mofile = $this->pluginDir() . '/languages/slashbooking-' . $locale . '.mo';
